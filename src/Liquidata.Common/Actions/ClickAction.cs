@@ -12,6 +12,6 @@ public class ClickAction : ActionBase
     public ClickButton ClickButton { get; set; } = ClickButton.Left;
     public bool IsDoubleClick { get; set; }
     public int WaitMilliseconds { get; set; }
-    public int MaxTimesCount { get; set; }
-    public bool IsMaxTimesTemplate { get; set; }
+    public int MaxTimesCount { get; set; } = 1;
+    public bool IsMaxTimesTemplate { get; set; } = true;
 }

@@ -9,6 +9,6 @@ public class JumpAction : ActionBase
 
     public ActionBase? JumpTarget { get; set; } = null!;
     public int WaitMilliseconds { get; set; }
-    public int MaxTimesCount { get; set; }
-    public bool IsMaxTimesTemplate { get; set; }
+    public int MaxTimesCount { get; set; } = 1;
+    public bool IsMaxTimesTemplate { get; set; } = true;
 }
