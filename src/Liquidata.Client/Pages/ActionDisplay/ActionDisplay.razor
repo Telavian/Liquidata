@@ -56,6 +56,6 @@
     <MudTooltip Text="Remove action and all descendents" Delay="500">
         <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error"                       
                        Style="@BuildItemVisibility(IsMouseOver)"
-                       OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />
+                       OnClick="@(() => Parent!.RemoveActionAsyncCommand(Action!))" />
     </MudTooltip>
 </MudStack>

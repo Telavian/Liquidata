@@ -262,4 +262,14 @@ public partial class ViewModelBase : LayoutComponentBase
         await Task.Yield();
         _navigationManager!.NavigateTo(url, forceLoad, replace);        
     }
+
+    protected Task<bool?> ConfirmActionAsync(string title, string message)
+    {
+        return _dialogService!.ShowMessageBox(title, message);        
+    }
+
+    protected Task<bool?> ConfirmActionAsync(string title, MarkupString message)
+    {
+        return _dialogService!.ShowMessageBox(title, message);
+    }
 }

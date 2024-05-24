@@ -42,6 +42,9 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<ActionBase, Task>? _addChildActionAsyncCommand;
     public Func<ActionBase, Task> AddChildActionAsyncCommand => _addChildActionAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleAddChildActionAsync, "Unable to add child action");
 
+    private Func<ActionBase, Task>? _removeActionAsyncCommand;
+    public Func<ActionBase, Task> RemoveActionAsyncCommand => _removeActionAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleRemoveActionAsync, "Unable to remove action");
+
     protected override async Task OnInitializedAsync()
     {
         var projectKey = Constants.Browser.ProjectKey(ProjectId);
@@ -55,7 +58,7 @@ public partial class EditProjectViewModel : ViewModelBase
 
         Console.WriteLine($"Displaying project '{CurrentProject.Name}'");
         SelectedTemplate = CurrentProject.AllTemplates
-            .First(x => x.Name == "main");
+            .First(x => x.Name == Template.MainTemplateName);
 
         Console.WriteLine($"Setting active template '{SelectedTemplate?.Name}'");
         await base.OnInitializedAsync();
@@ -90,5 +93,35 @@ public partial class EditProjectViewModel : ViewModelBase
         }
 
         action.AddSiblingAction(actionType);
+    }
+
+    private async Task HandleRemoveActionAsync(ActionBase action)
+    {
+        await Task.Yield();
+
+        var isConfirmed = await ConfirmActionAsync("Remove action?", "Remove action and all descendants?");
+
+        if (isConfirmed == true)
+        {
+            await RemoveActionAsync(action);
+        }        
+    }
+
+    private async Task RemoveActionAsync(ActionBase action)
+    {
+        if (action.ActionType == ActionType.Template)
+        {
+            if (action.Name == Template.MainTemplateName)
+            {
+                await ShowAlertAsync("Unable remove main template");
+                return;
+            }
+
+            CurrentProject.AllTemplates.Remove((action as Template)!);
+            SelectedTemplate = CurrentProject.AllTemplates.First();
+            return;
+        }
+
+        action.Parent!.RemoveChild(action);
     }
 }

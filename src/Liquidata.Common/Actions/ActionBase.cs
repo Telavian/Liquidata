@@ -96,6 +96,17 @@ namespace Liquidata.Common.Actions
             return results;
         }
 
+        public void RemoveChild(ActionBase child)
+        {
+            var actions = ChildActions
+                .ToList();
+
+            actions.Remove(child);
+
+            ChildActions = actions
+                .ToList();
+        }
+
         public override bool Equals(object? o)
         {
             var other = o as ActionBase;

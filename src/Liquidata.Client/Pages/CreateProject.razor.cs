@@ -53,7 +53,7 @@ public partial class CreateProjectViewModel : ViewModelBase
 
         newProject.AllTemplates.Add(new Template
         {
-            Name = "main"
+            Name = Template.MainTemplateName
         });
 
         Console.WriteLine($"Saving project '{Name}'");

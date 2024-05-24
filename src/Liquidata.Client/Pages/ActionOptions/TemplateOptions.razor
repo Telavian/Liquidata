@@ -1,9 +1,10 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Actions
 @using MudBlazor
 @inherits TemplateOptionsViewModel
 
 <MudStack>
-    <MudTextField Label="Name" Clearable="true" Disabled="@(Action!.Name == "main")"
+    <MudTextField Label="Name" Clearable="true" Disabled="@(Action!.Name == Template.MainTemplateName)"
                   @bind-Value="@TypedAction.Name" Variant="@Variant.Text" />
     <MudTextField Label="Url" Clearable="true"
                   @bind-Value="@TypedAction.Url" Variant="@Variant.Text" />

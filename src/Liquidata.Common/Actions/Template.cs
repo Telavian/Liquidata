@@ -2,6 +2,8 @@
 
 public class Template : ActionBase
 {
+    public const string MainTemplateName = "main";
+
     public override ActionType ActionType => ActionType.Template;
     public override bool AllowChildren => true;
 
