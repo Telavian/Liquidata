@@ -3,35 +3,49 @@
 @using MudBlazor
 @inherits ActionDisplayViewModel
 
-<div>
-    @if (Action?.ActionType == ActionType.Template) { <TemplateDisplay Action="Action" Parent="Parent" /> }
+<MudStack Row="true" style="width: 100%;"
+          onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
+          onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
+    <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
+                         Icon="@Icons.Material.Filled.Block" ToggledIcon="@Icons.Material.Filled.Block" ToggledColor="Color.Error"
+                         @bind-Toggled="Action!.IsDisabled" />
 
-    else if (Action?.ActionType == ActionType.Select) { <SelectDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectDisplay Action="Action" Parent="Parent" /> }
+    <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
 
-    else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Extract) { <ExtractDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Log) { <LogDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Scope) { <ScopeDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Store) { <StoreDisplay Action="Action" Parent="Parent" /> }
+    <div>
+        @if (Action?.ActionType == ActionType.Template) { <TemplateDisplay Action="Action" Parent="Parent" /> }
 
-    else if (Action?.ActionType == ActionType.Conditional) { <ConditionalDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Foreach) { <ForeachDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Jump) { <JumpDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.JumpTarget) { <JumpTargetDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Select) { <SelectDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectDisplay Action="Action" Parent="Parent" /> }
 
-    else if (Action?.ActionType == ActionType.Click) { <ClickDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Hover) { <HoverDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Input) { <InputDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Keypress) { <KeypressDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Reload) { <ReloadDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Scroll) { <ScrollDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Stop) { <StopDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.StopIf) { <StopIfDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Wait) { <WaitDisplay Action="Action" Parent="Parent" /> }
-    else { <ErrorDisplay Action="Action" Parent="Parent" /> }
-</div>
+        else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Extract) { <ExtractDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Log) { <LogDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Scope) { <ScopeDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Store) { <StoreDisplay Action="Action" Parent="Parent" /> }
+
+        else if (Action?.ActionType == ActionType.Conditional) { <ConditionalDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Foreach) { <ForeachDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Jump) { <JumpDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.JumpTarget) { <JumpTargetDisplay Action="Action" Parent="Parent" /> }
+
+        else if (Action?.ActionType == ActionType.Click) { <ClickDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Hover) { <HoverDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Input) { <InputDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Keypress) { <KeypressDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Reload) { <ReloadDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Scroll) { <ScrollDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Stop) { <StopDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.StopIf) { <StopIfDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Wait) { <WaitDisplay Action="Action" Parent="Parent" /> }
+        else { <ErrorDisplay Action="Action" Parent="Parent" /> }
+    </div>
+
+    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Success"
+                   Style="@BuildItemVisibility(IsMouseOver)"
+                   OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />
+</MudStack>
