@@ -50,7 +50,8 @@ namespace Liquidata.Common.Actions
             var action = actionType.CreateNewAction();
             action.Parent = this;
 
-            ChildActions = ChildActions.Concat([action])
+            ChildActions = (ChildActions ?? [])
+                .Concat([action])
                 .ToList();
         }
 
@@ -59,7 +60,7 @@ namespace Liquidata.Common.Actions
             var action = actionType.CreateNewAction();
             action.Parent = Parent;
 
-            var actionsList = Parent!.ChildActions
+            var actionsList = (Parent!.ChildActions ?? [])
                 .ToList();
 
             var index = actionsList.IndexOf(this);
@@ -72,33 +73,20 @@ namespace Liquidata.Common.Actions
         {
             Parent = parent;
 
-            foreach (var child in ChildActions)
+            foreach (var child in ChildActions ?? [])
             {
                 child.RestoreParentReferences(this);
             }
         }
 
-        public ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter, List<ActionBase>? results = null)
+        public ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter)
         {
-            results ??= new List<ActionBase>();
-
-            var isMatch = filter(this);
-            if (isMatch)
-            {
-                results.Add(this);
-            }
-
-            foreach (var child in ChildActions)
-            {
-                FindActions(filter, results);
-            }
-
-            return results;
+            return FindActions(filter, new List<ActionBase>());
         }
 
         public void RemoveChild(ActionBase child)
         {
-            var actions = ChildActions
+            var actions = (ChildActions ?? [])
                 .ToList();
 
             actions.Remove(child);
@@ -121,6 +109,24 @@ namespace Liquidata.Common.Actions
         public override string ToString()
         {
             return Name;
-        }        
+        }
+
+        private ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter, List<ActionBase>? results = null)
+        {
+            results ??= new List<ActionBase>();
+
+            var isMatch = filter(this);
+            if (isMatch)
+            {
+                results.Add(this);
+            }
+
+            foreach (var child in ChildActions ?? [])
+            {
+                child.FindActions(filter, results);
+            }
+
+            return results;
+        }
     }
 }

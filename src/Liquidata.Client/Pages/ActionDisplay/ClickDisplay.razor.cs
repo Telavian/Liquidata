@@ -7,6 +7,13 @@ namespace Liquidata.Client.Pages.ActionDisplay;
 
 public partial class ClickDisplayViewModel : ActionDisplayViewModelBase<ClickAction>
 {
+    public Template? ExecutionTemplate
+    {
+        get => Parent?.CurrentProject?.AllTemplates
+            .FirstOrDefault(x => x.ActionId == TypedAction.ExecutionTemplateId);
+        set => TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
+    }
+
     protected string BuildActionText()
     {
         if (TypedAction.ClickType == ClickType.Continue)
@@ -15,7 +22,7 @@ public partial class ClickDisplayViewModel : ActionDisplayViewModelBase<ClickAct
         }
         else if (TypedAction.ClickType == ClickType.ExecuteTemplate)
         {
-            return $"Click and run {TypedAction?.ExecutionTemplate?.Name}";
+            return $"Click and run {ExecutionTemplate?.Name}";
         }
 
         return "";

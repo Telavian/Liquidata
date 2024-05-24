@@ -6,5 +6,12 @@ namespace Liquidata.Client.Pages.ActionOptions;
 
 public partial class JumpOptionsViewModel : ActionOptionsViewModelBase<JumpAction>
 {
-
+    public JumpTargetAction? JumpTarget
+    {
+        get => Parent?.SelectedTemplate
+            ?.FindActions(x => x.ActionId == TypedAction.JumpTargetId)
+            ?.OfType<JumpTargetAction>()
+            ?.FirstOrDefault();
+        set => TypedAction.JumpTargetId = value?.ActionId ?? null;
+    }
 }

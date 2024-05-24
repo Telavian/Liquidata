@@ -4,8 +4,8 @@
 
 <MudStack>
     <MudSelect Label="Jump target" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-                MultiSelection="false" @bind-Value="TypedAction.JumpTarget">
-        @foreach (var item in Parent!.SelectedTemplate.FindAllJumpTargets())
+                MultiSelection="false" @bind-Value="JumpTarget">
+        @foreach (var item in Parent!.SelectedTemplate?.FindAllJumpTargets() ?? [])
         {
             <MudSelectItem Value="@item">@item.Name</MudSelectItem>
         }

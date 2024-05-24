@@ -260,16 +260,16 @@ public partial class ViewModelBase : LayoutComponentBase
     protected async Task NavigateToAsync(string url, bool forceLoad = false, bool replace = false)
     {
         await Task.Yield();
-        _navigationManager!.NavigateTo(url, forceLoad, replace);        
+        _navigationManager!.NavigateTo(url, forceLoad, replace);
     }
 
     protected Task<bool?> ConfirmActionAsync(string title, string message)
     {
-        return _dialogService!.ShowMessageBox(title, message);        
+        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL");
     }
 
     protected Task<bool?> ConfirmActionAsync(string title, MarkupString message)
     {
-        return _dialogService!.ShowMessageBox(title, message);
+        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL");
     }
 }

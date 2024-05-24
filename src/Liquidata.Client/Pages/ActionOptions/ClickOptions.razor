@@ -5,8 +5,8 @@
 @inherits ClickOptionsViewModel
 
 <MudStack>
-    <MudSelect Label="Click action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.ClickType">
+    <MudSelect Label="Click action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"               
+               MultiSelection="false" @bind-Value="ClickType">
         @foreach (var type in Enum.GetValues<ClickType>())
         {
             <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
@@ -16,7 +16,7 @@
     @if (TypedAction.ClickType == ClickType.ExecuteTemplate)
     {
         <MudSelect Label="Template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-                   MultiSelection="false" @bind-Value="TypedAction.ExecutionTemplate">
+                   MultiSelection="false" @bind-Value="ExecutionTemplate">
             @foreach (var item in Parent!.CurrentProject.AllTemplates)
             {
                 <MudSelectItem Value="@item">@item.Name</MudSelectItem>
@@ -39,7 +39,7 @@
         </MudSwitch>
     </MudStack>
 
-    <MudSlider Min="0" Max="5000" Step="250"
+    <MudSlider Min="0" Max="5000" Step="250"        
         @bind-Value="@TypedAction.WaitMilliseconds">
         Wait @(TypedAction.WaitMilliseconds) milliseconds
     </MudSlider>

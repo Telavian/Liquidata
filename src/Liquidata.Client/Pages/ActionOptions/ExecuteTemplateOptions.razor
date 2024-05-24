@@ -4,7 +4,7 @@
 
 <MudStack>
     <MudSelect Label="Template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.ExecutionTemplate">
+               MultiSelection="false" @bind-Value="ExecutionTemplate">
         @foreach (var item in Parent!.CurrentProject.AllTemplates)
         {
             <MudSelectItem Value="@item">@item.Name</MudSelectItem>

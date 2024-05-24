@@ -122,6 +122,14 @@ public partial class EditProjectViewModel : ViewModelBase
             return;
         }
 
+        var isSelected = SelectedAction == action ||
+            action.FindActions(x => x.ActionId == action.ActionId).Any();
+
         action.Parent!.RemoveChild(action);
+
+        if (isSelected)
+        {
+            SelectedAction = null;
+        }
     }
 }
