@@ -19,11 +19,14 @@
                              @bind-Value="@LoadImages" />
             </MudStack>
 
-            <MudButton Style="width: 100px; margin-top: auto; margin-left: auto;" 
-                       Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"
-                       OnClick="@(() => CreateProjectAsyncCommand())">
-                Create
-            </MudButton>
+            <div style="width: 100px; margin-top: auto; margin-left: auto;">
+                <MudTooltip Text="Create new project" Delay="500">
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"                               
+                               OnClick="@(() => CreateProjectAsyncCommand())">
+                        Create
+                    </MudButton>
+                </MudTooltip>
+            </div>
         </MudStack>
     </MudPaper>
 </div>

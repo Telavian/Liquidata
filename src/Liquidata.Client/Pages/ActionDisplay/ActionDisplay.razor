@@ -6,9 +6,11 @@
 <MudStack Row="true" style="width: 100%;"
           onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
           onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
-    <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
-                         Icon="@Icons.Material.Filled.Block" ToggledIcon="@Icons.Material.Filled.Block" ToggledColor="Color.Error"
-                         @bind-Toggled="Action!.IsDisabled" />
+    <MudTooltip Text="Toggles whether the action is executed" Delay="500">
+        <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
+                             Icon="@Icons.Material.Filled.Block" ToggledIcon="@Icons.Material.Filled.Block" ToggledColor="Color.Error"
+                             @bind-Toggled="Action!.IsDisabled" />
+    </MudTooltip>
 
     <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
 
@@ -45,7 +47,15 @@
         else { <ErrorDisplay Action="Action" Parent="Parent" /> }
     </div>
 
-    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Success"
-                   Style="@BuildItemVisibility(IsMouseOver)"
-                   OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />
+    <MudTooltip Text="Add a new action" Delay="500">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Success"                       
+                       Style="@BuildItemVisibility(IsMouseOver)"
+                       OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />
+    </MudTooltip>
+
+    <MudTooltip Text="Remove action and all descendents" Delay="500">
+        <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error"                       
+                       Style="@BuildItemVisibility(IsMouseOver)"
+                       OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />
+    </MudTooltip>
 </MudStack>

@@ -21,13 +21,19 @@
     <!-- Actions -->
     <div style="grid-row: 1 / span 2; grid-column: 2; background-color: lightgray; height: 100%; padding: 5px;">
         <div style="display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto 1fr auto; height: 100%;">
-            <MudIconButton Style="grid-row: 1; grid-column: 1;"
-                           Variant="Variant.Filled" Icon="@Icons.Material.Filled.Settings" />
+            <div style="grid-row: 1; grid-column: 1;">
+                <MudTooltip Text="Display project settings" Delay="500">
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Settings" />
+                </MudTooltip>                
+            </div>
 
-            <MudButton Style="grid-row: 1; grid-column: 3;"
-                       Color="@Color.Primary" Variant="Variant.Filled">
-                Select
-            </MudButton>
+            <div style="grid-row: 1; grid-column: 3;">
+                <MudTooltip Text="Toggles browser selection mode" Delay="500">
+                    <MudButton Color="@Color.Primary" Variant="Variant.Filled">
+                        Select
+                    </MudButton>
+                </MudTooltip>
+            </div>
 
             <div style="grid-row: 2; grid-column: 1 / span 2; margin-top: 5px;">
                 <MudSelect Dense="true" Label="Active template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
@@ -39,9 +45,12 @@
                 </MudSelect>
             </div>
 
-            <MudIconButton Style="grid-row: 2; grid-column: 3; margin-top: 5px; margin-left: 5px;"
-                           Icon="@Icons.Material.Filled.AddCard" Size="@Size.Large" Variant="Variant.Filled" 
-                           OnClick="@(() => AddTemplateAsyncCommand())" />
+            <div style="grid-row: 2; grid-column: 3; margin-top: 5px; margin-left: 5px;">
+                <MudTooltip Text="Add a new template" Delay="500">
+                    <MudIconButton Icon="@Icons.Material.Filled.AddCard" Size="@Size.Large" Variant="Variant.Filled"
+                                   OnClick="@(() => AddTemplateAsyncCommand())" />
+                </MudTooltip>
+            </div>
 
             <MudTreeView Style="grid-row: 3; grid-column: 1 / span 3; height: 100%; margin-top: 5px;" ExpandOnDoubleClick="true"
                          SelectionMode="SelectionMode.SingleSelection" Color="Color.Success" ReadOnly="false" Hover="true"

@@ -6,12 +6,15 @@
 <div style="height: 100%; display: grid; grid-template-columns: 1fr 750px 1fr; grid-template-rows: 1fr 500px 1fr;">
     <MudPaper Style="grid-row: 2; grid-column: 2; height: 100%; padding: 5px;">
         <MudStack Row="true" Style="height: 100%;">
-            <MudButton Style="height: 100px; width: 250px; margin-top: auto; margin-bottom: auto;" 
-            Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Info"
-                       IconClass="iconSize75"
-                       OnClick="@(() => CreateProjectAsyncCommand())">
-                Create
-            </MudButton>
+            <div style="height: 100px; width: 250px; margin-top: auto; margin-bottom: auto;">
+                <MudTooltip Text="Create new project" Delay="500">
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Info"
+                               IconClass="iconSize75"                               
+                               OnClick="@(() => CreateProjectAsyncCommand())">
+                        Create
+                    </MudButton>
+                </MudTooltip>
+            </div>
 
             <MudPaper Style="grid-row: 1; grid-column: 2; height: 100%; width: 100%;" Elevation="30" Outlined="true">
                 <MudStack Style="height: 100%;">
@@ -25,11 +28,14 @@
                         }
                     </MudList>
 
-                    <MudButton Style="width: 100px; margin-right: 5px; margin-bottom: 5px; margin-left: auto;"
-                               Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"
-                               OnClick="@(() => LoadProjectAsyncCommand())">
-                        Load
-                    </MudButton>
+                    <div style="width: 100px; margin-bottom: 5px; margin-left: auto;">
+                        <MudTooltip Text="Load existing project" Delay="500">
+                            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"
+                                       OnClick="@(() => LoadProjectAsyncCommand())">
+                                Load
+                            </MudButton>
+                        </MudTooltip>
+                    </div>
                 </MudStack>
             </MudPaper>
         </MudStack>

@@ -74,9 +74,11 @@
     </DialogContent>
 
     <DialogActions>
-        <MudButton Color="Color.Error" Variant="Variant.Filled"
-                   OnClick="@(() => CloseDialogAsyncCommand())">
-            Cancel
-        </MudButton>
+        <MudTooltip Text="Cancel adding action" Delay="500">
+            <MudButton Color="Color.Error" Variant="Variant.Filled"                       
+                       OnClick="@(() => CloseDialogAsyncCommand())">
+                Cancel
+            </MudButton>
+        </MudTooltip>
     </DialogActions>
 </MudDialog>
