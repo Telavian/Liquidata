@@ -1,0 +1,7 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits ExecuteScriptOptionsViewModel
+
+<MudTextField Label="Script" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
+              @bind-Value="TypedAction.Script" />
+

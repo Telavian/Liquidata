@@ -1,0 +1,26 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions.Enums
+@using Liquidata.Common.Extensions
+@using MudBlazor
+@inherits InputOptionsViewModel
+
+<MudStack>
+    <MudSelect Label="Script action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+               MultiSelection="false" @bind-Value="ScriptType">
+        @foreach (var type in Enum.GetValues<ScriptType>())
+        {
+            <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
+        }
+    </MudSelect>
+
+    <MudSelect Label="Expression type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+               MultiSelection="false" @bind-Value="TypedAction.ExpressionType">
+        @foreach (var type in Enum.GetValues<ExpressionType>())
+        {
+            <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
+        }
+    </MudSelect>
+
+    <MudTextField Label="Script" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
+                  @bind-Value="TypedAction.Script" />
+</MudStack>

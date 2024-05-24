@@ -1,0 +1,15 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions.Enums
+@using Liquidata.Common.Extensions
+@using MudBlazor
+@inherits StopOptionsViewModel
+
+<MudStack>
+    <MudSelect Label="Stop type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+               MultiSelection="false" @bind-Value="TypedAction.StopType">
+        @foreach (var type in Enum.GetValues<StopType>())
+        {
+            <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
+        }
+    </MudSelect>
+</MudStack>

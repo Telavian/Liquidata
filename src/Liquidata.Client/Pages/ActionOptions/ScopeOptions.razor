@@ -1,0 +1,8 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits ScopeOptionsViewModel
+
+<MudStack>
+    <MudTextField Label="Name" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
+                  @bind-Value="TypedAction.Name" />
+</MudStack>

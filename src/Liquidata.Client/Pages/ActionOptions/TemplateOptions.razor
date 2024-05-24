@@ -1,0 +1,10 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits TemplateOptionsViewModel
+
+<MudStack>
+    <MudTextField Label="Name" Clearable="true" Disabled="@(Action!.Name == "main")"
+                  @bind-Value="@TypedAction.Name" Variant="@Variant.Text" />
+    <MudTextField Label="Url" Clearable="true"
+                  @bind-Value="@TypedAction.Url" Variant="@Variant.Text" />
+</MudStack>

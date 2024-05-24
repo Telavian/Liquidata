@@ -1,0 +1,16 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits SelectOptionsViewModel
+
+<MudStack>
+    <MudTextField Label="Name" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
+                  @bind-Value="TypedAction.Name" />
+
+    <MudTextField Label="XPath" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
+                  @bind-Value="TypedAction.XPath" />
+
+    <MudSlider Min="0" Max="5000" Step="250"
+               @bind-Value="@TypedAction.WaitMilliseconds">
+        Wait @(TypedAction.WaitMilliseconds) milliseconds
+    </MudSlider>
+</MudStack>

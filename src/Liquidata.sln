@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.Client", "Liquidata.Client\Liquidata.Client.csproj", "{4E5E31CA-5208-4506-A1F7-4F1534164162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquidata.Common", "Liquidata.Common\Liquidata.Common.csproj", "{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E5E31CA-5208-4506-A1F7-4F1534164162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5E31CA-5208-4506-A1F7-4F1534164162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5E31CA-5208-4506-A1F7-4F1534164162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5E31CA-5208-4506-A1F7-4F1534164162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F08E446-0B19-4A7A-9A0F-C0CA53F92A67}
+	EndGlobalSection
+EndGlobal

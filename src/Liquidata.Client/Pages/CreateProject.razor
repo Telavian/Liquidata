@@ -1,0 +1,29 @@
+﻿@page "/CreateProject"
+@layout MainLayout
+@using MudBlazor
+@inherits CreateProjectViewModel
+
+<div style="height: 100%; display: grid; grid-template-columns: 1fr 500px 1fr; grid-template-rows: 1fr 500px 1fr;">
+    <MudPaper Style="grid-row: 2; grid-column: 2; padding: 5px; height: 100%;">
+        <MudStack Style="height: 100%;">
+            <MudStack AlignItems="AlignItems.Stretch">
+                <h1>Create Project</h1>
+
+                <MudTextField Label="Project Name" Clearable="true"
+                              @bind-Value="@Name" Variant="@Variant.Text" />
+
+                <MudTextField Label="Starting Url" Clearable="true"
+                              @bind-Value="@Url" Variant="@Variant.Text" />
+
+                <MudCheckBox Label="Load Images" LabelPosition="LabelPosition.Start" Color="Color.Secondary"
+                             @bind-Value="@LoadImages" />
+            </MudStack>
+
+            <MudButton Style="width: 100px; margin-top: auto; margin-left: auto;" 
+                       Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"
+                       OnClick="@(() => CreateProjectAsyncCommand())">
+                Create
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+</div>

@@ -1,0 +1,20 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@inherits ClickDisplayViewModel
+
+<MudStack Row="true" style="width: 100%;"
+          onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
+          onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
+    <MudToggleIconButton Icon="@Icons.Material.Filled.Block" ToggledIcon="@Icons.Material.Filled.Block" ToggledColor="Color.Error"
+                         Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
+                         @bind-Toggled="Action!.IsDisabled" />
+
+    <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
+    <div class="verticalCenter">@BuildActionText()</div>
+
+    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Success"
+                   Style="@BuildItemVisibility(IsMouseOver)"
+                   OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action))" />
+</MudStack>
+
