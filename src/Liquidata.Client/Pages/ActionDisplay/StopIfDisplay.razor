@@ -1,9 +1,10 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Extensions
 @using MudBlazor
 @inherits StopIfDisplayViewModel
 
 <MudStack Row="true" style="width: 100%; height: 100%;">
     <div class="verticalCenter">
-        Stop execution if
+        Stop @(TypedAction.StopType.BuildFriendlyName(true)) execution if
     </div>
 </MudStack>

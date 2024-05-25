@@ -1,16 +1,17 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Extensions
 @using MudBlazor
 @inherits KeypressOptionsViewModel
 
 <MudStack>
     <MudTextField Label="Key" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
-                  ReadOnly="true" Value="@BuildKeybordActionText()"               
+                  ReadOnly="true" Value="@(TypedAction.BuildKeypressText())"               
                   KeyDownPreventDefault="true"
                   OnKeyDown="@(args => UpdateKeypressedAsyncCommand(args))" />
     
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@TypedAction.WaitMilliseconds">
-        Wait @(TypedAction.WaitMilliseconds) milliseconds
+        Wait @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 
     <MudStack Row="true">

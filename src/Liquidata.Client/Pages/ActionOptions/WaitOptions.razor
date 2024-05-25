@@ -1,10 +1,11 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Extensions
 @using MudBlazor
 @inherits WaitOptionsViewModel
 
 <MudStack>   
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@TypedAction.WaitMilliseconds">
-        Wait @(TypedAction.WaitMilliseconds) milliseconds
+        Wait @(TypedAction.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

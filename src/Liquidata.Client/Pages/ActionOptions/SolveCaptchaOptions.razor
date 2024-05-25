@@ -1,11 +1,12 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Extensions
 @using MudBlazor
 @inherits SolveCaptchaOptionsViewModel
 
 <MudStack>
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@TypedAction.WaitMilliseconds">
-        Wait @(TypedAction.WaitMilliseconds) milliseconds
+        Wait @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 
     <MudStack Row="true">

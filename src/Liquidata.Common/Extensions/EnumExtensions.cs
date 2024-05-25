@@ -4,7 +4,7 @@ namespace Liquidata.Common.Extensions
 {
     public static class EnumExtensions
     {
-        public static string BuildFriendlyName(this Enum item)
+        public static string BuildFriendlyName(this Enum item, bool lowercase = false)
         {
             var text = item
                 .ToString();
@@ -17,6 +17,11 @@ namespace Liquidata.Common.Extensions
                 if (x > 0 && char.IsUpper(current))
                 {
                     result.Append(' ');
+                }
+
+                if (lowercase)
+                {
+                    current = char.ToLower(current);
                 }
 
                 result.Append(current);
