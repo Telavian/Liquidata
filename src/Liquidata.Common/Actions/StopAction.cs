@@ -8,4 +8,9 @@ public class StopAction : ActionBase
     public override bool AllowChildren => false;
 
     public StopType StopType { get; set; }
+
+    public override string[] BuildValidationErrors()
+    {
+        return [];
+    }
 }

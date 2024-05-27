@@ -7,7 +7,13 @@ public class Template : ActionBase
     public override ActionType ActionType => ActionType.Template;
     public override bool AllowChildren => true;
 
-    public string Url { get; set; } = "";    
+    public string Url { get; set; } = "";
+
+    public override string[] BuildValidationErrors()
+    {
+        // TODO: Url required?
+        return [];
+    }
 
     public ICollection<JumpTargetAction> FindAllJumpTargets()
     {

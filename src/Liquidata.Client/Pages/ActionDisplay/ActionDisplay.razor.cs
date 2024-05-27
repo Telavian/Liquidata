@@ -49,6 +49,27 @@ public partial class ActionDisplayViewModel : ViewModelBase
         return Action!.ActionType.BuildActionColor();
     }
 
+    protected string BuildValidationVisibility()
+    {
+        var errors = Action!.BuildValidationErrors();
+        var isInvalid = !Action.IsDisabled && errors.Length > 0;
+        return BuildItemVisibility(isInvalid);
+    }
+
+    protected MarkupString BuildValidationErrors()
+    {
+        var errors = Action!.BuildValidationErrors();        
+
+        if (errors.Length == 0)
+        {
+            return (MarkupString)"";
+        }
+
+        var formattedErrors = errors
+            .Select(x => $"<br>{x}");
+        return (MarkupString)$"Validation errors: {string.Join("", formattedErrors)}";
+    }
+
     private async Task UpdateIsMouseOverAsync(bool isOver)
     {
         await Task.Yield();

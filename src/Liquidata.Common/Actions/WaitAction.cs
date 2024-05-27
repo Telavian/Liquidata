@@ -6,4 +6,9 @@ public class WaitAction : ActionBase
     public override bool AllowChildren => false;
 
     public int WaitMilliseconds { get; set; }
+
+    public override string[] BuildValidationErrors()
+    {
+        return [];
+    }
 }

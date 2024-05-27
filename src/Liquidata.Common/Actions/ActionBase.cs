@@ -43,7 +43,9 @@ namespace Liquidata.Common.Actions
 
         [JsonIgnore]
         public ActionBase? Parent { get; set; } = null!;
-        public IReadOnlyCollection<ActionBase> ChildActions { get; set; } = new List<ActionBase>();        
+        public IReadOnlyCollection<ActionBase> ChildActions { get; set; } = new List<ActionBase>();
+
+        public abstract string[] BuildValidationErrors();
 
         public void AddChildAction(ActionType actionType)
         {

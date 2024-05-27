@@ -1,4 +1,5 @@
 ﻿using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Extensions;
 
 namespace Liquidata.Common.Actions;
 
@@ -10,4 +11,11 @@ public class LogAction : ActionBase
     public ScriptType ScriptType { get; set; }
     public ExpressionType ExpressionType { get; set; }
     public string? Script { get; set; } = null!;
+
+    public override string[] BuildValidationErrors()
+    {
+        return Script.IsNotDefined()
+            ? (["No message defined"])
+            : ([]);
+    }
 }
