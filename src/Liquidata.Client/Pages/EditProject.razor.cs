@@ -2,6 +2,7 @@
 using Liquidata.Client.Pages.Dialogs;
 using Liquidata.Common;
 using Liquidata.Common.Actions;
+using Liquidata.Common.Actions.Enums;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -18,6 +19,7 @@ public partial class EditProjectViewModel : ViewModelBase
     public ElementReference OptionsPanel { get; set; }
 
     public Project CurrentProject { get; set; } = new Project();
+    public BrowserMode BrowserMode { get; set; } = BrowserMode.Select;
 
     private Template _selectedTemplate = new Template();
     public Template SelectedTemplate 
@@ -45,6 +47,9 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<ActionBase, Task>? _removeActionAsyncCommand;
     public Func<ActionBase, Task> RemoveActionAsyncCommand => _removeActionAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleRemoveActionAsync, "Unable to remove action");
 
+    private Func<Task>? _toggleBrowserModeAsyncCommand;
+    public Func<Task> ToggleBrowserModeAsyncCommand => _toggleBrowserModeAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleToggleBrowserModeAsync, "Unable to toggle browser mode");
+
     protected override async Task OnInitializedAsync()
     {
         var projectKey = Constants.Browser.ProjectKey(ProjectId);
@@ -62,6 +67,21 @@ public partial class EditProjectViewModel : ViewModelBase
 
         Console.WriteLine($"Setting active template '{SelectedTemplate?.Name}'");
         await base.OnInitializedAsync();
+    }
+
+    protected Color BuildBrowserModeColor()
+    {
+        if (BrowserMode == BrowserMode.Browse)
+        {
+            return Color.Success;
+        }
+        
+        if (BrowserMode == BrowserMode.Select)
+        {
+            return Color.Primary;
+        }
+
+        throw new Exception($"Unknown browser mode: '{BrowserMode}'");
     }
 
     private async Task HandleAddTemplateAsync()
@@ -105,6 +125,22 @@ public partial class EditProjectViewModel : ViewModelBase
         {
             await RemoveActionAsync(action);
         }        
+    }
+
+    private async Task HandleToggleBrowserModeAsync()
+    {
+        await Task.Yield();
+
+        // TODO: Update browser
+
+        if (BrowserMode == BrowserMode.Browse)
+        {
+            BrowserMode = BrowserMode.Select;
+        }
+        else if (BrowserMode == BrowserMode.Select)
+        {
+            BrowserMode = BrowserMode.Browse;
+        }
     }
 
     private async Task RemoveActionAsync(ActionBase action)
