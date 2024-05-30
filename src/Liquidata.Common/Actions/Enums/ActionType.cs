@@ -1,9 +1,9 @@
-﻿namespace Liquidata.Common.Actions
+﻿namespace Liquidata.Common.Actions.Enums
 {
     public enum ActionType
     {
         Unknown = 0,
-        
+
         // Template
         Template,
 
@@ -29,7 +29,7 @@
         // Interaction
         Click,
         ExecuteScript,
-        Hover,        
+        Hover,
         Input,
         Keypress,
         Reload,

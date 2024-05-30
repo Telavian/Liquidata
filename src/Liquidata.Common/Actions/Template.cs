@@ -1,11 +1,14 @@
-﻿namespace Liquidata.Common.Actions;
+﻿using Liquidata.Common.Actions.Enums;
+using System.Text.Json.Serialization;
+
+namespace Liquidata.Common.Actions;
 
 public class Template : ActionBase
 {
     public const string MainTemplateName = "main";
 
-    public override ActionType ActionType => ActionType.Template;
-    public override bool AllowChildren => true;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Template;
+    [JsonIgnore] public override bool AllowChildren => true;
 
     public string Url { get; set; } = "";
 

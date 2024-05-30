@@ -85,7 +85,20 @@ public partial class ViewModelBase : LayoutComponentBase
         property = newValue;
         _isUpdated = true;
 
-        action(newValue);
+        AttemptAction(() => action(newValue), "Unable to process property changed");        
+    }
+
+    protected void UpdateProperty<T>(ref T property, T newValue, Func<T, Task> action)
+    {
+        if (EqualityComparer<T>.Default.Equals(property, newValue))
+        {
+            return;
+        }
+
+        property = newValue;
+        _isUpdated = true;
+
+        _ = AttemptActionAsync(async () => await action(newValue), "Unable to process property changed");
     }
 
     protected async Task<T?> InvokeAsync<T>(Func<Task<T>> action)

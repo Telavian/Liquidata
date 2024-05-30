@@ -1,12 +1,13 @@
 ﻿using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class KeypressAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Keypress;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Keypress;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public bool IsShiftPressed { get; set; }
     public bool IsCtrlPressed { get; set; }

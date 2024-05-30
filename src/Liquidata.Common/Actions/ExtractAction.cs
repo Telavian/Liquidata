@@ -1,12 +1,13 @@
 ﻿using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class ExtractAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Extract;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Extract;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public ScriptType ScriptType { get; set; }    
     public string? Script { get; set; } = null!;

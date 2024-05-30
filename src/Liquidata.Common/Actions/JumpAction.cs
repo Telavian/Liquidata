@@ -1,12 +1,13 @@
 ﻿using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class JumpAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Jump;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Jump;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public Guid? JumpTargetId { get; set; } = null!;
     public int WaitMilliseconds { get; set; }

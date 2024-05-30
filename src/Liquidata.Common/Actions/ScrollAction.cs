@@ -1,11 +1,12 @@
 ﻿using Liquidata.Common.Actions.Enums;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class ScrollAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Scroll;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Scroll;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public ScrollType ScrollType { get; set; }
     public int WaitMilliseconds { get; set; }

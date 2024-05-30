@@ -1,9 +1,12 @@
-﻿namespace Liquidata.Common.Actions;
+﻿using Liquidata.Common.Actions.Enums;
+using System.Text.Json.Serialization;
+
+namespace Liquidata.Common.Actions;
 
 public class ReloadAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Reload;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Reload;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public override string[] BuildValidationErrors()
     {

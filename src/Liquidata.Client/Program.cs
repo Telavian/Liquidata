@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using CurrieTechnologies.Razor.Clipboard;
 using Liquidata.Client;
+using Liquidata.Client.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -15,11 +16,7 @@ builder.Services.AddMudServices();
 builder.Services.AddClipboard();
 builder.Services.AddBlazoredLocalStorage(o =>
 {
-    o.JsonSerializerOptions = new JsonSerializerOptions()
-    {
-        ReferenceHandler = ReferenceHandler.Preserve,        
-    };
-
+    o.JsonSerializerOptions = new JsonSerializerOptions();
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 

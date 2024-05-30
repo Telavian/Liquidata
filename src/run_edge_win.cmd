@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --profile-directory=Default --user-data-dir=%temp% --disable-web-security --disable-site-isolation-trials

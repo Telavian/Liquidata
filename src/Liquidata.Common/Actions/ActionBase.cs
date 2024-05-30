@@ -1,4 +1,5 @@
-﻿using Liquidata.Common.Extensions;
+﻿using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions
@@ -34,8 +35,8 @@ namespace Liquidata.Common.Actions
     [JsonDerivedType(typeof(WaitAction), nameof(WaitAction))]
     public abstract class ActionBase
     {
-        public abstract ActionType ActionType { get; }
-        public abstract bool AllowChildren { get; }
+        [JsonIgnore] public abstract ActionType ActionType { get; }
+        [JsonIgnore] public abstract bool AllowChildren { get; }
 
         public Guid ActionId { get; init; } = Guid.NewGuid();
         public string Name { get; set; } = "";

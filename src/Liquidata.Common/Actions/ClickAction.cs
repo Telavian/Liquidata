@@ -1,12 +1,13 @@
 ﻿using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class ClickAction : ActionBase
-{
-    public override ActionType ActionType => ActionType.Click;
-    public override bool AllowChildren => false;
+{    
+    [JsonIgnore] public override ActionType ActionType => ActionType.Click;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public ClickType ClickType { get; set; } = ClickType.Continue;
     public Guid? ExecutionTemplateId { get; set; } = null!;

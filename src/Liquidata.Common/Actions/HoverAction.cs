@@ -1,9 +1,12 @@
-﻿namespace Liquidata.Common.Actions;
+﻿using Liquidata.Common.Actions.Enums;
+using System.Text.Json.Serialization;
+
+namespace Liquidata.Common.Actions;
 
 public class HoverAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Hover;
-    public override bool AllowChildren => false;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Hover;
+    [JsonIgnore] public override bool AllowChildren => false;
 
     public int WaitMilliseconds { get; set; }
 

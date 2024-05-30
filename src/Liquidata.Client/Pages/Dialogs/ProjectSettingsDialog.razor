@@ -1,0 +1,40 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits ProjectSettingsDialogViewModel
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Style="margin: 5px;">
+            <MudTextField Label="Project Name" Clearable="true"
+                          @bind-Value="@Name" Variant="@Variant.Text" />
+
+            <MudTextField Label="Starting Url" Clearable="true"
+                          @bind-Value="@Url" Variant="@Variant.Text" />
+
+            <MudCheckBox Label="Load Images" LabelPosition="LabelPosition.Start" Color="Color.Secondary"
+                         @bind-Value="@LoadImages" />
+
+            <MudCheckBox Label="Rotate IP Addresses" LabelPosition="LabelPosition.Start" Color="Color.Secondary"
+                         @bind-Value="@RotateIpAddresses" />
+
+            <MudNumericField Label="Concurrency" Clearable="true"
+                             @bind-Value="@Concurrency" Variant="@Variant.Text" />
+        </MudStack>
+    </DialogContent>
+
+    <DialogActions>
+        <MudTooltip Text="Add a new template" Delay="500">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled"                       
+                       OnClick="@(() => SaveSettingsAsyncCommand())">
+                Save
+            </MudButton>
+        </MudTooltip>        
+
+        <MudTooltip Text="Cancel adding template" Delay="500">
+            <MudButton Color="Color.Error" Variant="Variant.Filled"                       
+                       OnClick="@(() => CloseDialogAsyncCommand())">
+                Cancel
+            </MudButton>
+        </MudTooltip>
+    </DialogActions>
+</MudDialog>

@@ -1,11 +1,13 @@
-﻿using Liquidata.Common.Extensions;
+﻿using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Extensions;
+using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions;
 
 public class ScopeAction : ActionBase
 {
-    public override ActionType ActionType => ActionType.Scope;
-    public override bool AllowChildren => true;
+    [JsonIgnore] public override ActionType ActionType => ActionType.Scope;
+    [JsonIgnore] public override bool AllowChildren => true;
 
     public override string[] BuildValidationErrors()
     {

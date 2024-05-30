@@ -1,5 +1,5 @@
 ﻿using Liquidata.Client.Extensions;
-using Liquidata.Common.Actions;
+using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
