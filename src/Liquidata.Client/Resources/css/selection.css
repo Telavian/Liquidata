@@ -1,5 +1,5 @@
 ﻿.liquidata_selector_highlight {
-    outline: 5px solid #2378fa !important;
+    outline: 5px dotted #2378fa !important;
     outline-offset: 5px !important;
     box-shadow: 0 0 5px #2378fa !important;
     opacity: 1 !important;
@@ -12,22 +12,8 @@
     opacity: 1 !important;
 }
 
-.liquidata_selected_similar {
-    outline: 5px dotted #768dff !important;
-    outline-offset: 5px !important;
-    box-shadow: 0 0 5px #768dff !important;
-    opacity: 1 !important;
-}
-
 .liquidata_relative {
     outline: 5px solid #00a804 !important;
-    outline-offset: 5px !important;
-    box-shadow: 0 0 5px #00a804 !important;
-    opacity: 1 !important;
-}
-
-.liquidata_relative_similar {
-    outline: 5px dotted #00a804 !important;
     outline-offset: 5px !important;
     box-shadow: 0 0 5px #00a804 !important;
     opacity: 1 !important;

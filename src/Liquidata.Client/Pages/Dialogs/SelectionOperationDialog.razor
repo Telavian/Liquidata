@@ -1,0 +1,35 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@inherits SelectionOperationDialogViewModel
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Style="margin: 5px;">
+            <MudText>Selection is already defined.</MudText>
+
+            <MudStack Style="margin-top: 15px;" Row="true">
+                <MudButton Style="height: 50px;" StartIcon="@Icons.Material.TwoTone.Redo" 
+                           IconSize="Size.Large" Variant="Variant.Filled" Color="Color.Success"
+                           OnClick="@(() => SaveSelectionOperationAsyncCommand(SelectionOperation.Replace))">
+                    Replace
+                </MudButton>
+
+                <MudButton Style="margin-left: 15px; height: 50px;" StartIcon="@Icons.Material.TwoTone.MergeType" 
+                           IconSize="Size.Large" Variant="Variant.Filled" Color="Color.Info"
+                           OnClick="@(() => SaveSelectionOperationAsyncCommand(SelectionOperation.Combine))">
+                    Combine
+                </MudButton>
+            </MudStack>
+        </MudStack>
+    </DialogContent>
+
+    <DialogActions>
+        <MudTooltip Text="Cancel adding template" Delay="500">
+            <MudButton Color="Color.Error" Variant="Variant.Filled"                       
+                       OnClick="@(() => CloseDialogAsyncCommand())">
+                Cancel
+            </MudButton>
+        </MudTooltip>
+    </DialogActions>
+</MudDialog>

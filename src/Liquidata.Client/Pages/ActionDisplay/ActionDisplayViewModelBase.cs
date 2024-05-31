@@ -1,6 +1,6 @@
 ﻿using Liquidata.Client.Extensions;
 using Liquidata.Client.Pages.Common;
-using Liquidata.Common.Actions;
+using Liquidata.Common.Actions.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 

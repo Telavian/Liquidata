@@ -55,7 +55,8 @@ public partial class CreateProjectViewModel : ViewModelBase
 
         newProject.AllTemplates.Add(new Template
         {
-            Name = Template.MainTemplateName
+            Name = Template.MainTemplateName,
+            Url = Url ?? ""
         });
 
         Console.WriteLine($"Saving project '{Name}'");

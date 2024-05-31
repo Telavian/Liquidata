@@ -1,20 +1,35 @@
 ﻿using Liquidata.Common.Actions;
+using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Actions.Enums;
-using System.Text;
 
 namespace Liquidata.Common.Extensions
 {
     public static class ActionTypeExtensions
     {
+        public static bool IsTemplateAction(this ActionBase action)
+        {
+            return action.ActionType.IsTemplateAction();
+        }
+
         public static bool IsTemplateAction(this ActionType actionType)
         {
             return actionType is ActionType.Template;
+        }
+
+        public static bool IsSelectionAction(this ActionBase action)
+        {
+            return action.ActionType.IsSelectionAction();
         }
 
         public static bool IsSelectionAction(this ActionType actionType)
         {
             return actionType is ActionType.Select or 
                                  ActionType.RelativeSelect;
+        }
+
+        public static bool IsDataAction(this ActionBase action)
+        {
+            return action.ActionType.IsDataAction();
         }
 
         public static bool IsDataAction(this ActionType actionType)
@@ -27,6 +42,11 @@ namespace Liquidata.Common.Extensions
                                  ActionType.Store;
         }
 
+        public static bool IsLogicAction(this ActionBase action)
+        {
+            return action.ActionType.IsLogicAction();
+        }
+
         public static bool IsLogicAction(this ActionType actionType)
         {
             return actionType is ActionType.Conditional or
@@ -34,6 +54,11 @@ namespace Liquidata.Common.Extensions
                                  ActionType.Foreach or
                                  ActionType.Jump or
                                  ActionType.JumpTarget;
+        }
+
+        public static bool IsInteractionAction(this ActionBase action)
+        {
+            return action.ActionType.IsInteractionAction();
         }
 
         public static bool IsInteractionAction(this ActionType actionType)

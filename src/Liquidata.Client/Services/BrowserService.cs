@@ -8,10 +8,10 @@ namespace Liquidata.Client.Services;
 public class BrowserService(IJSRuntime jsRuntime)
 {
     private const string LD_Document = "LD_Document";
-    private const string IFrameContentDocument = "document.getElementById('liquidata_browser').contentDocument";    
+    private const string IFrameContentDocument = "document.getElementById('liquidata_browser').contentDocument";
 
-    private static string _selectionCss = null!;
-    private static string _selectionJs = null!;
+    private const string SelectedCSSClass = "liquidata_selected";
+    private const string RelativeSelectedCSSClass = "liquidata_relative";
 
     public async Task UpdateBrowserSelectionModeAsync(BrowserMode browserMode)
     {
@@ -26,6 +26,7 @@ public class BrowserService(IJSRuntime jsRuntime)
     public async Task InitializeBrowserAsync()
     {
         await AddSelectionCssAsync();
+        await AddXPathJsAsync();
         await AddSelectionJsAsync();
     }
 
@@ -75,6 +76,38 @@ public class BrowserService(IJSRuntime jsRuntime)
         return false;
     }
 
+    public async Task ClearCurrentSelectionsAsync()
+    {
+        await Task.Yield();
+        await ExecuteJavascriptAsync("globalThis.liquidata_removeAllSelectionHighlights()");
+    }
+
+    public async Task HighlightSelectionsAsync(string?[] directSelections)
+    {
+        foreach (var selection in directSelections)
+        {
+            if (string.IsNullOrWhiteSpace(selection))
+            {
+                continue;
+            }
+
+            await ExecuteJavascriptAsync($"globalThis.liquidata_highlightSelection(`{selection}`, `{SelectedCSSClass}`)");
+        }
+    }
+
+    public async Task HighlightRelativeSelectionsAsync(string?[] directSelections)
+    {
+        foreach (var selection in directSelections)
+        {
+            if (string.IsNullOrWhiteSpace(selection))
+            {
+                continue;
+            }
+
+            await ExecuteJavascriptAsync($"globalThis.liquidata_highlightSelection(`{selection}`, `{RelativeSelectedCSSClass}`)");
+        }
+    }
+
     private async Task AddSelectionCssAsync()
     {
         var css = await LoadSelectionCssAsync();
@@ -88,32 +121,31 @@ public class BrowserService(IJSRuntime jsRuntime)
         await ExecuteJavascriptAsync(js);
     }
 
+    private async Task AddXPathJsAsync()
+    {
+        var js = await LoadXPathJsAsync();
+        await ExecuteJavascriptAsync(js);
+    }
+
     private async Task AddSelectionJsAsync()
     {
         var js = await LoadSelectionJsAsync();
         await ExecuteJavascriptAsync(js);
     }
 
-    private async Task<string> LoadSelectionCssAsync()
+    private Task<string> LoadSelectionCssAsync()
     {
-        if (_selectionCss is not null)
-        {
-            return _selectionCss;
-        }
-
-        _selectionCss = await LoadResourceAsync("css.selection.css");
-        return _selectionCss;
+        return LoadResourceAsync("css.selection.css");
     }
 
-    private async Task<string> LoadSelectionJsAsync()
-    {
-        if (_selectionJs is not null)
-        {
-            return _selectionJs;
-        }
+    private Task<string> LoadSelectionJsAsync()
+    {        
+        return LoadResourceAsync("javascript.selection.js");        
+    }
 
-        _selectionJs = await LoadResourceAsync("javascript.selection.js");
-        return _selectionJs;
+    private Task<string> LoadXPathJsAsync()
+    {
+        return LoadResourceAsync("javascript.xpath.js");
     }
 
     private async Task<string> LoadResourceAsync(string name)

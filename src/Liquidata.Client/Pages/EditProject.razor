@@ -60,8 +60,8 @@
                          SelectionMode="SelectionMode.SingleSelection" Color="Color.Success" ReadOnly="false" Hover="true"
                          @bind-SelectedValue="SelectedAction" Items="@TemplateActionItems">
                 <ItemTemplate Context="item">
-                    <MudTreeViewItem Value="@item" Items="@item!.ChildActions">
-                        <BodyContent>        
+                    <MudTreeViewItem Value="@item" Items="@item!.ChildActions" Expanded="true">
+                        <BodyContent>
                             <ActionDisplay Action="@item" Parent="@this" />
                         </BodyContent>
                     </MudTreeViewItem>
@@ -78,7 +78,8 @@
 
     <!-- Browser -->
     <div style="grid-row: 1; grid-column: 3;">
-        <iframe id="liquidata_browser" src="@(CurrentProject.Url)" onload="@(() => BrowserLoadedAsyncCommand())" />
+        <iframe id="liquidata_browser" src="@(CurrentProject.Url)" 
+                onload="@(() => BrowserLoadedAsyncCommand())" />
     </div>
 
     <!-- Data -->

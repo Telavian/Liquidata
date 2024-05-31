@@ -243,10 +243,12 @@ public partial class ViewModelBase : LayoutComponentBase
         return (true, (TResult)dialogResult.Data);
     }
 
-    protected async Task<(bool success, TResult? value)> ShowDialogAsync<TDialog, TResult>(string title, DialogParameters parameters)
+    protected async Task<(bool success, TResult? value)> ShowDialogAsync<TDialog, TResult>(string title, DialogParameters parameters = null!)
         where TDialog : IComponent
-    {
+    {        
         await Task.Yield();
+        
+        parameters ??= new DialogParameters();
         var result = await _dialogService!.ShowAsync<TDialog>(title, parameters);
 
         if (result is null)

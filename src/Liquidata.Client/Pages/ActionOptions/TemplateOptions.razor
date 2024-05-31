@@ -4,8 +4,10 @@
 @inherits TemplateOptionsViewModel
 
 <MudStack>
-    <MudTextField Label="Name" Clearable="true" Disabled="@(Action!.Name == Template.MainTemplateName)"
-                  @bind-Value="@TypedAction.Name" Variant="@Variant.Text" />
-    <MudTextField Label="Url" Clearable="true"
-                  @bind-Value="@TypedAction.Url" Variant="@Variant.Text" />
+    <MudTextField Label="Name" Clearable="true" Variant="@Variant.Text"
+                  Disabled="@(Action!.Name == Template.MainTemplateName)"
+                  @bind-Value="@TypedAction.Name"  />
+    <MudTextField Style="word-break: break-all;" Label="Url" 
+                  Clearable="true" AutoGrow="true" Variant="@Variant.Text"
+                  @bind-Value="@TypedAction.Url" />
 </MudStack>

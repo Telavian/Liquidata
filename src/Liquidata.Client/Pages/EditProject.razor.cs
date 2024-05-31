@@ -3,6 +3,7 @@ using Liquidata.Client.Pages.Dialogs;
 using Liquidata.Client.Services;
 using Liquidata.Common;
 using Liquidata.Common.Actions;
+using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -14,6 +15,9 @@ namespace Liquidata.Client.Pages;
 public partial class EditProjectViewModel : ViewModelBase
 {
     private bool _isBrowserInitialized;
+    private static Func<string, Task> _processSelectedItemAction = async xpath => await Task.Yield();
+
+    private BrowserService _browserService = null!;
 
     public const string NavigationPath = "EditProject";
 
@@ -65,8 +69,17 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<Task>? _displayProjectSettingsAsyncCommand;
     public Func<Task> DisplayProjectSettingsAsyncCommand => _displayProjectSettingsAsyncCommand ??= CreateEventCallbackAsyncCommand(DisplayProjectSettingsAsync, "Unable to display project settings");
 
+    [JSInvokable]
+    public static async Task ProcessSelectedItemAsync(string xpath)
+    {
+        await Task.Yield();
+        await _processSelectedItemAction(xpath);
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        _browserService = new BrowserService(_jsRuntime!);
+
         var projectKey = Constants.Browser.ProjectKey(ProjectId);
         CurrentProject = (await LoadSettingAsync<Project>(projectKey))!;
         
@@ -81,6 +94,8 @@ public partial class EditProjectViewModel : ViewModelBase
             .First(x => x.Name == Template.MainTemplateName);
 
         Console.WriteLine($"Setting active template '{SelectedTemplate?.Name}'");
+        _processSelectedItemAction = HandleItemSelectedAsync;
+        
         await base.OnInitializedAsync();
     }
 
@@ -101,7 +116,7 @@ public partial class EditProjectViewModel : ViewModelBase
 
     private async Task HandleAddTemplateAsync()
     {
-        var (success, templateResult) = await ShowDialogAsync<AddTemplateDialog, Template>();
+        var (success, templateResult) = await ShowDialogAsync<AddTemplateDialog, Template>("Add Template");
 
         if (!success || templateResult is null)
         {
@@ -114,20 +129,16 @@ public partial class EditProjectViewModel : ViewModelBase
     private async Task HandleAddChildActionAsync(ActionBase action)
     {
         await Task.Yield();
-        var (success, actionType) = await ShowDialogAsync<AddActionDialog, ActionType>();
+        var (success, actionType) = await ShowDialogAsync<AddActionDialog, ActionType>("Add Action");
         
         if (!success)
         {
             return;
         }
 
-        if (action.AllowChildren)
-        {
-            action.AddChildAction(actionType);
-            return;
-        }
-
-        action.AddSiblingAction(actionType);
+        var newAction = action.AllowChildren 
+            ? action.AddChildAction(actionType) 
+            : action.AddSiblingAction(actionType);
     }
 
     private async Task HandleRemoveActionAsync(ActionBase action)
@@ -156,17 +167,6 @@ public partial class EditProjectViewModel : ViewModelBase
         }
 
         await UpdateBrowserSelectionModeAsync();
-    }
-
-    private async Task UpdateBrowserSelectionModeAsync()
-    {
-        await Task.Yield();
-        var effectiveMode = BrowserMode == BrowserMode.Select && (SelectedAction?.ActionType.IsSelectionAction() ?? false)
-            ? BrowserMode.Select
-            : BrowserMode.Browse;
-
-        await new BrowserService(_jsRuntime!)
-            .UpdateBrowserSelectionModeAsync(effectiveMode);
     }
 
     private async Task RemoveActionAsync(ActionBase action)
@@ -211,11 +211,8 @@ public partial class EditProjectViewModel : ViewModelBase
         await Task.Yield();
         Console.WriteLine("Initializing browser");
 
-        var browser = new BrowserService(_jsRuntime!);
-
         // https://stackoverflow.com/questions/35432749/disable-web-security-in-chrome-48
-        var isWebSecurity = await browser.CheckIfWebSecurityEnabledAsync();
-        isWebSecurity = true;        
+        var isWebSecurity = await _browserService.CheckIfWebSecurityEnabledAsync();
 
         if (isWebSecurity)
         {
@@ -233,15 +230,101 @@ public partial class EditProjectViewModel : ViewModelBase
 
         _isBrowserInitialized = true;
         Console.WriteLine("Executing browser initialization");
-        await browser.WaitForBrowserReadyAsync(TimeSpan.FromSeconds(10));
-        await browser.InitializeBrowserAsync();
+        await _browserService.WaitForBrowserReadyAsync(TimeSpan.FromSeconds(10));
+        await _browserService.InitializeBrowserAsync();
 
         await UpdateBrowserSelectionModeAsync();
+    }
+
+    private async Task HandleItemSelectedAsync(string xpath)
+    {
+        await Task.Yield();
+        var shouldContinue = await MergeSelectedItemAsync(SelectedAction, xpath);
+
+        if (!shouldContinue)
+        {
+            return;
+        }
+
+        await HighlightSelectionsAsync();
+        await RefreshAsync();
+    }
+
+    private async Task<bool> MergeSelectedItemAsync(ActionBase? action, string xpath)
+    {
+        if (action is null || action is not SelectionActionBase selection)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(selection.XPath))
+        {
+            selection.XPath = xpath;
+            return true;
+        }
+                
+        var (success, operation) = await ShowDialogAsync<SelectionOperationDialog, SelectionOperation>("Selection Operation");
+
+        if (!success)
+        {
+            return false;
+        }
+
+        selection!.XPath = DetermineSelectionXPath(selection.XPath, xpath, operation);
+        return true;
+    }
+
+    private string DetermineSelectionXPath(string? currentXPath, string newXPath, SelectionOperation operation)
+    {
+        if (operation == SelectionOperation.Replace)
+        {
+            return newXPath;
+        }
+
+        if (operation == SelectionOperation.Combine)
+        {
+            // TODO: Finish combine
+            return "xyz";
+        }
+
+        throw new Exception($"Unknown selection operation: {operation}");
     }
 
     private async Task ProcessSelectedActionChangedAsync()
     {
         await Task.Yield();
         await UpdateBrowserSelectionModeAsync();
+        await HighlightSelectionsAsync();
+    }
+
+    private async Task UpdateBrowserSelectionModeAsync()
+    {
+        await Task.Yield();
+        var effectiveMode = BrowserMode == BrowserMode.Select && (SelectedAction?.IsSelectionAction() ?? false)
+            ? BrowserMode.Select
+            : BrowserMode.Browse;
+
+        await _browserService
+            .UpdateBrowserSelectionModeAsync(effectiveMode);
+    }
+
+    private async Task HighlightSelectionsAsync()
+    {
+        var allSelections = (SelectedAction?.GetAllSelectionAncestors() ?? [])
+            .Reverse();
+
+        await _browserService.ClearCurrentSelectionsAsync();
+
+        foreach (var selection in allSelections)
+        {
+            if (selection.ActionType == ActionType.Select)
+            {
+                await _browserService.HighlightSelectionsAsync([selection.XPath]);
+            }
+            else if (selection.ActionType == ActionType.RelativeSelect)
+            {
+                await _browserService.HighlightRelativeSelectionsAsync([selection.XPath]);
+            }
+        }                       
     }
 }
