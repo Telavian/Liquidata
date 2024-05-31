@@ -1,7 +1,9 @@
-﻿using Liquidata.Common.Actions.Enums;
+﻿using Liquidata.Client.Models;
+using Liquidata.Common.Actions.Enums;
 using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Liquidata.Client.Services;
 
@@ -82,9 +84,9 @@ public class BrowserService(IJSRuntime jsRuntime)
         await ExecuteJavascriptAsync("globalThis.liquidata_removeAllSelectionHighlights()");
     }
 
-    public async Task HighlightSelectionsAsync(string?[] directSelections)
+    public async Task HighlightSelectionsAsync(string?[] selections)
     {
-        foreach (var selection in directSelections)
+        foreach (var selection in selections)
         {
             if (string.IsNullOrWhiteSpace(selection))
             {
@@ -95,9 +97,9 @@ public class BrowserService(IJSRuntime jsRuntime)
         }
     }
 
-    public async Task HighlightRelativeSelectionsAsync(string?[] directSelections)
+    public async Task HighlightRelativeSelectionsAsync(string?[] selections)
     {
-        foreach (var selection in directSelections)
+        foreach (var selection in selections)
         {
             if (string.IsNullOrWhiteSpace(selection))
             {
@@ -106,6 +108,19 @@ public class BrowserService(IJSRuntime jsRuntime)
 
             await ExecuteJavascriptAsync($"globalThis.liquidata_highlightSelection(`{selection}`, `{RelativeSelectedCSSClass}`)");
         }
+    }
+
+    public async Task<SelectionInfo> GetSelectionInfoAsync(string xpath)
+    {
+        var result = await ExecuteJavascriptAsync<string>($"return globalThis.liquidata_getSelectionDetails(`{xpath}`)");
+
+        if (!result.success || string.IsNullOrWhiteSpace(result.result))
+        {
+            throw new Exception("Unable to determine selection information");
+        }
+
+        var info = JsonSerializer.Deserialize<SelectionInfo>(result.result)!;
+        return info;
     }
 
     private async Task AddSelectionCssAsync()

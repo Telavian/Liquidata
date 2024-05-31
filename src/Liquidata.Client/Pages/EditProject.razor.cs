@@ -9,13 +9,15 @@ using Liquidata.Common.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using System.Text.Json;
+using Liquidata.Client.Models;
 
 namespace Liquidata.Client.Pages;
 
 public partial class EditProjectViewModel : ViewModelBase
 {
     private bool _isBrowserInitialized;
-    private static Func<string, Task> _processSelectedItemAction = async xpath => await Task.Yield();
+    private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
 
     private BrowserService _browserService = null!;
 
@@ -70,10 +72,12 @@ public partial class EditProjectViewModel : ViewModelBase
     public Func<Task> DisplayProjectSettingsAsyncCommand => _displayProjectSettingsAsyncCommand ??= CreateEventCallbackAsyncCommand(DisplayProjectSettingsAsync, "Unable to display project settings");
 
     [JSInvokable]
-    public static async Task ProcessSelectedItemAsync(string xpath)
+    public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
         await Task.Yield();
-        await _processSelectedItemAction(xpath);
+        var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection);
+
+        await _processSelectedItemAction(selection);
     }
 
     protected override async Task OnInitializedAsync()
@@ -236,10 +240,17 @@ public partial class EditProjectViewModel : ViewModelBase
         await UpdateBrowserSelectionModeAsync();
     }
 
-    private async Task HandleItemSelectedAsync(string xpath)
+    private async Task HandleItemSelectedAsync(XPathSelection selection)
     {
         await Task.Yield();
-        var shouldContinue = await MergeSelectedItemAsync(SelectedAction, xpath);
+
+        if (selection.IsShiftKey)
+        {
+            await ShowSelectionDetailsAsync(selection.XPath);
+            return;
+        }
+
+        var shouldContinue = await MergeSelectedItemAsync(SelectedAction, selection.XPath);
 
         if (!shouldContinue)
         {
@@ -248,6 +259,17 @@ public partial class EditProjectViewModel : ViewModelBase
 
         await HighlightSelectionsAsync();
         await RefreshAsync();
+    }
+
+    private async Task ShowSelectionDetailsAsync(string xpath)
+    {
+        var info = await _browserService.GetSelectionInfoAsync(xpath);
+
+        var parameters = new DialogParameters
+        {
+            { nameof(SelectionInfoDialog.Info), info }
+        };
+        await ShowDialogAsync<SelectionInfoDialog>("Selection Info", parameters);
     }
 
     private async Task<bool> MergeSelectedItemAsync(ActionBase? action, string xpath)

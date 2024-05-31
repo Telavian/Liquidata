@@ -5,8 +5,6 @@ function highlightElement(element, name) {
         return;
     }
 
-    removeHighlight(name);
-
     try {
         element.classList.add(name);
     }    
@@ -48,7 +46,7 @@ var removeAllSelectionHighlights = function() {
 }
 globalThis.liquidata_removeAllSelectionHighlights = removeAllSelectionHighlights;
 
-var highlightSelection = function (xpath, cssClass) {
+var highlightSelection = function(xpath, cssClass) {
 
     var nodes = LD_Document.evaluate(xpath, LD_Document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     
@@ -59,10 +57,33 @@ var highlightSelection = function (xpath, cssClass) {
 }
 globalThis.liquidata_highlightSelection = highlightSelection;
 
+var getSelectionDetails = function (xpath) {
+    var node = LD_Document.evaluate(xpath, LD_Document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+    if (node == null || node == undefined) {
+        return "";
+    }
+    
+    var fullPath = globalThis.liquidata_xPath(node, false);
+    var text = node.innerText;
+    var attributes = [];
+
+    for (var index = 0; index < node.attributes.length; index++) {
+        var current = node.attributes[index];
+        attributes.push(`${current.name}:${current.value}`)
+    }
+
+    var result = { FullPath: fullPath, Text: text, Attributes: attributes };
+    return JSON.stringify(result);
+}
+globalThis.liquidata_getSelectionDetails = getSelectionDetails;
+
 LD_Document.addEventListener('mousemove', function (e) {
     if (!globalThis.liquidata_is_selection_mode) {
         return;
     }
+
+    removeHighlight('liquidata_selector_highlight');
 
     var current = LD_Document.elementFromPoint(e.clientX, e.clientY);
     highlightElement(current, 'liquidata_selector_highlight');
@@ -83,6 +104,8 @@ LD_Document.addEventListener('click', function (e) {
 
     var current = LD_Document.elementFromPoint(e.clientX, e.clientY);
     var xpath = globalThis.liquidata_xPath(current, true);
+    var isShift = e.shiftKey;
+    var result = JSON.stringify({ XPath: xpath, IsShiftKey: isShift });
 
-    DotNet.invokeMethodAsync('Liquidata.Client', 'ProcessSelectedItemAsync', xpath);
+    DotNet.invokeMethodAsync('Liquidata.Client', 'ProcessSelectedItemAsync', result);
 }, true);
