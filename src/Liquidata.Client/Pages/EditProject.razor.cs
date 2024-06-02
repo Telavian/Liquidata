@@ -72,6 +72,9 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<Task>? _displayProjectSettingsAsyncCommand;
     public Func<Task> DisplayProjectSettingsAsyncCommand => _displayProjectSettingsAsyncCommand ??= CreateEventCallbackAsyncCommand(DisplayProjectSettingsAsync, "Unable to display project settings");
 
+    private Func<ActionBase, Task>? _clearSelectionAsyncCommand;
+    public Func<ActionBase, Task> ClearSelectionAsyncCommand => _clearSelectionAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleClearSelectionAsync, "Unable to clear selection");
+
     [JSInvokable]
     public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
@@ -334,5 +337,26 @@ public partial class EditProjectViewModel : ViewModelBase
                 await _browserService.HighlightRelativeSelectionsAsync([selection.XPath]);
             }
         }                       
+    }
+
+    private async Task HandleClearSelectionAsync(ActionBase action)
+    {
+        await Task.Yield();
+        if (!action.IsSelectionAction())
+        {
+            return;
+        }
+
+        var isConfirmed = await ConfirmActionAsync("Clear", "Clear selection? This can not be undone.");
+
+        if (isConfirmed != true)
+        {
+            return;
+        }
+
+        var selectionAction = (SelectionActionBase)action;
+        selectionAction.XPath = "";
+
+        await HighlightSelectionsAsync();
     }
 }
