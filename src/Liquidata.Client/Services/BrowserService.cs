@@ -14,6 +14,7 @@ public class BrowserService(IJSRuntime jsRuntime)
 
     private const string SelectedCSSClass = "liquidata_selected";
     private const string RelativeSelectedCSSClass = "liquidata_relative";
+    private const string SelectorHighlightCSSClass = "liquidata_selector_highlight";
 
     public async Task UpdateBrowserSelectionModeAsync(BrowserMode browserMode)
     {
@@ -120,7 +121,28 @@ public class BrowserService(IJSRuntime jsRuntime)
         }
 
         var info = JsonSerializer.Deserialize<SelectionInfo>(result.result)!;
+        info.Attributes = info.Attributes
+            .Select(x => x
+                .Replace(SelectedCSSClass, "")
+                .Replace(RelativeSelectedCSSClass, "")
+                .Replace(SelectorHighlightCSSClass, "")
+                .Replace("  ", " "))
+            .ToArray();
+
         return info;
+    }
+
+    public async Task<string[]> GetAllMatchesAsync(string xpath)
+    {
+        var result = await ExecuteJavascriptAsync<string>($"return globalThis.liquidata_getXPathMatches(`{xpath}`)");
+
+        if (!result.success || string.IsNullOrWhiteSpace(result.result))
+        {
+            throw new Exception("Unable to determine xpath matches");
+        }
+
+        var matches = JsonSerializer.Deserialize<string[]>(result.result)!;
+        return matches;
     }
 
     private async Task AddSelectionCssAsync()

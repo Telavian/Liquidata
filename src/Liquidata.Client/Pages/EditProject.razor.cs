@@ -20,6 +20,7 @@ public partial class EditProjectViewModel : ViewModelBase
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
 
     private BrowserService _browserService = null!;
+    private XPathProcessorService _xpathProcessorService = null!;
 
     public const string NavigationPath = "EditProject";
 
@@ -75,7 +76,7 @@ public partial class EditProjectViewModel : ViewModelBase
     public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
         await Task.Yield();
-        var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection);
+        var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection)!;
 
         await _processSelectedItemAction(selection);
     }
@@ -83,6 +84,7 @@ public partial class EditProjectViewModel : ViewModelBase
     protected override async Task OnInitializedAsync()
     {
         _browserService = new BrowserService(_jsRuntime!);
+        _xpathProcessorService = new XPathProcessorService(_browserService);        
 
         var projectKey = Constants.Browser.ProjectKey(ProjectId);
         CurrentProject = (await LoadSettingAsync<Project>(projectKey))!;
@@ -292,24 +294,8 @@ public partial class EditProjectViewModel : ViewModelBase
             return false;
         }
 
-        selection!.XPath = DetermineSelectionXPath(selection.XPath, xpath, operation);
+        selection!.XPath = await _xpathProcessorService.ProcessXPathOperationAsync(selection.XPath, xpath, operation);
         return true;
-    }
-
-    private string DetermineSelectionXPath(string? currentXPath, string newXPath, SelectionOperation operation)
-    {
-        if (operation == SelectionOperation.Replace)
-        {
-            return newXPath;
-        }
-
-        if (operation == SelectionOperation.Combine)
-        {
-            // TODO: Finish combine
-            return "xyz";
-        }
-
-        throw new Exception($"Unknown selection operation: {operation}");
     }
 
     private async Task ProcessSelectedActionChangedAsync()

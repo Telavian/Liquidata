@@ -20,6 +20,18 @@
                            OnClick="@(() => SaveSelectionOperationAsyncCommand(SelectionOperation.Combine))">
                     Combine
                 </MudButton>
+
+                <MudButton Style="margin-left: 15px; height: 50px;" StartIcon="@Icons.Material.TwoTone.CopyAll"
+                           IconSize="Size.Large" Variant="Variant.Filled" Color="Color.Primary"
+                           OnClick="@(() => SaveSelectionOperationAsyncCommand(SelectionOperation.Similar))">
+                    Similar
+                </MudButton>
+
+                <MudButton Style="margin-left: 15px; height: 50px;" StartIcon="@Icons.Material.TwoTone.Delete"
+                           IconSize="Size.Large" Variant="Variant.Filled" Color="Color.Secondary"
+                           OnClick="@(() => SaveSelectionOperationAsyncCommand(SelectionOperation.Remove))">
+                    Remove
+                </MudButton>
             </MudStack>
         </MudStack>
     </DialogContent>

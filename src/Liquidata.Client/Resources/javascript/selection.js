@@ -7,7 +7,7 @@ function highlightElement(element, name) {
 
     try {
         element.classList.add(name);
-    }    
+    }
     catch (error) {
         // Nothing
     }
@@ -38,7 +38,7 @@ function removeHighlight(name) {
     }
 }
 
-var removeAllSelectionHighlights = function() {
+var removeAllSelectionHighlights = function () {
     removeHighlight('liquidata_selected');
     removeHighlight('liquidata_selected_similar');
     removeHighlight('liquidata_relative');
@@ -46,14 +46,13 @@ var removeAllSelectionHighlights = function() {
 }
 globalThis.liquidata_removeAllSelectionHighlights = removeAllSelectionHighlights;
 
-var highlightSelection = function(xpath, cssClass) {
-
+var highlightSelection = function (xpath, cssClass) {
     var nodes = LD_Document.evaluate(xpath, LD_Document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    
+
     for (var index = 0; index < nodes.snapshotLength; index++) {
         var current = nodes.snapshotItem(index);
         highlightElement(current, cssClass);
-    }    
+    }
 }
 globalThis.liquidata_highlightSelection = highlightSelection;
 
@@ -63,7 +62,7 @@ var getSelectionDetails = function (xpath) {
     if (node == null || node == undefined) {
         return "";
     }
-    
+
     var fullPath = globalThis.liquidata_xPath(node, false);
     var text = node.innerText;
     var attributes = [];
@@ -77,6 +76,21 @@ var getSelectionDetails = function (xpath) {
     return JSON.stringify(result);
 }
 globalThis.liquidata_getSelectionDetails = getSelectionDetails;
+
+var getXPathMatches = function (xpath) {
+    var matches = [];
+
+    var nodes = LD_Document.evaluate(xpath, LD_Document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+    for (var index = 0; index < nodes.snapshotLength; index++) {
+        var current = nodes.snapshotItem(index);
+        var xpath = globalThis.liquidata_xPath(current, true);
+        matches.push(xpath);
+    }
+
+    return JSON.stringify(matches);
+}
+globalThis.liquidata_getXPathMatches = getXPathMatches;
 
 LD_Document.addEventListener('mousemove', function (e) {
     if (!globalThis.liquidata_is_selection_mode) {

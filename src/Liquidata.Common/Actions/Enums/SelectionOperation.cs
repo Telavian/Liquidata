@@ -3,6 +3,8 @@
     public enum SelectionOperation
     {
         Replace,
-        Combine
+        Combine,
+        Similar,
+        Remove
     }
 }
