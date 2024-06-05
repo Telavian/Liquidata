@@ -46,7 +46,7 @@ namespace Liquidata.Client.Services
                 return xpath;
             }
 
-            return $"{parent}{xpath}";
+            return $"({parent}){xpath}";
         }
 
         public async Task<string> DetermineRelativeXPathAsync(string parent, string xPath)
