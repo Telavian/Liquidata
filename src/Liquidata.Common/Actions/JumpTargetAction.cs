@@ -9,6 +9,7 @@ public class JumpTargetAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.JumpTarget;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public override string[] BuildValidationErrors()
     {

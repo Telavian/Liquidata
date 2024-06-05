@@ -155,7 +155,7 @@ public partial class EditProjectViewModel : ViewModelBase
             return;
         }
 
-        var newAction = action.AllowChildren 
+        var _ = action.AllowChildren 
             ? action.AddChildAction(actionType) 
             : action.AddSiblingAction(actionType);
     }

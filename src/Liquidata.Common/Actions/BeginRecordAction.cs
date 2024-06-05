@@ -8,6 +8,7 @@ public class BeginRecordAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.BeginRecord;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public override string[] BuildValidationErrors()
     {

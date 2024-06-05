@@ -8,6 +8,7 @@ public class ReloadAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Reload;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => true;
 
     public override string[] BuildValidationErrors()
     {

@@ -37,6 +37,7 @@ public abstract class ActionBase
 {
     [JsonIgnore] public abstract ActionType ActionType { get; }
     [JsonIgnore] public abstract bool AllowChildren { get; }
+    [JsonIgnore] public abstract bool IsInteractive { get; }
 
     public Guid ActionId { get; init; } = Guid.NewGuid();
     public string Name { get; set; } = "";

@@ -9,6 +9,7 @@ public class ScreenCaptureAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.ScreenCapture;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => true;
 
     public override string[] BuildValidationErrors()
     {

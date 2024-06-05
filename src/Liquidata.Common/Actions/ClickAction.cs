@@ -9,6 +9,7 @@ public class ClickAction : ActionBase
 {    
     [JsonIgnore] public override ActionType ActionType => ActionType.Click;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => true;
 
     public ClickType ClickType { get; set; } = ClickType.Continue;
     public Guid? ExecutionTemplateId { get; set; } = null!;

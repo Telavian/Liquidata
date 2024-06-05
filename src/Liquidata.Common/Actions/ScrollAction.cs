@@ -8,6 +8,7 @@ public class ScrollAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Scroll;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public ScrollType ScrollType { get; set; }
     public int WaitMilliseconds { get; set; }

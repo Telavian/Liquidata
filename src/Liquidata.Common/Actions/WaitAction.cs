@@ -8,7 +8,8 @@ public class WaitAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Wait;
     [JsonIgnore] public override bool AllowChildren => false;
-
+    [JsonIgnore] public override bool IsInteractive => false;
+    
     public int WaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()

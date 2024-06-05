@@ -7,6 +7,7 @@ namespace Liquidata.Common.Actions;
 public abstract class SelectionActionBase : ActionBase
 {    
     [JsonIgnore] public override bool AllowChildren => true;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public string? XPath { get; set; }
     public int WaitMilliseconds { get; set; }

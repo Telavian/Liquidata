@@ -9,6 +9,7 @@ public class StoreAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Store;
     [JsonIgnore] public override bool AllowChildren => false;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public StoreType StoreType { get; set; }
     public ScriptType ScriptType { get; set; }

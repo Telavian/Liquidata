@@ -9,6 +9,7 @@ public class ConditionalAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Conditional;
     [JsonIgnore] public override bool AllowChildren => true;
+    [JsonIgnore] public override bool IsInteractive => false;
 
     public ScriptType ScriptType { get; set; }
     public string? Script { get; set; } = null!;
