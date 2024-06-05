@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using System.Text.Json;
 using Liquidata.Client.Models;
+using System;
 
 namespace Liquidata.Client.Pages;
 
@@ -31,7 +32,7 @@ public partial class EditProjectViewModel : ViewModelBase
     [SupplyParameterFromQuery]
     public Guid ProjectId { get; set; }
 
-    public ElementReference OptionsPanel { get; set; }
+    public string RelativeSelectionParent { get; set; } = "";
 
     public Project CurrentProject { get; set; } = new Project();
     public BrowserMode BrowserMode { get; set; } = BrowserMode.Select;
@@ -255,15 +256,39 @@ public partial class EditProjectViewModel : ViewModelBase
             return;
         }
 
-        var shouldContinue = await MergeSelectedItemAsync(SelectedAction, selection.XPath);
-
-        if (!shouldContinue)
+        var currentAction = SelectedAction;
+        if (currentAction is null || currentAction is not SelectionActionBase selectionAction)
         {
             return;
         }
+        
+        var shouldContinue = true;
+        if (selectionAction.ActionType == ActionType.RelativeSelect)
+        {
+            shouldContinue = await ProcessRelativeSelectedItemAsync(selection);
+        }        
+
+        if (shouldContinue)
+        {
+            await MergeSelectedItemAsync(selectionAction, selection.XPath);
+        }        
 
         await HighlightSelectionsAsync();
         await RefreshAsync();
+    }
+
+    private async Task<bool> ProcessRelativeSelectedItemAsync(XPathSelection selection)
+    {
+        if (string.IsNullOrWhiteSpace(RelativeSelectionParent))
+        {
+            RelativeSelectionParent = selection.XPath;
+            return false;
+        }
+                
+        selection.XPath = await _xpathProcessorService.DetermineRelativeXPathAsync(RelativeSelectionParent, selection.XPath);
+        RelativeSelectionParent = "";        
+
+        return true;
     }
 
     private async Task ShowSelectionDetailsAsync(string xpath)
@@ -277,13 +302,8 @@ public partial class EditProjectViewModel : ViewModelBase
         await ShowDialogAsync<SelectionInfoDialog>("Selection Info", parameters);
     }
 
-    private async Task<bool> MergeSelectedItemAsync(ActionBase? action, string xpath)
+    private async Task<bool> MergeSelectedItemAsync(SelectionActionBase selection, string xpath)
     {
-        if (action is null || action is not SelectionActionBase selection)
-        {
-            return false;
-        }
-
         if (string.IsNullOrWhiteSpace(selection.XPath))
         {
             selection.XPath = xpath;
@@ -304,6 +324,8 @@ public partial class EditProjectViewModel : ViewModelBase
     private async Task ProcessSelectedActionChangedAsync()
     {
         await Task.Yield();
+        RelativeSelectionParent = "";
+
         await UpdateBrowserSelectionModeAsync();
         await HighlightSelectionsAsync();
     }
@@ -316,7 +338,7 @@ public partial class EditProjectViewModel : ViewModelBase
             : BrowserMode.Browse;
 
         await _browserService
-            .UpdateBrowserSelectionModeAsync(effectiveMode);
+            .UpdateBrowserSelectionModeAsync(SelectedAction, effectiveMode);
     }
 
     private async Task HighlightSelectionsAsync()
@@ -325,18 +347,26 @@ public partial class EditProjectViewModel : ViewModelBase
             .Reverse();
 
         await _browserService.ClearCurrentSelectionsAsync();
+        var lastSelection = "";
 
         foreach (var selection in allSelections)
         {
+            var selectionXPath = selection.XPath;            
+
             if (selection.ActionType == ActionType.Select)
             {
-                await _browserService.HighlightSelectionsAsync([selection.XPath]);
+                await _browserService.HighlightSelectionsAsync([selectionXPath]);
             }
             else if (selection.ActionType == ActionType.RelativeSelect)
             {
-                await _browserService.HighlightRelativeSelectionsAsync([selection.XPath]);
+                selectionXPath = _xpathProcessorService.MakeRelativeXPathQuery(lastSelection, selectionXPath);
+                await _browserService.HighlightRelativeSelectionsAsync([selectionXPath]);
             }
-        }                       
+
+            lastSelection = selectionXPath;
+        }
+
+        await _browserService.HighlightRelativeSelectionParentAsync(RelativeSelectionParent);
     }
 
     private async Task HandleClearSelectionAsync(ActionBase action)

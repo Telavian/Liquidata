@@ -1,5 +1,6 @@
 ﻿using Liquidata.Client.Models;
 using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Actions.Shared;
 using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
@@ -14,16 +15,27 @@ public class BrowserService(IJSRuntime jsRuntime)
 
     private const string SelectedCSSClass = "liquidata_selected";
     private const string RelativeSelectedCSSClass = "liquidata_relative";
+    private const string RelativeSelectedParentCSSClass = "liquidata_relative_parent";
     private const string SelectorHighlightCSSClass = "liquidata_selector_highlight";
 
-    public async Task UpdateBrowserSelectionModeAsync(BrowserMode browserMode)
+    public async Task UpdateBrowserSelectionModeAsync(ActionBase? action, BrowserMode browserMode)
     {
         await Task.Yield();
-        var booleanValue = browserMode == BrowserMode.Select
-            ? "true"
-            : "false";
+        var selectionMode = "browse";
 
-        await ExecuteJavascriptAsync($"globalThis.liquidata_is_selection_mode = {booleanValue};");
+        if (action is not null && browserMode == BrowserMode.Select)
+        {
+            if (action.ActionType == ActionType.Select)
+            {
+                selectionMode = "selection";
+            }
+            else if(action.ActionType == ActionType.RelativeSelect)
+            {
+                selectionMode = "relativeSelection";
+            }
+        }
+
+        await ExecuteJavascriptAsync($"globalThis.liquidata_selection_mode = `{selectionMode}`;");
     }
 
     public async Task InitializeBrowserAsync()
@@ -109,6 +121,16 @@ public class BrowserService(IJSRuntime jsRuntime)
 
             await ExecuteJavascriptAsync($"globalThis.liquidata_highlightSelection(`{selection}`, `{RelativeSelectedCSSClass}`)");
         }
+    }
+
+    public async Task HighlightRelativeSelectionParentAsync(string? selection)
+    {
+        if (string.IsNullOrWhiteSpace(selection))
+        {
+            return;
+        }
+
+        await ExecuteJavascriptAsync($"globalThis.liquidata_highlightSelection(`{selection}`, `{RelativeSelectedParentCSSClass}`)");
     }
 
     public async Task<SelectionInfo> GetSelectionInfoAsync(string xpath)

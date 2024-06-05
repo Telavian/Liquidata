@@ -5,6 +5,13 @@
     opacity: 1 !important;
 }
 
+.liquidata_relative_selector_highlight {
+    outline: 5px dotted #78fa23 !important;
+    outline-offset: 5px !important;
+    box-shadow: 0 0 5px #78fa23 !important;
+    opacity: 1 !important;
+}
+
 .liquidata_selected {
     outline: 5px solid #768dff !important;
     outline-offset: 5px !important;
@@ -13,8 +20,15 @@
 }
 
 .liquidata_relative {
-    outline: 5px solid #00a804 !important;
+    outline: 5px solid #23fa3a !important;
     outline-offset: 5px !important;
-    box-shadow: 0 0 5px #00a804 !important;
+    box-shadow: 0 0 5px #23fa3a !important;
+    opacity: 1 !important;
+}
+
+.liquidata_relative_parent {
+    outline: 5px solid #a623fa !important;
+    outline-offset: 5px !important;
+    box-shadow: 0 0 5px #a623fa !important;
     opacity: 1 !important;
 }

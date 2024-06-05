@@ -1,4 +1,5 @@
-﻿using Liquidata.Common.Actions.Enums;
+﻿using CodePlex.XPathParser;
+using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text;
 
@@ -6,6 +7,8 @@ namespace Liquidata.Client.Services
 {
     public class XPathProcessorService(BrowserService browserService)
     {
+        private const string _xpathConcatenator = " | ";
+
         public Task<string> ProcessXPathOperationAsync(string? currentXPath, string newXPath, SelectionOperation operation)
         {
             if (operation == SelectionOperation.Replace)
@@ -30,7 +33,74 @@ namespace Liquidata.Client.Services
 
             throw new Exception($"Unknown selection operation: {operation}");
         }
-        
+
+        public string? MakeRelativeXPathQuery(string? parent, string? xpath)
+        {
+            if (string.IsNullOrWhiteSpace(xpath))
+            {
+                return "";
+            }
+
+            if (string.IsNullOrWhiteSpace(parent))
+            {
+                return xpath;
+            }
+
+            return $"{parent}{xpath}";
+        }
+
+        public async Task<string> DetermineRelativeXPathAsync(string parent, string xPath)
+        {
+            var parentSegments = await BreakXPathIntoSegmentsAsync(parent);
+            var xpathSegments = await BreakXPathIntoSegmentsAsync(xPath);
+
+            while (parentSegments.Count > 0 && xpathSegments.Count > 0 && parentSegments[0] == xpathSegments[0])
+            {
+                parentSegments.RemoveAt(0);
+                xpathSegments.RemoveAt(0);
+            }
+
+            while (parentSegments.Count > 0)
+            {
+                parentSegments.RemoveAt(0);
+                xpathSegments.Insert(0, "/..");
+            }
+
+            return xpathSegments.StringJoin("");
+        }
+
+        private async Task<IList<string>> BreakXPathIntoSegmentsAsync(string xpath)
+        {
+            var fullXPathMatches = await browserService.GetAllMatchesAsync(xpath);
+            var fullXPath = fullXPathMatches.FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(fullXPath))
+            {
+                return [];
+            }
+
+            var segments = new List<string>();
+            var index = 0;
+
+            while(true)
+            {
+                var searchIndex = fullXPath[index + 1] == '/'
+                    ? index + 2
+                    : index + 1;
+                var nextIndex = fullXPath.IndexOf('/', searchIndex);
+                if (nextIndex == -1)
+                {
+                    segments.Add(fullXPath.Substring(index));
+                    break;
+                }
+
+                segments.Add(fullXPath.Substring(index, nextIndex - index));
+                index = nextIndex;
+            }
+
+            return segments;
+        }
+
         private async Task<string> ProcessReplaceAsync(string? currentXPath, string newXPath)
         {
             await Task.Yield();
@@ -43,7 +113,7 @@ namespace Liquidata.Client.Services
             return MergeExpressions(currentXPath, newXPath);
         }
 
-         private async Task<string> ProcessSimilarAsync(string? currentXPath, string newXPath)
+        private async Task<string> ProcessSimilarAsync(string? currentXPath, string newXPath)
         {
             await Task.Yield();
             var similarNewXPath = MakeSimilarSearch(newXPath);
@@ -66,14 +136,14 @@ namespace Liquidata.Client.Services
             var isRemoved = expressions.Remove(newXPath);
             if (isRemoved)
             {
-                return expressions.StringJoin(" | ");
+                return expressions.StringJoin(_xpathConcatenator);
             }
 
             var matches = (await browserService.GetAllMatchesAsync(currentXPath))
                 .ToHashSet();
 
             matches.Remove(newXPath);
-            return matches.StringJoin(" | ");
+            return matches.StringJoin(_xpathConcatenator);
         }
 
         private string MakeSimilarSearch(string? xpath)
@@ -83,9 +153,9 @@ namespace Liquidata.Client.Services
                 return "";
             }
 
-            return xpath.Split(" | ")
+            return xpath.Split(_xpathConcatenator)
                 .Select(x => MakeSimilarXPath(x))
-                .StringJoin(" | ");
+                .StringJoin(_xpathConcatenator);
         }
 
         private string MakeSimilarXPath(string xpath)
@@ -164,7 +234,7 @@ namespace Liquidata.Client.Services
             }
 
             return xpaths
-                .StringJoin(" | ");
+                .StringJoin(_xpathConcatenator);
         }
 
         private HashSet<string> SplitExpressions(string? xpath)
@@ -174,7 +244,7 @@ namespace Liquidata.Client.Services
                 return new HashSet<string>();
             }
 
-            var items = xpath.Split(" | ");
+            var items = xpath.Split(_xpathConcatenator);
             return new HashSet<string>(items);
         }
     }

@@ -1,4 +1,7 @@
-﻿globalThis.liquidata_is_selection_mode = false;
+﻿const liquidataBrowseMode = "browse";
+const liquidataSelectionMode = "selection";
+const liquidataRelativeSelectionMode = "relativeSelection";
+globalThis.liquidata_selection_mode = liquidataBrowseMode;
 
 function highlightElement(element, name) {
     if (element === null) {
@@ -40,9 +43,8 @@ function removeHighlight(name) {
 
 var removeAllSelectionHighlights = function () {
     removeHighlight('liquidata_selected');
-    removeHighlight('liquidata_selected_similar');
     removeHighlight('liquidata_relative');
-    removeHighlight('liquidata_relative_similar');
+    removeHighlight('liquidata_relative_parent');
 }
 globalThis.liquidata_removeAllSelectionHighlights = removeAllSelectionHighlights;
 
@@ -92,24 +94,34 @@ var getXPathMatches = function (xpath) {
 }
 globalThis.liquidata_getXPathMatches = getXPathMatches;
 
+function selectorHighlight(name, e) {
+    removeHighlight(name);
+
+    var current = LD_Document.elementFromPoint(e.clientX, e.clientY);
+    highlightElement(current, name);
+}
+
 LD_Document.addEventListener('mousemove', function (e) {
-    if (!globalThis.liquidata_is_selection_mode) {
+    if (globalThis.liquidata_selection_mode == liquidataBrowseMode) {
         return;
     }
 
-    removeHighlight('liquidata_selector_highlight');
-
-    var current = LD_Document.elementFromPoint(e.clientX, e.clientY);
-    highlightElement(current, 'liquidata_selector_highlight');
+    if (globalThis.liquidata_selection_mode == liquidataSelectionMode) {
+        selectorHighlight('liquidata_selector_highlight', e);
+    }
+    else if (globalThis.liquidata_selection_mode == liquidataRelativeSelectionMode) {
+        selectorHighlight('liquidata_relative_selector_highlight', e);
+    }
 }, true);
 
 LD_Document.addEventListener('mouseleave', function (e) {
     var target = e.target;
     removeHighlighting(target, 'liquidata_selector_highlight');
+    removeHighlighting(target, 'liquidata_relative_selector_highlight');
 }, true);
 
 LD_Document.addEventListener('click', function (e) {
-    if (!globalThis.liquidata_is_selection_mode) {
+    if (globalThis.liquidata_selection_mode == liquidataBrowseMode) {
         return;
     }
 
