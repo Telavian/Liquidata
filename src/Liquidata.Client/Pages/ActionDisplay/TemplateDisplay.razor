@@ -1,4 +1,5 @@
 ﻿@layout MainLayout
+@using Liquidata.Common.Extensions
 @using MudBlazor
 @inherits TemplateDisplayViewModel
 
@@ -6,4 +7,10 @@
     <div class="verticalCenter">
         @Action!.Name
     </div>
+
+    @if (TypedAction.Url.IsDefined())
+    {
+        <MudIconButton Icon="@Icons.Material.TwoTone.Link" Color="Color.Primary"
+                       OnClick="@(() => LoadTemplateUrlAsyncCommand())" />
+    }
 </MudStack>

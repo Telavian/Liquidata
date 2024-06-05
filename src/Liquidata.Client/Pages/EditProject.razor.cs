@@ -36,14 +36,15 @@ public partial class EditProjectViewModel : ViewModelBase
 
     public Project CurrentProject { get; set; } = new Project();
     public BrowserMode BrowserMode { get; set; } = BrowserMode.Select;
+    public string? ActiveUrl { get; set; } = "";
 
     private Template _selectedTemplate = new Template();
     public Template SelectedTemplate 
     {
         get => _selectedTemplate;
         set => UpdateProperty(ref _selectedTemplate, value,
-            v => TemplateActionItems = [v]);
-    }
+            v => HandleNewTemplateSelectedAsync(v));
+    }    
 
     private ActionBase? _selectedAction;
     public ActionBase? SelectedAction
@@ -76,6 +77,9 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<ActionBase, Task>? _clearSelectionAsyncCommand;
     public Func<ActionBase, Task> ClearSelectionAsyncCommand => _clearSelectionAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleClearSelectionAsync, "Unable to clear selection");
 
+    private Func<string, Task>? _loadTemplateUrlAsyncCommand;
+    public Func<string, Task> LoadTemplateUrlAsyncCommand => _loadTemplateUrlAsyncCommand ??= CreateEventCallbackAsyncCommand<string>(HandleLoadTemplateUrlAsync, "Unable to load template url");
+
     [JSInvokable]
     public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
@@ -83,7 +87,7 @@ public partial class EditProjectViewModel : ViewModelBase
         var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection)!;
 
         await _processSelectedItemAction(selection);
-    }
+    }    
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,6 +110,10 @@ public partial class EditProjectViewModel : ViewModelBase
         Console.WriteLine($"Setting active template '{SelectedTemplate?.Name}'");
         _processSelectedItemAction = HandleItemSelectedAsync;
         
+        ActiveUrl = string.IsNullOrWhiteSpace(SelectedTemplate?.Url) 
+            ? CurrentProject?.Url 
+            : SelectedTemplate?.Url;
+
         await base.OnInitializedAsync();
     }
 
@@ -134,6 +142,7 @@ public partial class EditProjectViewModel : ViewModelBase
         }
 
         CurrentProject.AllTemplates.Add(templateResult);
+        SelectedTemplate = templateResult;
     }
 
     private async Task HandleAddChildActionAsync(ActionBase action)
@@ -388,5 +397,32 @@ public partial class EditProjectViewModel : ViewModelBase
         selectionAction.XPath = "";
 
         await HighlightSelectionsAsync();
+    }
+
+    private async Task HandleNewTemplateSelectedAsync(Template template)
+    {
+        TemplateActionItems = [template];
+
+        if (!string.IsNullOrWhiteSpace(template.Url))
+        {
+            await HandleLoadTemplateUrlAsync(template.Url);
+        }
+    }
+
+    private async Task HandleLoadTemplateUrlAsync(string url)
+    {
+        await Task.Yield();
+
+        if (ActiveUrl == url)
+        {
+            return;
+        }
+
+        var isConfirm = await ConfirmActionAsync("Load url", "Load template url?");
+        
+        if (isConfirm == true)
+        {
+            ActiveUrl = url;
+        }        
     }
 }

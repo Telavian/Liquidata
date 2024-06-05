@@ -111,3 +111,7 @@ code {
     margin-top: auto !important;
     margin-bottom: auto !important;
 }
+
+.ld_max_height {
+    height: 100%;
+}

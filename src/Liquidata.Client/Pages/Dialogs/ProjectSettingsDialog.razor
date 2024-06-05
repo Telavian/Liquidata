@@ -4,11 +4,11 @@
 
 <MudDialog>
     <DialogContent>
-        <MudStack Style="margin: 5px;">
+        <MudStack Style="margin: 5px; min-width: 350px;">
             <MudTextField Label="Project Name" Clearable="true"
                           @bind-Value="@Name" Variant="@Variant.Text" />
 
-            <MudTextField Style="word-break: break-all;" Label="Starting Url" Clearable="true"
+            <MudTextField Style="word-break: break-all;" Label="Starting Url" Clearable="true" InputType="InputType.Url"
                           @bind-Value="@Url" Variant="@Variant.Text" />
 
             <MudCheckBox Label="Load Images" LabelPosition="LabelPosition.Start" Color="Color.Secondary"

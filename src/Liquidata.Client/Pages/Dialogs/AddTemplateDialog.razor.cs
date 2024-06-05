@@ -20,7 +20,7 @@ public class AddTemplateDialogViewModel : DialogViewModelBase
             return;
         }
 
-        var isValid = Uri.TryCreate(TemplateUrl, UriKind.Absolute, out _);
+        var isValid = string.IsNullOrWhiteSpace(TemplateUrl) || Uri.TryCreate(TemplateUrl, UriKind.Absolute, out _);
         if (!isValid)
         {                
             await ShowAlertAsync("Template url is required");

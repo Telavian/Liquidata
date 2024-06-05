@@ -280,11 +280,21 @@ public partial class ViewModelBase : LayoutComponentBase
 
     protected Task<bool?> ConfirmActionAsync(string title, string message)
     {
-        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL");
+        var options = new DialogOptions
+        {
+            FullWidth = true   
+        };
+
+        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL", options: options);
     }
 
     protected Task<bool?> ConfirmActionAsync(string title, MarkupString message)
     {
-        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL");
+        var options = new DialogOptions
+        {
+            FullWidth = true
+        };
+
+        return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL", options: options);
     }
 }

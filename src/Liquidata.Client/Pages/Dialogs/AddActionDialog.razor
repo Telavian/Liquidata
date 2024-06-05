@@ -2,11 +2,9 @@
 @using MudBlazor
 @inherits AddActionDialogViewModel
 
-<MudDialog Style="height: 650px; width: 600px">
+<MudDialog Style="min-height: 650px; min-width: 600px">
     <DialogContent>
         <MudStack Style="margin: 5px;">
-            <h1>Add Action</h1>
-
             <MudTextField Label="Filter" Variant="Variant.Outlined"
                           @bind-Value="FilterText" Immediate="true" />
 

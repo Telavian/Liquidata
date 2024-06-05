@@ -4,15 +4,12 @@
 
 <MudDialog>
     <DialogContent>
-        <MudStack Style="margin: 5px;">
-            <h1>Add Template</h1>
-
+        <MudStack Style="margin: 5px; min-width: 350px;">
             <MudTextField Label="Name" Variant="Variant.Outlined"
                           @bind-Value="TemplateName" />
 
-            <MudTextField Style="word-break: break-all;" Label="Name" Variant="Variant.Outlined"
+            <MudTextField Style="word-break: break-all;" Label="Url" Variant="Variant.Outlined" InputType="InputType.Url"
                           @bind-Value="TemplateUrl" />
-
         </MudStack>
     </DialogContent>
 

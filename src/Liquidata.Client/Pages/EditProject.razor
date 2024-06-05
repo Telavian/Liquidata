@@ -1,6 +1,8 @@
 ﻿@page "/EditProject"
 @layout MainLayout
+@using Liquidata.Client.Extensions
 @using Liquidata.Common.Actions
+@using Liquidata.Common.Actions.Enums
 @using MudBlazor
 @using Liquidata.Client.Pages.ActionDisplay
 @using Liquidata.Client.Pages.ActionOptions
@@ -78,7 +80,7 @@
 
     <!-- Browser -->
     <div style="grid-row: 1; grid-column: 3;">
-        <iframe id="liquidata_browser" src="@(CurrentProject.Url)" 
+        <iframe id="liquidata_browser" src="@ActiveUrl"
                 onload="@(() => BrowserLoadedAsyncCommand())" />
     </div>
 
