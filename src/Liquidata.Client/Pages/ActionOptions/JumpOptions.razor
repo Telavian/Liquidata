@@ -18,8 +18,8 @@
     </MudSlider>
 
     <MudStack Row="true">
-        <MudNumericField Min="0" Format="N0" Label="Max count" Clearable="true"
-                         HelperText="@(TypedAction.MaxTimesCount is null ? "Unlimited" : $"Jump {TypedAction.MaxTimesCount} times")"
-                         @bind-Value="@TypedAction.MaxTimesCount" />
+        <MudNumericField Min="0" Format="N0" Label="Max count" Clearable="true" Immediate="true"
+                         HelperText="@(MaxTimesCount == 0 ? "Unlimited" : $"Jump {MaxTimesCount} times")"
+                         @bind-Value="@MaxTimesCount" />
     </MudStack>
 </MudStack>

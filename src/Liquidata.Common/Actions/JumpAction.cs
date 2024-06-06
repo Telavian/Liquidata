@@ -14,7 +14,7 @@ public class JumpAction : ActionBase
 
     public Guid? JumpTargetId { get; set; } = null!;
     public int WaitMilliseconds { get; set; }
-    public int? MaxTimesCount { get; set; }    
+    public int MaxTimesCount { get; set; }    
 
     public override string[] BuildValidationErrors()
     {

@@ -20,6 +20,7 @@ public class BeginRecordAction : ActionBase
     {
         await Task.Yield();
 
-        service.DataExtractor.AddRecord();
+        service.DataExtractor
+            .AddRecord();
     }
 }

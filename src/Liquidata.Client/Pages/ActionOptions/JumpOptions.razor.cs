@@ -14,4 +14,14 @@ public partial class JumpOptionsViewModel : ActionOptionsViewModelBase<JumpActio
             ?.FirstOrDefault();
         set => TypedAction.JumpTargetId = value?.ActionId ?? null;
     }
+
+    public int MaxTimesCount
+    {
+        get => TypedAction.MaxTimesCount;
+        set
+        {
+            TypedAction.MaxTimesCount = value;
+            RefreshAsync();
+        }
+    }
 }

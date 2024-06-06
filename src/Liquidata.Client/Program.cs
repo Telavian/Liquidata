@@ -27,6 +27,7 @@ builder.Services.AddBlazoredLocalStorage(o =>
 });
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IBrowserService, ClientBrowserService>();
 builder.Services.AddScoped<IClientBrowserService, ClientBrowserService>();
 builder.Services.AddScoped<IXPathProcessorService, XPathProcessorService>();
 

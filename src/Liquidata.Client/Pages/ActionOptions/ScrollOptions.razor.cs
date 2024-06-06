@@ -6,5 +6,13 @@ namespace Liquidata.Client.Pages.ActionOptions;
 
 public partial class ScrollOptionsViewModel : ActionOptionsViewModelBase<ScrollAction>
 {
-
+    public int MaxTimesCount
+    {
+        get => TypedAction.MaxTimesCount;
+        set
+        {
+            TypedAction.MaxTimesCount = value;
+            RefreshAsync();
+        }
+    }
 }
