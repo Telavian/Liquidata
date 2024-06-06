@@ -5,7 +5,7 @@
 @inherits ClickOptionsViewModel
 
 <MudStack>
-    <MudSelect Label="Click action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"               
+    <MudSelect Label="Click action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                MultiSelection="false" @bind-Value="ClickType">
         @foreach (var type in Enum.GetValues<ClickType>())
         {
@@ -24,11 +24,6 @@
         </MudSelect>
     }
 
-    <MudSwitch Class="verticalCenter" Color="Color.Info"
-               @bind-Value="@TypedAction.IsNewPage">
-        @(TypedAction.IsNewPage ? "New page" : "Same page")
-    </MudSwitch>
-
     <MudStack Row="true">
         <MudSelect Label="Click button" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                    MultiSelection="false" @bind-Value="TypedAction.ClickButton">
@@ -39,13 +34,18 @@
         </MudSelect>
 
         <MudSwitch Class="verticalCenter" Color="Color.Info"
-            @bind-Value="@TypedAction.IsDoubleClick">
+                   @bind-Value="@TypedAction.IsDoubleClick">
             @(TypedAction.IsDoubleClick ? "Double" : "Single")
         </MudSwitch>
     </MudStack>
 
-    <MudSlider Min="0" Max="5000" Step="250"        
-        @bind-Value="@TypedAction.WaitMilliseconds">
+    <MudSwitch Class="verticalCenter" Color="Color.Info"
+               @bind-Value="@TypedAction.IsNewPage">
+        @(TypedAction.IsNewPage ? "New page" : "Same page")
+    </MudSwitch>
+
+    <MudSlider Min="0" Max="5000" Step="250"
+               @bind-Value="@TypedAction.WaitMilliseconds">
         @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>
