@@ -2,6 +2,7 @@
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
+using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Common.Actions;
 
@@ -16,5 +17,10 @@ public class JumpTargetAction : ActionBase
         return Name.IsNotDefined()
             ? (["Name is not defined"])
             : ([]);
+    }
+
+    public override async Task ExecuteActionAsync(IExecutionService service)
+    {
+        await Task.Yield();
     }
 }

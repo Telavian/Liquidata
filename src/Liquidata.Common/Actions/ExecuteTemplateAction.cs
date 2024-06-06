@@ -2,6 +2,7 @@
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
+using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Common.Actions;
 
@@ -13,13 +14,16 @@ public class ExecuteTemplateAction : ActionBase
 
     public Guid? ExecutionTemplateId { get; set; } = null!;
     public int WaitMilliseconds { get; set; }
-    public int MaxTimesCount { get; set; } = 1;
-    public bool IsMaxTimesTemplate { get; set; } = true;
 
     public override string[] BuildValidationErrors()
     {
         return ExecutionTemplateId.IsNotDefined()
             ? (["No template selected"])
             : ([]);
+    }
+
+    public override async Task ExecuteActionAsync(IExecutionService service)
+    {
+        await Task.Yield();
     }
 }

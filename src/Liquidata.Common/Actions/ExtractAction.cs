@@ -2,6 +2,7 @@
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
+using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Common.Actions;
 
@@ -30,5 +31,10 @@ public class ExtractAction : ActionBase
         }
 
         return errors.ToArray();
+    }
+
+    public override async Task ExecuteActionAsync(IExecutionService service)
+    {
+        await Task.Yield();
     }
 }

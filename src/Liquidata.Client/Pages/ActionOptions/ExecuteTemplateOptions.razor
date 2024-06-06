@@ -6,7 +6,7 @@
 <MudStack>
     <MudSelect Label="Template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                MultiSelection="false" @bind-Value="ExecutionTemplate">
-        @foreach (var item in Parent!.CurrentProject.AllTemplates)
+        @foreach (var item in (Parent!.CurrentProject?.AllTemplates ?? []))
         {
             <MudSelectItem Value="@item">@item.Name</MudSelectItem>
         }
@@ -14,16 +14,6 @@
 
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@TypedAction.WaitMilliseconds">
-        Wait @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
-
-    <MudStack Row="true">
-        <MudNumericField Min="0" Format="N0" Label="Max count"
-                         @bind-Value="@TypedAction.MaxTimesCount" />
-
-        <MudSwitch Class="verticalCenter" Color="Color.Info"
-                   @bind-Value="@TypedAction.IsMaxTimesTemplate">
-            @(TypedAction.IsMaxTimesTemplate ? "Template" : "Global")
-        </MudSwitch>
-    </MudStack>
 </MudStack>

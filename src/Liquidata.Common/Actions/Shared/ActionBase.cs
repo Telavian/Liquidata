@@ -1,5 +1,6 @@
 ﻿using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
+using Liquidata.Common.Services.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace Liquidata.Common.Actions.Shared;
@@ -48,6 +49,7 @@ public abstract class ActionBase
     public IReadOnlyCollection<ActionBase> ChildActions { get; set; } = new List<ActionBase>();
 
     public abstract string[] BuildValidationErrors();
+    public abstract Task ExecuteActionAsync(IExecutionService service);
 
     public ActionBase AddChildAction(ActionType actionType)
     {

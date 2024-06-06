@@ -2,6 +2,7 @@
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
+using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Common.Actions;
 
@@ -13,13 +14,17 @@ public class JumpAction : ActionBase
 
     public Guid? JumpTargetId { get; set; } = null!;
     public int WaitMilliseconds { get; set; }
-    public int MaxTimesCount { get; set; } = 1;
-    public bool IsMaxTimesTemplate { get; set; } = true;
+    public int? MaxTimesCount { get; set; }    
 
     public override string[] BuildValidationErrors()
     {
         return JumpTargetId.IsNotDefined()
             ? (["No jump target selected"])
             : ([]);
+    }
+
+    public override async Task ExecuteActionAsync(IExecutionService service)
+    {
+        await Task.Yield();
     }
 }

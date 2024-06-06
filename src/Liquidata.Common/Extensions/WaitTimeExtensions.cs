@@ -1,26 +1,20 @@
-﻿using Liquidata.Common.Actions;
-using System.Text;
+﻿using System.Text;
 
 namespace Liquidata.Common.Extensions;
 
 public static class WaitActionExtensions
 {
-    public static string BuildWaitTimeText(this WaitAction action)
-    {
-        return action.WaitMilliseconds
-            .BuildWaitTimeText();
-    }
-
     public static string BuildWaitTimeText(this int milliseconds)
     {
-        var time = TimeSpan.FromMilliseconds(milliseconds);
-
-        if (milliseconds == 0)
+        if (milliseconds == 0) 
         {
-            return "0 ms";
+            return "No wait";
         }
 
+        var time = TimeSpan.FromMilliseconds(milliseconds);
+
         var result = new StringBuilder();
+        result.Append("Wait ");
 
         if (time.Seconds > 0)
         {

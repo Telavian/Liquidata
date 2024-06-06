@@ -1,6 +1,7 @@
 ﻿using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Actions.Enums;
 using System.Text.Json.Serialization;
+using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Common.Actions;
 
@@ -15,5 +16,10 @@ public class HoverAction : ActionBase
     public override string[] BuildValidationErrors()
     {
         return [];
+    }
+
+    public override async Task ExecuteActionAsync(IExecutionService service)
+    {
+        await Task.Yield();
     }
 }

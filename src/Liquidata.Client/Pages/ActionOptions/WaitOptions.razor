@@ -6,6 +6,6 @@
 <MudStack>   
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@TypedAction.WaitMilliseconds">
-        Wait @(TypedAction.BuildWaitTimeText())
+        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>
