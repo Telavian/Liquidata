@@ -1,11 +1,16 @@
 ﻿using Liquidata.Client.Pages.Common;
+using Liquidata.Client.Services;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common;
 using Liquidata.Common.Actions;
+using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Client.Pages;
 
 public partial class CreateProjectViewModel : ViewModelBase
 {
+    [Inject] private IProjectService _projectService { get; set; } = null!;
+
     public const string NavigationPath = "CreateProject";
 
     public string? Name { get; set; }
@@ -60,13 +65,7 @@ public partial class CreateProjectViewModel : ViewModelBase
         });
 
         Console.WriteLine($"Saving project '{Name}'");
-        var projectKey = Constants.Browser.ProjectKey(newProject.ProjectId);
-        await SaveSettingAsync(projectKey, newProject);
-
-        Console.WriteLine($"Updating all projects");
-        var allProjects = await LoadSettingAsync(Constants.Browser.AllProjectsKey, new List<Project>());
-        allProjects!.Add(newProject);
-        await SaveSettingAsync(Constants.Browser.AllProjectsKey, allProjects);
+        await _projectService.SaveProjectAsync(newProject);
         
         Console.WriteLine($"Project created");
         return newProject.ProjectId;

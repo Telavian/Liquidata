@@ -13,7 +13,7 @@
                 <MudStack Row="true" Wrap="Wrap.Wrap">
                     @foreach (var item in GetFilteredSelectionActions(FilteredActionTypes))
                     {
-                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500">
+                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500" Color="Color.Primary">
                             <MudButton Variant="Variant.Filled" StartIcon="@BuildActionIcon(item)" Color="@BuildActionColor(item)"
                                        OnClick="@(() => SelectActionTypeAsyncCommand(item))">
                                 <MudText>@BuildFriendlyName(item)</MudText>
@@ -28,7 +28,7 @@
                 <MudStack Row="true" Wrap="Wrap.Wrap">
                     @foreach (var item in GetFilteredDataActions(FilteredActionTypes))
                     {
-                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500">
+                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500" Color="Color.Primary">
                             <MudButton Variant="Variant.Filled" StartIcon="@BuildActionIcon(item)" Color="@BuildActionColor(item)"
                                        OnClick="@(() => SelectActionTypeAsyncCommand(item))">
                                 <MudText>@BuildFriendlyName(item)</MudText>
@@ -43,7 +43,7 @@
                 <MudStack Row="true" Wrap="Wrap.Wrap">
                     @foreach (var item in GetFilteredLogicActions(FilteredActionTypes))
                     {
-                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500">
+                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500" Color="Color.Primary">
                             <MudButton Variant="Variant.Filled" StartIcon="@BuildActionIcon(item)" Color="@BuildActionColor(item)"
                                        OnClick="@(() => SelectActionTypeAsyncCommand(item))">
                                 <MudText>@BuildFriendlyName(item)</MudText>
@@ -58,7 +58,7 @@
                 <MudStack Row="true" Wrap="Wrap.Wrap">
                     @foreach (var item in GetFilteredInteractionActions(FilteredActionTypes))
                     {
-                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500">
+                        <MudTooltip Text="@BuildActionToolip(item)" Delay="500" Color="Color.Primary">
                             <MudButton Variant="Variant.Filled" StartIcon="@BuildActionIcon(item)" Color="@BuildActionColor(item)"
                                        OnClick="@(() => SelectActionTypeAsyncCommand(item))">
                                 <MudText>@BuildFriendlyName(item)</MudText>
@@ -72,7 +72,7 @@
     </DialogContent>
 
     <DialogActions>
-        <MudTooltip Text="Cancel adding action" Delay="500">
+        <MudTooltip Text="Cancel adding action" Delay="500" Color="Color.Primary">
             <MudButton Color="Color.Error" Variant="Variant.Filled"                       
                        OnClick="@(() => CloseDialogAsyncCommand())">
                 Cancel

@@ -7,7 +7,7 @@
         Relative select <b>@(TypedAction.Name)</b>
     </div>
 
-    <MudTooltip Text="Clear selection">
+    <MudTooltip Text="Clear selection" Delay="500" Color="Color.Primary">
         <MudIconButton Icon="@Icons.Material.TwoTone.BorderClear" Color="Color.Tertiary"
                        OnClick="@(() => Parent!.ClearSelectionAsyncCommand(Action!))" />
     </MudTooltip>

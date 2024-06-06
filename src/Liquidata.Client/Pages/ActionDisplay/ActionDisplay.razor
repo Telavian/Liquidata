@@ -7,7 +7,7 @@
 <MudStack Row="true" style="width: 100%;" Spacing="1"
           onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
           onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
-    <MudTooltip Text="Toggles whether the action is executed" Delay="500">
+    <MudTooltip Text="Toggles whether the action is executed" Delay="500" Color="Color.Primary">
         <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
                              Icon="@Icons.Material.TwoTone.Block" ToggledIcon="@Icons.Material.TwoTone.Block" ToggledColor="Color.Error"
                              @bind-Toggled="Action!.IsDisabled" />
@@ -48,7 +48,7 @@
         else { <ErrorDisplay Action="Action" Parent="Parent" /> }
     </div>
     
-    <MudTooltip Delay="500" Inline="false">
+    <MudTooltip Delay="500" Color="Color.Primary">
         <TooltipContent>
             @(BuildValidationErrors())
         </TooltipContent>

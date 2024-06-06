@@ -1,11 +1,12 @@
 ﻿using CodePlex.XPathParser;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text;
 
 namespace Liquidata.Client.Services
 {
-    public class XPathProcessorService(BrowserService browserService)
+    public class XPathProcessorService(IBrowserService browserService) : IXPathProcessorService
     {
         private const string _xpathConcatenator = " | ";
 

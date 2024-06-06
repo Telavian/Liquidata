@@ -8,28 +8,34 @@
 @using Liquidata.Client.Pages.ActionOptions
 @inherits EditProjectViewModel
 
-<div style="height: 100%; display: grid; grid-template-columns: 85px auto 1fr; grid-template-rows: 1fr auto; grid-gap: 5px; background-color: lightgray;">
+<div style="height: 100%; display: grid; grid-template-columns: auto auto 1fr; grid-template-rows: 1fr auto; grid-gap: 5px; background-color: lightgray;">
     <!-- Navigation -->
     <div style="grid-row: 1 / span 2; grid-column: 1; background-color: gray; padding: 5px;">
-        <MudIconButton Style="width: 75px;" Variant="Variant.Filled"
-                       Icon="@Icons.Material.TwoTone.Home">
-            Home
-        </MudIconButton>
+        <MudStack>
+            <MudTooltip Text="Home" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.Home"
+                               OnClick="@(() => NavigateHomeAsyncCommand())" />
+            </MudTooltip>
 
-        <MudIconButton Style="width: 75px;" Variant="Variant.Filled"
-                       Icon="@Icons.Material.TwoTone.Save">
-            Save
-        </MudIconButton>
+            <MudTooltip Text="Save the current project" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.Save"
+                               OnClick="@(() => SaveProjectAsyncCommand())" />
+            </MudTooltip>
 
-        <MudIconButton Style="width: 75px;" Variant="Variant.Filled"
-                       Icon="@Icons.Material.TwoTone.SaveAs">
-            Save As
-        </MudIconButton>
+            <MudTooltip Text="Save the current project as a new project" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.SaveAs"
+                               OnClick="@(() => SaveAsProjectAsyncCommand())" />
+            </MudTooltip>
 
-        <MudIconButton Style="width: 75px;" Variant="Variant.Filled"
-                       Icon="@Icons.Material.TwoTone.Delete">
-            Delete
-        </MudIconButton>
+            <MudTooltip Text="Delete the current project" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.Delete"
+                               OnClick="@(() => DeleteProjectAsyncCommand())" />
+            </MudTooltip>
+        </MudStack>
     </div>
 
     <!-- Actions -->
@@ -37,7 +43,7 @@
         <div style="display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto 1fr auto; height: 100%;">
             <div style="grid-row: 1; grid-column: 1 / span 3;">
                 <MudStack Row="true">
-                    <MudTooltip Text="Display project settings" Delay="500">
+                    <MudTooltip Text="Display project settings" Delay="500" Color="Color.Primary">
                         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.TwoTone.Settings"
                                        OnClick="@(() => DisplayProjectSettingsAsyncCommand())" />
                     </MudTooltip>
@@ -51,7 +57,7 @@
                         </MudTooltip>
                     </div>
                 </MudStack>
-            </div>            
+            </div>
 
             <div style="grid-row: 2; grid-column: 1 / span 2; margin-top: 5px;">
                 <MudSelect Dense="true" Label="Active template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
@@ -59,12 +65,12 @@
                     @foreach (var template in CurrentProject.AllTemplates)
                     {
                         <MudSelectItem Value="@template" />
-                    } 
+                    }
                 </MudSelect>
             </div>
 
             <div style="grid-row: 2; grid-column: 3; margin-top: 5px; margin-left: 5px;">
-                <MudTooltip Text="Add a new template" Delay="500">
+                <MudTooltip Text="Add a new template" Delay="500" Color="Color.Primary">
                     <MudIconButton Icon="@Icons.Material.TwoTone.AddCard" Size="@Size.Large" Variant="Variant.Filled"
                                    OnClick="@(() => AddTemplateAsyncCommand())" />
                 </MudTooltip>
@@ -79,7 +85,7 @@
                             <ActionDisplay Action="@item" Parent="@this" />
                         </BodyContent>
                     </MudTreeViewItem>
-                </ItemTemplate>                
+                </ItemTemplate>
             </MudTreeView>
 
             <MudExpansionPanels Style="grid-row: 4; grid-column: 1 / span 3;">

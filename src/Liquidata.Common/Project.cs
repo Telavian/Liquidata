@@ -13,6 +13,19 @@ public class Project
 
     public List<Template> AllTemplates { get; init; } = new List<Template>();
 
+    public Project Clone(string name)
+    {
+        return new Project
+        {
+            Name = name,
+            Url = Url,
+            LoadImages = LoadImages,
+            RotateIpAddresses = RotateIpAddresses,
+            Concurrency = Concurrency,
+            AllTemplates = AllTemplates
+        };
+    }
+
     public void RestoreParentReferences()
     {
         foreach (var template in AllTemplates)

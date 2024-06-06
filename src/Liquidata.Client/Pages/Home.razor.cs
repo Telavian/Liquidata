@@ -1,23 +1,30 @@
-﻿using Liquidata.Client.Pages.Common;
-using Liquidata.Common;
+﻿using Liquidata.Client.Models;
+using Liquidata.Client.Pages.Common;
+using Liquidata.Client.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Client.Pages
 {
     public partial class HomeViewModel : ViewModelBase
     {
+        [Inject]
+        private IProjectService _projectService { get; set; } = null!;
+
         private Func<Task>? _createProjectAsyncCommand;
         public Func<Task> CreateProjectAsyncCommand => _createProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleCreateProjectAsync, "Unable to create project");
 
         private Func<Task>? _loadProjectAsyncCommand;
         public Func<Task> LoadProjectAsyncCommand => _loadProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleLoadProjectAsync, "Unable to load project");
 
-        public Project[] AllProjects { get; set; } = Array.Empty<Project>();
-        public Project? SelectedProject { get; set; }
+        public ProjectInfo[] AllProjects { get; set; } = Array.Empty<ProjectInfo>();
+        public ProjectInfo? SelectedProject { get; set; }
+
+        public const string NavigationPath = "/";
 
         protected override async Task OnInitializedAsync()
         {
-            var projects = await LoadSettingAsync<Project[]>(Constants.Browser.AllProjectsKey);
-            AllProjects = projects ?? Array.Empty<Project>();
+            var projects = await _projectService.LoadAllProjectsAsync();
+            AllProjects = projects ?? Array.Empty<ProjectInfo>();
 
             await RefreshAsync();
             await base.OnInitializedAsync();

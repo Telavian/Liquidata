@@ -12,20 +12,12 @@ public partial class ViewModelBase : LayoutComponentBase
 {
     private bool _isUpdated = true;
 
-    [Inject]
-    private ILocalStorageService? _localStorage { get; set; } = null!;    
-
-    [Inject]
-    private IJSRuntime? _jsRuntime { get; set; } = null!;
-
-    [Inject]
-    private ClipboardService? _clipboard { get; set; } = null!;
-
-    [Inject]
-    private IDialogService? _dialogService { get; set; } = null!;
-
-    [Inject]
-    private NavigationManager? _navigationManager { get; set; } = null!;
+    [Inject] private ILocalStorageService _localStorage { get; set; } = null!;    
+    [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
+    [Inject] private ClipboardService _clipboard { get; set; } = null!;
+    [Inject] private IDialogService _dialogService { get; set; } = null!;
+    [Inject] private NavigationManager _navigationManager { get; set; } = null!;
+    [Inject] private ISnackbar _snackbar { get; set; } = null!;
 
     protected async Task<T?> LoadSettingAsync<T>(string name, T? defaultValue = default)
     {
@@ -264,6 +256,18 @@ public partial class ViewModelBase : LayoutComponentBase
         }
 
         return (true, (TResult)dialogResult.Data);
+    }
+
+    protected async Task ShowSnackbarMessageAsync(string message)
+    {
+        await Task.Yield();
+        _snackbar.Add(message);
+    }
+
+    protected async Task ShowSnackbarMessageAsync(string message, Action<SnackbarOptions> configure)
+    {
+        await Task.Yield();
+        _snackbar.Add(message, configure:configure);
     }
 
     protected Task RefreshAsync()

@@ -7,7 +7,7 @@
     <MudPaper Style="grid-row: 2; grid-column: 2; height: 100%; padding: 5px;">
         <MudStack Row="true" Style="height: 100%;">
             <div style="height: 100px; width: 250px; margin-top: auto; margin-bottom: auto;">
-                <MudTooltip Text="Create new project" Delay="500">
+                <MudTooltip Text="Create new project" Delay="500" Color="Color.Primary">
                     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Info"
                                IconClass="iconSize75"                               
                                OnClick="@(() => CreateProjectAsyncCommand())">
@@ -29,7 +29,7 @@
                     </MudList>
 
                     <div style="width: 100px; margin-bottom: 5px; margin-left: auto;">
-                        <MudTooltip Text="Load existing project" Delay="500">
+                        <MudTooltip Text="Load existing project" Delay="500" Color="Color.Primary">
                             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.GitHub" Color="Color.Primary"
                                        OnClick="@(() => LoadProjectAsyncCommand())">
                                 Load

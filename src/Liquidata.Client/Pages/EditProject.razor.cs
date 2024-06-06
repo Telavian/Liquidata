@@ -12,6 +12,7 @@ using MudBlazor;
 using System.Text.Json;
 using Liquidata.Client.Models;
 using System;
+using Liquidata.Client.Services.Interfaces;
 
 namespace Liquidata.Client.Pages;
 
@@ -20,13 +21,11 @@ public partial class EditProjectViewModel : ViewModelBase
     private bool _isBrowserInitialized;
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
 
-    private BrowserService _browserService = null!;
-    private XPathProcessorService _xpathProcessorService = null!;
+    [Inject] private IBrowserService _browserService { get; set; } = null!;
+    [Inject] private IXPathProcessorService _xPathProcessorService { get; set; } = null!;
+    [Inject] private IProjectService _projectService { get; set; } = null!;
 
-    public const string NavigationPath = "EditProject";
-
-    [Inject]
-    private IJSRuntime? _jsRuntime { get; set; } = null!;
+    public const string NavigationPath = "EditProject";    
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -34,7 +33,7 @@ public partial class EditProjectViewModel : ViewModelBase
 
     public string RelativeSelectionParent { get; set; } = "";
 
-    public Project CurrentProject { get; set; } = new Project();
+    public Project? CurrentProject { get; set; } = new Project();
     public BrowserMode BrowserMode { get; set; } = BrowserMode.Select;
     public string? ActiveUrl { get; set; } = "";
 
@@ -80,6 +79,18 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<string, Task>? _loadTemplateUrlAsyncCommand;
     public Func<string, Task> LoadTemplateUrlAsyncCommand => _loadTemplateUrlAsyncCommand ??= CreateEventCallbackAsyncCommand<string>(HandleLoadTemplateUrlAsync, "Unable to load template url");
 
+    private Func<Task>? _navigateHomeAsyncCommand;
+    public Func<Task> NavigateHomeAsyncCommand => _navigateHomeAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleNavigateHomeAsync, "Unable to navigate home");
+
+    private Func<Task>? _saveProjectAsyncCommand;
+    public Func<Task> SaveProjectAsyncCommand => _saveProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleSaveProjectAsync, "Unable to save project");
+
+    private Func<Task>? _saveAsProjectAsyncCommand;
+    public Func<Task> SaveAsProjectAsyncCommand => _saveAsProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleSaveAsProjectAsync, "Unable to save as project");
+
+    private Func<Task>? _deleteProjectAsyncCommand;
+    public Func<Task> DeleteProjectAsyncCommand => _deleteProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleDeleteProjectAsync, "Unable to delete project");
+
     [JSInvokable]
     public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
@@ -91,11 +102,7 @@ public partial class EditProjectViewModel : ViewModelBase
 
     protected override async Task OnInitializedAsync()
     {
-        _browserService = new BrowserService(_jsRuntime!);
-        _xpathProcessorService = new XPathProcessorService(_browserService);        
-
-        var projectKey = Constants.Browser.ProjectKey(ProjectId);
-        CurrentProject = (await LoadSettingAsync<Project>(projectKey))!;
+        CurrentProject = await _projectService.LoadProjectAsync(ProjectId);
         
         if (CurrentProject is null)
         {
@@ -294,7 +301,7 @@ public partial class EditProjectViewModel : ViewModelBase
             return false;
         }
                 
-        selection.XPath = await _xpathProcessorService.DetermineRelativeXPathAsync(RelativeSelectionParent, selection.XPath);
+        selection.XPath = await _xPathProcessorService.DetermineRelativeXPathAsync(RelativeSelectionParent, selection.XPath);
         RelativeSelectionParent = "";        
 
         return true;
@@ -326,7 +333,7 @@ public partial class EditProjectViewModel : ViewModelBase
             return false;
         }
 
-        selection!.XPath = await _xpathProcessorService.ProcessXPathOperationAsync(selection.XPath, xpath, operation);
+        selection!.XPath = await _xPathProcessorService.ProcessXPathOperationAsync(selection.XPath, xpath, operation);
         return true;
     }
 
@@ -368,7 +375,7 @@ public partial class EditProjectViewModel : ViewModelBase
             }
             else if (selection.ActionType == ActionType.RelativeSelect)
             {
-                selectionXPath = _xpathProcessorService.MakeRelativeXPathQuery(lastSelection, selectionXPath);
+                selectionXPath = _xPathProcessorService.MakeRelativeXPathQuery(lastSelection, selectionXPath);
                 await _browserService.HighlightRelativeSelectionsAsync([selectionXPath]);
             }
 
@@ -424,5 +431,64 @@ public partial class EditProjectViewModel : ViewModelBase
         {
             ActiveUrl = url;
         }        
+    }
+
+    private async Task HandleNavigateHomeAsync()
+    {
+        var isConfirm = await ConfirmActionAsync("Home", "Navigate home? All unsaved changes will be lost");
+
+        if (isConfirm == true)
+        {
+            await NavigateToAsync($"{HomeViewModel.NavigationPath}");
+        }
+    }
+
+    private async Task HandleSaveProjectAsync()
+    {
+        if (CurrentProject is null)
+        {
+            return;
+        }
+
+        await _projectService.SaveProjectAsync(CurrentProject);
+        await ShowSnackbarMessageAsync("Project saved");
+    }
+
+    private async Task HandleSaveAsProjectAsync()
+    {
+        if (CurrentProject is null)
+        {
+            return;
+        }
+
+        var (success, saveAsResult) = await ShowDialogAsync<SaveAsProjectSettingsDialog, string>("Save project as");
+
+        if (!success || string.IsNullOrWhiteSpace(saveAsResult))
+        {
+            return;
+        }
+
+        CurrentProject = CurrentProject.Clone(saveAsResult);
+
+        await _projectService.SaveProjectAsync(CurrentProject);
+        await ShowSnackbarMessageAsync($"Project saved to '{saveAsResult}'");
+    }
+
+    private async Task HandleDeleteProjectAsync()
+    {
+        await Task.Yield();
+
+        if (CurrentProject is null)
+        {
+            return;
+        }
+
+        var isConfirm = await ConfirmActionAsync("Delete project", $"Delete project '{CurrentProject.Name}'? This action can not be undone");
+
+        if (isConfirm == true)
+        {
+            await _projectService.DeleteProjectAsync(CurrentProject.ProjectId);
+            await NavigateToAsync($"{HomeViewModel.NavigationPath}");
+        }
     }
 }

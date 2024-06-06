@@ -1,23 +1,20 @@
 ﻿@layout MainLayout
 @using MudBlazor
-@inherits AddTemplateDialogViewModel
+@inherits SaveAsProjectSettingsDialogViewModel
 
 <MudDialog>
     <DialogContent>
         <MudStack Style="margin: 5px; min-width: 350px;">
-            <MudTextField Label="Name" Variant="Variant.Outlined"
-                          @bind-Value="TemplateName" />
-
-            <MudTextField Style="word-break: break-all;" Label="Url" Variant="Variant.Outlined" InputType="InputType.Url"
-                          @bind-Value="TemplateUrl" />
+            <MudTextField Label="Project Name" Clearable="true"
+                          @bind-Value="@Name" Variant="@Variant.Text" />
         </MudStack>
     </DialogContent>
 
     <DialogActions>
-        <MudTooltip Text="Add a new template" Delay="500" Color="Color.Primary">
+        <MudTooltip Text="New project name" Delay="500" Color="Color.Primary">
             <MudButton Color="Color.Primary" Variant="Variant.Filled"                       
-                       OnClick="@(() => AddTemplateAsyncCommand())">
-                Add
+                       OnClick="@(() => SaveAsyncCommand())">
+                Save
             </MudButton>
         </MudTooltip>        
 
