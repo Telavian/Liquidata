@@ -1,7 +1,8 @@
-﻿using Liquidata.Client.Models;
-using Liquidata.Client.Services.Interfaces;
+﻿using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
+using Liquidata.Common.Models;
+using Liquidata.Common.Services.Interfaces;
 using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
@@ -9,7 +10,7 @@ using System.Text.Json;
 
 namespace Liquidata.Client.Services;
 
-public class BrowserService(IJSRuntime jsRuntime) : IBrowserService
+public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 {
     private const string LD_Document = "LD_Document";
     private const string IFrameContentDocument = "document.getElementById('liquidata_browser').contentDocument";

@@ -4,25 +4,24 @@ using Liquidata.Common.Actions.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Liquidata.Client.Pages.ActionDisplay
+namespace Liquidata.Client.Pages.ActionDisplay;
+
+public abstract class ActionDisplayViewModelBase<T> : ViewModelBase
+    where T : ActionBase
 {
-    public abstract class ActionDisplayViewModelBase<T> : ViewModelBase
-        where T : ActionBase
+    [Parameter]
+    public ActionBase? Action { get; set; }
+
+    [Parameter]
+    public EditProjectViewModel? Parent { get; set; }
+
+    public T TypedAction => (T)Action!;
+    
+    protected override async Task OnParametersSetAsync()
     {
-        [Parameter]
-        public ActionBase? Action { get; set; }
+        await base.OnParametersSetAsync();
 
-        [Parameter]
-        public EditProjectViewModel? Parent { get; set; }
-
-        public T TypedAction => (T)Action!;
-        
-        protected override async Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-
-            // TODO: Optimize
-            await RefreshAsync();
-        }
+        // TODO: Optimize
+        await RefreshAsync();
     }
 }

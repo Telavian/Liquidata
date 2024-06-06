@@ -3,6 +3,7 @@ using CurrieTechnologies.Razor.Clipboard;
 using Liquidata.Client;
 using Liquidata.Client.Services;
 using Liquidata.Client.Services.Interfaces;
+using Liquidata.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
@@ -26,7 +27,7 @@ builder.Services.AddBlazoredLocalStorage(o =>
 });
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<IBrowserService, BrowserService>();
+builder.Services.AddScoped<IClientBrowserService, ClientBrowserService>();
 builder.Services.AddScoped<IXPathProcessorService, XPathProcessorService>();
 
 await builder.Build().RunAsync();

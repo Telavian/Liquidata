@@ -1,4 +1,4 @@
-﻿using Liquidata.Client.Models;
+﻿using Liquidata.Common.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Client.Pages.Dialogs;

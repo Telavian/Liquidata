@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Text.Json;
-using Liquidata.Client.Models;
 using System;
+using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Models;
 using Liquidata.Client.Services.Interfaces;
 
 namespace Liquidata.Client.Pages;
@@ -21,7 +22,7 @@ public partial class EditProjectViewModel : ViewModelBase
     private bool _isBrowserInitialized;
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
 
-    [Inject] private IBrowserService _browserService { get; set; } = null!;
+    [Inject] private IClientBrowserService _browserService { get; set; } = null!;
     [Inject] private IXPathProcessorService _xPathProcessorService { get; set; } = null!;
     [Inject] private IProjectService _projectService { get; set; } = null!;
 

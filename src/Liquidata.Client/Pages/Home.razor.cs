@@ -1,50 +1,49 @@
-﻿using Liquidata.Client.Models;
-using Liquidata.Client.Pages.Common;
-using Liquidata.Client.Services.Interfaces;
+﻿using Liquidata.Client.Pages.Common;
+using Liquidata.Common.Models;
+using Liquidata.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
-namespace Liquidata.Client.Pages
+namespace Liquidata.Client.Pages;
+
+public partial class HomeViewModel : ViewModelBase
 {
-    public partial class HomeViewModel : ViewModelBase
+    [Inject]
+    private IProjectService _projectService { get; set; } = null!;
+
+    private Func<Task>? _createProjectAsyncCommand;
+    public Func<Task> CreateProjectAsyncCommand => _createProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleCreateProjectAsync, "Unable to create project");
+
+    private Func<Task>? _loadProjectAsyncCommand;
+    public Func<Task> LoadProjectAsyncCommand => _loadProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleLoadProjectAsync, "Unable to load project");
+
+    public ProjectInfo[] AllProjects { get; set; } = Array.Empty<ProjectInfo>();
+    public ProjectInfo? SelectedProject { get; set; }
+
+    public const string NavigationPath = "/";
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        private IProjectService _projectService { get; set; } = null!;
+        var projects = await _projectService.LoadAllProjectsAsync();
+        AllProjects = projects ?? Array.Empty<ProjectInfo>();
 
-        private Func<Task>? _createProjectAsyncCommand;
-        public Func<Task> CreateProjectAsyncCommand => _createProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleCreateProjectAsync, "Unable to create project");
+        await RefreshAsync();
+        await base.OnInitializedAsync();
+    }
 
-        private Func<Task>? _loadProjectAsyncCommand;
-        public Func<Task> LoadProjectAsyncCommand => _loadProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleLoadProjectAsync, "Unable to load project");
+    private async Task HandleCreateProjectAsync()
+    {
+        await Task.Yield();
+        await NavigateToAsync(CreateProjectViewModel.NavigationPath);
+    }
 
-        public ProjectInfo[] AllProjects { get; set; } = Array.Empty<ProjectInfo>();
-        public ProjectInfo? SelectedProject { get; set; }
-
-        public const string NavigationPath = "/";
-
-        protected override async Task OnInitializedAsync()
+    private async Task HandleLoadProjectAsync()
+    {
+        if (SelectedProject is null)
         {
-            var projects = await _projectService.LoadAllProjectsAsync();
-            AllProjects = projects ?? Array.Empty<ProjectInfo>();
-
-            await RefreshAsync();
-            await base.OnInitializedAsync();
+            await ShowAlertAsync("No project selected");
+            return;
         }
 
-        private async Task HandleCreateProjectAsync()
-        {
-            await Task.Yield();
-            await NavigateToAsync(CreateProjectViewModel.NavigationPath);
-        }
-
-        private async Task HandleLoadProjectAsync()
-        {
-            if (SelectedProject is null)
-            {
-                await ShowAlertAsync("No project selected");
-                return;
-            }
-
-            await NavigateToAsync($"/{EditProjectViewModel.NavigationPath}?ProjectId={SelectedProject.ProjectId}");
-        }
+        await NavigateToAsync($"/{EditProjectViewModel.NavigationPath}?ProjectId={SelectedProject.ProjectId}");
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace Liquidata.Common.Actions.Enums
+﻿namespace Liquidata.Common.Actions.Enums;
+
+public enum SelectionOperation
 {
-    public enum SelectionOperation
-    {
-        Replace,
-        Combine,
-        Similar,
-        Remove
-    }
+    Replace,
+    Combine,
+    Similar,
+    Remove
 }

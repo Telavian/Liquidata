@@ -1,11 +1,10 @@
-﻿using Liquidata.Common.Actions.Shared;
-using Liquidata.Common.Extensions;
+﻿using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 
-namespace Liquidata.Common.Actions;
+namespace Liquidata.Common.Actions.Shared;
 
 public abstract class SelectionActionBase : ActionBase
-{    
+{
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
 
