@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -12,9 +13,9 @@ public class InputAction : ActionBase
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
 
-    public ScriptType ScriptType { get; set; }
     public ExpressionType ExpressionType { get; set; }
     public string? Script { get; set; } = null!;
+    public int WaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()
     {
@@ -23,8 +24,16 @@ public class InputAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Script.IsNotDefined())
+        {
+            throw new ExecutionException("Script is not defined for input action");
+        }
+
+        var inputValue = EvaluateExpressionAsync(executionService, Script, ExpressionType);
+
+        await executionService.Browser.InputToSelectionAsync(executionService.CurrentSelection, inputValue);
+        await WaitForDelayAsync(WaitMilliseconds);
     }
 }

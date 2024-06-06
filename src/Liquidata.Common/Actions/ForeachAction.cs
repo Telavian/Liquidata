@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -12,8 +13,8 @@ public class ForeachAction : ActionBase
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
 
-    public ScriptType ScriptType { get; set; }
     public string? Script { get; set; } = null!;
+    public int WaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()
     {
@@ -32,8 +33,37 @@ public class ForeachAction : ActionBase
         return errors.ToArray();
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Name.IsNotDefined())
+        {
+            throw new ExecutionException("Name is not defined for foreach action");
+        }
+
+        if (Script.IsNotDefined())
+        {
+            throw new ExecutionException("Script is not defined for foreach action");
+        }
+
+        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string[]>(Script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Script not executed successfully for foreach action");
+        }
+
+        foreach (var item in result) 
+        {
+            try
+            {
+                await executionService.Browser.SetVariableAsync(Name, item);
+                await ExecuteChildrenAsync(executionService);
+                await WaitForDelayAsync(WaitMilliseconds);
+            }
+            finally
+            {
+                await executionService.Browser.RemoveVariableAsync(Name);
+            }
+        }
     }
 }

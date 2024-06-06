@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -19,8 +20,14 @@ public class ScreenCaptureAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Name.IsNotDefined())
+        {
+            throw new ExecutionException("Name is not defined for screen capture action");
+        }
+
+        var screenshot = await executionService.Browser.GetScreenshotAsync();
+        await executionService.SaveScreenshotAsync(Name, screenshot);
     }
 }

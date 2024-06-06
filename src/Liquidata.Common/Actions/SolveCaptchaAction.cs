@@ -18,8 +18,9 @@ public class SolveCaptchaAction : ActionBase
         return [];
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        await executionService.Browser.SolveCaptchaAsync();
+        await WaitForDelayAsync(WaitMilliseconds);
     }
 }

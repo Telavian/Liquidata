@@ -49,7 +49,7 @@ public abstract class ActionBase
     public IReadOnlyCollection<ActionBase> ChildActions { get; set; } = new List<ActionBase>();
 
     public abstract string[] BuildValidationErrors();
-    public abstract Task ExecuteActionAsync(IExecutionService service);
+    public abstract Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService service);
 
     public ActionBase AddChildAction(ActionType actionType)
     {
@@ -119,6 +119,55 @@ public abstract class ActionBase
     public override string ToString()
     {
         return Name;
+    }
+
+    protected async Task ExecuteChildrenAsync(IExecutionService executionService)
+    {
+        foreach (var child in ChildActions)
+        {
+            await child.ExecuteChildrenAsync(executionService);
+        }
+    }
+
+    protected async Task WaitForDelayAsync(int? waitMilliseconds)
+    {
+        if (waitMilliseconds is null || waitMilliseconds == 0)
+        {
+            return;
+        }
+
+        await Task.Delay(TimeSpan.FromMilliseconds(waitMilliseconds.Value));
+    }
+
+    protected async Task<string?> EvaluateExpressionAsync(IExecutionService executionService, string? script, ExpressionType expressionType, bool throwOnError = false)
+    {
+        string? value;
+        if (expressionType == ExpressionType.Expression)
+        {
+            var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string[]>(script);
+
+            if (!isSuccess)
+            {
+                var errorMessage = "Script not executed successfully";
+                executionService.LogError(errorMessage);
+                if (throwOnError)
+                {
+                    throw new Exception(errorMessage);
+                }
+            }
+
+            value = result;
+        }
+        else if (expressionType == ExpressionType.Text)
+        {
+            value = script;
+        }
+        else
+        {
+            throw new Exception($"Unknown expression type: {expressionType}");
+        }
+
+        return value;
     }
 
     private ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter, List<ActionBase>? results = null)

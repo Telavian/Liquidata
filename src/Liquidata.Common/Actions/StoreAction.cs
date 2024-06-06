@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -13,7 +14,6 @@ public class StoreAction : ActionBase
     [JsonIgnore] public override bool IsInteractive => false;
 
     public StoreType StoreType { get; set; }
-    public ScriptType ScriptType { get; set; }
     public string? Script { get; set; } = null!;
     public FieldType FieldType { get; set; }
 
@@ -34,8 +34,27 @@ public class StoreAction : ActionBase
         return errors.ToArray();
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Script.IsNotDefined())
+        {
+            throw new ExecutionException("Script is not defined for store action");
+        }
+
+        if (Name.IsNotDefined())
+        {
+            throw new ExecutionException("Name is not defined for store action");
+        }
+
+        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string>(Script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Script not executed successfully for extract action");
+        }
+
+        result = await executionService.DataHandler.CleanData(result, FieldType);
+        executionService.Browser.StoreDataAsync(Name, result);
+        return ExecutionReturnType.Continue;
     }
 }

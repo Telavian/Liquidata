@@ -18,8 +18,9 @@ public class WaitAction : ActionBase
         return [];
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        await WaitForDelayAsync(WaitMilliseconds);
+        return ExecutionReturnType.Continue;
     }
 }

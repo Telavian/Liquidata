@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -12,7 +13,6 @@ public class LogAction : ActionBase
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => false;
 
-    public ScriptType ScriptType { get; set; }
     public ExpressionType ExpressionType { get; set; }
     public string? Script { get; set; } = null!;
 
@@ -23,8 +23,14 @@ public class LogAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Script.IsNotDefined())
+        {
+            throw new ExecutionException("Script is not defined for input action");
+        }
+
+        var message = EvaluateExpressionAsync(executionService, Script, ExpressionType);
+        await executionService.LogMessageAsync(message);
     }
 }

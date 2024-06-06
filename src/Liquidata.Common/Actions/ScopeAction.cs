@@ -19,8 +19,16 @@ public class ScopeAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        try
+        {
+            await executionService.DataHandler.AddDataScopeAsync(Name);
+            await ExecuteChildrenAsync(executionService);
+        }
+        finally
+        {
+            await executionService.DataHandler.RemoveDataScopeAsync(Name);
+        }
     }
 }

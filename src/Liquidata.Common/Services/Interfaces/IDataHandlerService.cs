@@ -1,6 +1,6 @@
 ﻿namespace Liquidata.Common.Services.Interfaces
 {
-    public interface IDataExtractorService
+    public interface IDataHandlerService
     {
         public void AddRecord();
     }

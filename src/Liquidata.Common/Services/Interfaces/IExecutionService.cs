@@ -2,7 +2,13 @@
 {
     public interface IExecutionService
     {
-        public IDataExtractorService DataExtractor { get; }
+        public IDataHandlerService DataHandler { get; }
         public IBrowserService Browser { get; }
+        public IXPathProcessorService XPathProcessor { get; }
+
+        public string CurrentSelection { get; }
+        public Project CurrentProject { get; }
+
+        public Task CreateExecutionTaskAsync(Func<Task> action);
     }
 }

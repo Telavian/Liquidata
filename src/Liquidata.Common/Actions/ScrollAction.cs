@@ -13,15 +13,15 @@ public class ScrollAction : ActionBase
 
     public ScrollType ScrollType { get; set; }
     public int WaitMilliseconds { get; set; }
-    public int MaxTimesCount { get; set; }    
 
     public override string[] BuildValidationErrors()
     {
         return [];
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        await executionService.Browser.ScrollPageAsync(ScrollType);
+        await WaitForDelayAsync(WaitMilliseconds);
     }
 }

@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -21,8 +22,18 @@ public class ExecuteScriptAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Script.IsNotDefined())
+        {
+            throw new ExecutionException("Script is not defined for execute script action");
+        }
+
+        var isSuccess = await executionService.Browser.ExecuteScriptAsync(Script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Script not executed successfully for execute script action");
+        }
     }
 }

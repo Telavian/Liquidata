@@ -16,11 +16,11 @@ public class BeginRecordAction : ActionBase
         return [];
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
         await Task.Yield();
 
-        service.DataExtractor
+        executionService.DataHandler
             .AddRecord();
     }
 }

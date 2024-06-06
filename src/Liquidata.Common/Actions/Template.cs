@@ -21,15 +21,10 @@ public class Template : ActionBase
         return [];
     }
 
-    public ICollection<JumpTargetAction> FindAllJumpTargets()
-    {
-        return FindActions(x => x.ActionType == ActionType.JumpTarget)
-            .OfType<JumpTargetAction>()
-            .ToList();
-    }
-
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
         await Task.Yield();
+        await ExecuteChildrenAsync(executionService);
+        return ExecutionReturnType.Continue;
     }
 }

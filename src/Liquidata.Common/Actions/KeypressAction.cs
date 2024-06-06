@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -25,8 +26,14 @@ public class KeypressAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        if (Keypressed.IsNotDefined())
+        {
+            throw new ExecutionException("Key pressed is not defined for keypress action");
+        }
+
+        await executionService.Browser.KeypressToSelectionAsync(executionService.CurrentSelection, IsShiftPressed, IsCtrlPressed, IsAltPressed, Keypressed);
+        await WaitForDelayAsync(WaitMilliseconds);
     }
 }

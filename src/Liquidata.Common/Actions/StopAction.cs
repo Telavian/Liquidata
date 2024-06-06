@@ -2,6 +2,7 @@
 using Liquidata.Common.Actions.Enums;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -18,8 +19,25 @@ public class StopAction : ActionBase
         return [];
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
         await Task.Yield();
+
+        if (StopType == StopType.Loop)
+        {
+            return ExecutionReturnType.StopLoop;
+        }
+
+        if (StopType == StopType.Template)
+        {
+            return ExecutionReturnType.StopTemplate;
+        }
+
+        if (StopType == StopType.Project)
+        {
+            return ExecutionReturnType.StopProject;
+        }
+
+        throw new ExecutionException($"Unknown stop type: {StopType}");
     }
 }

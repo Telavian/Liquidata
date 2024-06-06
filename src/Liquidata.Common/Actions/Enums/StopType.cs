@@ -2,6 +2,7 @@
 
 public enum StopType
 {
+    Loop,
     Template,
-    Project
+    Project,    
 }

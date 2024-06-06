@@ -3,6 +3,7 @@ using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
+using Liquidata.Common.Exceptions;
 
 namespace Liquidata.Common.Actions;
 
@@ -22,8 +23,13 @@ public class ExecuteTemplateAction : ActionBase
             : ([]);
     }
 
-    public override async Task ExecuteActionAsync(IExecutionService service)
+    public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
-        await Task.Yield();
+        var newTemplate = executionService.CurrentProject.AllTemplates
+            .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
+            ?? throw new ExecutionException("Unable to find template for click action");
+
+        await newTemplate.ExecuteActionAsync(executionService);
+        await WaitForDelayAsync(WaitMilliseconds);
     }
 }
