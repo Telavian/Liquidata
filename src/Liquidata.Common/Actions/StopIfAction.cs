@@ -30,7 +30,7 @@ public class StopIfAction : ActionBase
             throw new ExecutionException("Script is not defined for stop if action");
         }
 
-        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<bool>(Script);
+        var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<bool>(Script!);
 
         if (!isSuccess)
         {

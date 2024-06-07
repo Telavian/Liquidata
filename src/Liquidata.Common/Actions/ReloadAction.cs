@@ -22,5 +22,7 @@ public class ReloadAction : ActionBase
     {
         await executionService.Browser.ReloadPageAsync();
         await WaitForDelayAsync(WaitMilliseconds);
+
+        return ExecutionReturnType.Continue;
     }
 }

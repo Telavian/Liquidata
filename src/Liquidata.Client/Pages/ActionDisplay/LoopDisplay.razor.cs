@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Client.Pages.ActionDisplay;
 
-public partial class JumpTargetDisplayViewModel : ActionDisplayViewModelBase<JumpTargetAction>
+public partial class LoopDisplayViewModel : ActionDisplayViewModelBase<LoopAction>
 {
 
 }

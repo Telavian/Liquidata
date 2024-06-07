@@ -22,5 +22,6 @@ public class SolveCaptchaAction : ActionBase
     {
         await executionService.Browser.SolveCaptchaAsync();
         await WaitForDelayAsync(WaitMilliseconds);
+        return ExecutionReturnType.Continue;
     }
 }

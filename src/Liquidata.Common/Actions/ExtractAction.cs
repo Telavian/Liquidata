@@ -45,14 +45,14 @@ public class ExtractAction : ActionBase
             throw new ExecutionException("Name is not defined for extract action");
         }
 
-        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string>(Script);
+        var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<string>(Script!);
         
         if (!isSuccess)
         {
             throw new ExecutionException("Script not executed successfully for extract action");
         }
 
-        result = await executionService.DataHandler.CleanData(result, FieldType);
+        result = await executionService.DataHandler.CleanDataAsync(result, FieldType);
         executionService.DataHandler.AddData(Name, result);
         return ExecutionReturnType.Continue;
     }

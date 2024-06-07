@@ -31,9 +31,11 @@ public class InputAction : ActionBase
             throw new ExecutionException("Script is not defined for input action");
         }
 
-        var inputValue = EvaluateExpressionAsync(executionService, Script, ExpressionType);
+        var inputValue = await EvaluateExpressionAsync(executionService, Script, ExpressionType)
+            ?? "";
 
         await executionService.Browser.InputToSelectionAsync(executionService.CurrentSelection, inputValue);
         await WaitForDelayAsync(WaitMilliseconds);
+        return ExecutionReturnType.Continue;
     }
 }

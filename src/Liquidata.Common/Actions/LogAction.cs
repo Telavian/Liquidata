@@ -30,7 +30,9 @@ public class LogAction : ActionBase
             throw new ExecutionException("Script is not defined for input action");
         }
 
-        var message = EvaluateExpressionAsync(executionService, Script, ExpressionType);
+        var message = await EvaluateExpressionAsync(executionService, Script, ExpressionType)
+            ?? "";
         await executionService.LogMessageAsync(message);
+        return ExecutionReturnType.Continue;
     }
 }

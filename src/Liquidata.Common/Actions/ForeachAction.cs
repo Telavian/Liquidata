@@ -45,7 +45,7 @@ public class ForeachAction : ActionBase
             throw new ExecutionException("Script is not defined for foreach action");
         }
 
-        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string[]>(Script);
+        var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<string[]>(Script!);
 
         if (!isSuccess)
         {
@@ -57,7 +57,17 @@ public class ForeachAction : ActionBase
             try
             {
                 await executionService.Browser.SetVariableAsync(Name, item);
-                await ExecuteChildrenAsync(executionService);
+                var returnType = await ExecuteChildrenAsync(executionService);
+
+                if (returnType == ExecutionReturnType.StopLoop)
+                {
+                    return ExecutionReturnType.Continue;
+                }
+                else if (returnType != ExecutionReturnType.Continue)
+                {
+                    return returnType;
+                }
+
                 await WaitForDelayAsync(WaitMilliseconds);
             }
             finally
@@ -65,5 +75,7 @@ public class ForeachAction : ActionBase
                 await executionService.Browser.RemoveVariableAsync(Name);
             }
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

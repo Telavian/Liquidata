@@ -28,6 +28,7 @@ public class ScreenCaptureAction : ActionBase
         }
 
         var screenshot = await executionService.Browser.GetScreenshotAsync();
-        await executionService.SaveScreenshotAsync(Name, screenshot);
+        await executionService.DataHandler.AddScreenshotAsync(Name, screenshot);
+        return ExecutionReturnType.Continue;
     }
 }

@@ -1,0 +1,16 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions.Enums
+@using Liquidata.Common.Extensions
+@using MudBlazor
+@inherits LoopOptionsViewModel
+
+<MudStack>
+    <MudNumericField Min="0" Format="N0" Label="Max times"
+                     HelperText="@(MaxTimesCount.BuildMaxTimesText("Loop"))"
+                     @bind-Value="@MaxTimesCount" />
+
+    <MudSlider Min="0" Max="5000" Step="250"
+               @bind-Value="@TypedAction.WaitMilliseconds">
+        Wait @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+    </MudSlider>
+</MudStack>

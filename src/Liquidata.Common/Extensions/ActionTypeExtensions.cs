@@ -52,8 +52,7 @@ public static class ActionTypeExtensions
         return actionType is ActionType.Conditional or
                              ActionType.ExecuteTemplate or
                              ActionType.Foreach or
-                             ActionType.Jump or
-                             ActionType.JumpTarget;
+                             ActionType.Loop;
     }
 
     public static bool IsInteractionAction(this ActionBase action)
@@ -95,8 +94,7 @@ public static class ActionTypeExtensions
             ActionType.Conditional => new ConditionalAction(),
             ActionType.ExecuteTemplate => new ExecuteTemplateAction(),
             ActionType.Foreach => new ForeachAction(),
-            ActionType.Jump => new JumpAction(),
-            ActionType.JumpTarget => new JumpTargetAction(),
+            ActionType.Loop => new LoopAction(),            
 
             ActionType.Click => new ClickAction(),
             ActionType.ExecuteScript => new ExecuteScriptAction(),

@@ -31,11 +31,24 @@ public class LoopAction : ActionBase
         {
             if (count >= maxCount)
             {
-                return;
+                return ExecutionReturnType.Continue;
             }
 
-            await child.ExecuteActionAsync(executionService);
+            var returnType = await child.ExecuteActionAsync(executionService);
+
+            if (returnType == ExecutionReturnType.StopLoop)
+            {
+                return ExecutionReturnType.Continue;
+            }
+            else if (returnType != ExecutionReturnType.Continue)
+            {
+                return returnType;
+            }
+
+            count++;
             await WaitForDelayAsync(WaitMilliseconds);
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

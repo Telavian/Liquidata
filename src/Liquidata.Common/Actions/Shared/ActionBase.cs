@@ -1,4 +1,5 @@
 ﻿using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Exceptions;
 using Liquidata.Common.Extensions;
 using Liquidata.Common.Services.Interfaces;
 using System.Text.Json.Serialization;
@@ -20,8 +21,6 @@ namespace Liquidata.Common.Actions.Shared;
 [JsonDerivedType(typeof(ConditionalAction), nameof(ConditionalAction))]
 [JsonDerivedType(typeof(ExecuteTemplateAction), nameof(ExecuteTemplateAction))]
 [JsonDerivedType(typeof(ForeachAction), nameof(ForeachAction))]
-[JsonDerivedType(typeof(JumpAction), nameof(JumpAction))]
-[JsonDerivedType(typeof(JumpTargetAction), nameof(JumpTargetAction))]
 
 [JsonDerivedType(typeof(ClickAction), nameof(ClickAction))]
 [JsonDerivedType(typeof(ExecuteScriptAction), nameof(ExecuteScriptAction))]
@@ -121,12 +120,21 @@ public abstract class ActionBase
         return Name;
     }
 
-    protected async Task ExecuteChildrenAsync(IExecutionService executionService)
+    protected async Task<ExecutionReturnType> ExecuteChildrenAsync(IExecutionService executionService)
     {
         foreach (var child in ChildActions)
         {
-            await child.ExecuteChildrenAsync(executionService);
+            var returnType = await child.ExecuteActionAsync(executionService);
+
+            if (returnType == ExecutionReturnType.Continue)
+            {
+                continue;
+            }        
+
+            return returnType;
         }
+
+        return ExecutionReturnType.Continue;
     }
 
     protected async Task WaitForDelayAsync(int? waitMilliseconds)
@@ -144,12 +152,18 @@ public abstract class ActionBase
         string? value;
         if (expressionType == ExpressionType.Expression)
         {
-            var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string[]>(script);
+            if (script.IsNotDefined())
+            {
+                throw new ExecutionException("Script is not defined for evaluation");
+            }
+
+            var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<string>(script!);
 
             if (!isSuccess)
             {
                 var errorMessage = "Script not executed successfully";
-                executionService.LogError(errorMessage);
+                await executionService.LogErrorAsync(errorMessage);
+
                 if (throwOnError)
                 {
                     throw new Exception(errorMessage);

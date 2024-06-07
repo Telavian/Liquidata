@@ -24,11 +24,22 @@ public class ScopeAction : ActionBase
         try
         {
             await executionService.DataHandler.AddDataScopeAsync(Name);
-            await ExecuteChildrenAsync(executionService);
+            var returnType = await ExecuteChildrenAsync(executionService);
+
+            if (returnType == ExecutionReturnType.StopLoop)
+            {
+                return ExecutionReturnType.Continue;
+            }
+            else if (returnType != ExecutionReturnType.Continue)
+            {
+                return returnType;
+            }
+
+            return ExecutionReturnType.Continue;
         }
         finally
         {
-            await executionService.DataHandler.RemoveDataScopeAsync(Name);
+            await executionService.DataHandler.RemoveDataScopeAsync();
         }
     }
 }

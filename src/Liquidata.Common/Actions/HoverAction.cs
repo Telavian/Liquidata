@@ -9,7 +9,7 @@ public class HoverAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Hover;
     [JsonIgnore] public override bool AllowChildren => false;
-    [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsInteractive => true;
 
     public int WaitMilliseconds { get; set; }
 
@@ -22,5 +22,6 @@ public class HoverAction : ActionBase
     {
         await executionService.Browser.HoverSelectionAsync(executionService.CurrentSelection);
         await WaitForDelayAsync(WaitMilliseconds);
+        return ExecutionReturnType.Continue;
     }
 }

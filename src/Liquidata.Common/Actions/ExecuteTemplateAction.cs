@@ -29,7 +29,9 @@ public class ExecuteTemplateAction : ActionBase
             .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
             ?? throw new ExecutionException("Unable to find template for click action");
 
-        await newTemplate.ExecuteActionAsync(executionService);
+        var returnType = await newTemplate.ExecuteActionAsync(executionService);
         await WaitForDelayAsync(WaitMilliseconds);
+
+        return returnType;
     }
 }

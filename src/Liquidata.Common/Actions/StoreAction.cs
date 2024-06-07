@@ -46,15 +46,15 @@ public class StoreAction : ActionBase
             throw new ExecutionException("Name is not defined for store action");
         }
 
-        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<string>(Script);
+        var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<string>(Script!);
 
         if (!isSuccess)
         {
             throw new ExecutionException("Script not executed successfully for extract action");
         }
 
-        result = await executionService.DataHandler.CleanData(result, FieldType);
-        executionService.Browser.StoreDataAsync(Name, result);
+        result = await executionService.DataHandler.CleanDataAsync(result, FieldType);
+        await executionService.Browser.StoreDataAsync(Name, result, StoreType);
         return ExecutionReturnType.Continue;
     }
 }

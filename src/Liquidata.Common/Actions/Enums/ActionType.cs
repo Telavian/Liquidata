@@ -23,8 +23,7 @@ public enum ActionType
     Conditional,
     ExecuteTemplate,
     Foreach,
-    Jump,
-    JumpTarget,
+    Loop,
 
     // Interaction
     Click,

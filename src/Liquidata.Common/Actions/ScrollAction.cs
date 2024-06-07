@@ -9,7 +9,7 @@ public class ScrollAction : ActionBase
 {
     [JsonIgnore] public override ActionType ActionType => ActionType.Scroll;
     [JsonIgnore] public override bool AllowChildren => false;
-    [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsInteractive => true;
 
     public ScrollType ScrollType { get; set; }
     public int WaitMilliseconds { get; set; }
@@ -23,5 +23,7 @@ public class ScrollAction : ActionBase
     {
         await executionService.Browser.ScrollPageAsync(ScrollType);
         await WaitForDelayAsync(WaitMilliseconds);
+
+        return ExecutionReturnType.Continue;
     }
 }

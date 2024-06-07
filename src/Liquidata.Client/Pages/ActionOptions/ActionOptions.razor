@@ -20,8 +20,7 @@ else if (Action?.ActionType == ActionType.Store) { <StoreOptions Action="Action"
 else if (Action?.ActionType == ActionType.Conditional) { <ConditionalOptions Action="Action" Parent="Parent" /> }
 else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateOptions Action="Action" Parent="Parent" /> }
 else if (Action?.ActionType == ActionType.Foreach) { <ForeachOptions Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Jump) { <JumpOptions Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.JumpTarget) { <JumpTargetOptions Action="Action" Parent="Parent" /> }
+else if (Action?.ActionType == ActionType.Loop) { <LoopOptions Action="Action" Parent="Parent" /> }
 
 else if (Action?.ActionType == ActionType.Click) { <ClickOptions Action="Action" Parent="Parent" /> }
 else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptOptions Action="Action" Parent="Parent" /> }

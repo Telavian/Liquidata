@@ -31,8 +31,7 @@
     else if (Action?.ActionType == ActionType.Conditional) { <ConditionalDisplay Action="Action" Parent="Parent" /> }
     else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateDisplay Action="Action" Parent="Parent" /> }
     else if (Action?.ActionType == ActionType.Foreach) { <ForeachDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.Jump) { <JumpDisplay Action="Action" Parent="Parent" /> }
-    else if (Action?.ActionType == ActionType.JumpTarget) { <JumpTargetDisplay Action="Action" Parent="Parent" /> }
+    else if (Action?.ActionType == ActionType.Loop) { <LoopDisplay Action="Action" Parent="Parent" /> }    
 
     else if (Action?.ActionType == ActionType.Click) { <ClickDisplay Action="Action" Parent="Parent" /> }
     else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptDisplay Action="Action" Parent="Parent" /> }

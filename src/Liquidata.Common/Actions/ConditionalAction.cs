@@ -29,11 +29,18 @@ public class ConditionalAction : ActionBase
             throw new ExecutionException("Script is not defined for conditional action");
         }
 
-        var (isSuccess, result) = await executionService.Browser.ExecuteScriptAsync<bool>(Script);
+        var (isSuccess, result) = await executionService.Browser.ExecuteJavascriptAsync<bool>(Script!);
 
         if (isSuccess && result) 
         {
-            await ExecuteChildrenAsync(executionService);
+            var returnType = await ExecuteChildrenAsync(executionService);
+
+            if (returnType != ExecutionReturnType.Continue)
+            {
+                return returnType;
+            }
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

@@ -11,11 +11,11 @@ public partial class ExtractOptionsViewModel : ActionOptionsViewModelBase<Extrac
     private ScriptType _scriptType;
     public ScriptType ScriptType
     {
-        get => TypedAction.ScriptType;
+        get => TypedAction.Script.GetMatchingScriptType();
         set => UpdateProperty(ref _scriptType, value,
             v =>
             {
-                TypedAction.ScriptType = value;
+                _scriptType = value;
                 TypedAction.Script = v.BuildScript();
             });
     }

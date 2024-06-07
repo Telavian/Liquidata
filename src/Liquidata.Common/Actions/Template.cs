@@ -24,7 +24,17 @@ public class Template : ActionBase
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
         await Task.Yield();
-        await ExecuteChildrenAsync(executionService);
+        var returnType = await ExecuteChildrenAsync(executionService);
+
+        if (returnType == ExecutionReturnType.StopLoop || returnType == ExecutionReturnType.StopTemplate)
+        {
+            return ExecutionReturnType.Continue;
+        }
+        else if (returnType != ExecutionReturnType.Continue)
+        {
+            return returnType;
+        }
+
         return ExecutionReturnType.Continue;
     }
 }

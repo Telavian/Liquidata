@@ -22,5 +22,7 @@ public class BeginRecordAction : ActionBase
 
         executionService.DataHandler
             .AddRecord();
+
+        return ExecutionReturnType.Continue;
     }
 }

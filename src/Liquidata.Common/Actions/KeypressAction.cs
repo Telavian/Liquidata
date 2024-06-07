@@ -35,5 +35,6 @@ public class KeypressAction : ActionBase
 
         await executionService.Browser.KeypressToSelectionAsync(executionService.CurrentSelection, IsShiftPressed, IsCtrlPressed, IsAltPressed, Keypressed);
         await WaitForDelayAsync(WaitMilliseconds);
+        return ExecutionReturnType.Continue;
     }
 }

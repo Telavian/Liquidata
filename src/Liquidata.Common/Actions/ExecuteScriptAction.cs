@@ -29,11 +29,13 @@ public class ExecuteScriptAction : ActionBase
             throw new ExecutionException("Script is not defined for execute script action");
         }
 
-        var isSuccess = await executionService.Browser.ExecuteScriptAsync(Script);
+        var isSuccess = await executionService.Browser.ExecuteJavascriptAsync(Script!);
 
         if (!isSuccess)
         {
             throw new ExecutionException("Script not executed successfully for execute script action");
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

@@ -45,10 +45,11 @@ public class ClickAction : ActionBase
                 await newTemplate.ExecuteActionAsync(executionService);
             });
 
-            return;
+            return ExecutionReturnType.Continue;
         }
 
-        await executionService.Browser.ClickSelectionAsync(executionService.CurrentSelection, ClickButton, IsDoubleClick, WaitMilliseconds);
+        await executionService.Browser.ClickSelectionAsync(executionService.CurrentSelection, ClickButton, IsDoubleClick);
+        await WaitForDelayAsync(WaitMilliseconds);
 
         if (ClickType == ClickType.ExecuteTemplate)
         {
@@ -56,8 +57,9 @@ public class ClickAction : ActionBase
                 .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
                 ?? throw new ExecutionException("Unable to find template for click action");
 
-            await WaitForDelayAsync(WaitMilliseconds);
             await newTemplate.ExecuteActionAsync(executionService);
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

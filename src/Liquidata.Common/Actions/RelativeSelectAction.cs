@@ -27,8 +27,18 @@ public class RelativeSelectAction : SelectionActionBase
         {
             try
             {
-                await executionService.Browser.SetVariableAsync(Name, match);
-                await ExecuteChildrenAsync(executionService);
+                await executionService.Browser.SetVariableAsync(Name, match);                
+                var returnType = await ExecuteChildrenAsync(executionService);
+
+                if (returnType == ExecutionReturnType.StopLoop)
+                {
+                    return ExecutionReturnType.Continue;
+                }
+                else if (returnType != ExecutionReturnType.Continue)
+                {
+                    return returnType;
+                }
+
                 await WaitForDelayAsync(WaitMilliseconds);
             }
             finally
@@ -36,5 +46,7 @@ public class RelativeSelectAction : SelectionActionBase
                 await executionService.Browser.RemoveVariableAsync(Name);
             }
         }
+
+        return ExecutionReturnType.Continue;
     }
 }

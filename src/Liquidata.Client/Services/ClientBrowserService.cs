@@ -1,4 +1,5 @@
-﻿using Liquidata.Client.Services.Interfaces;
+﻿using Liquidata.Client.Exceptions;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Models;
@@ -7,6 +8,7 @@ using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
+using static MudBlazor.Colors;
 
 namespace Liquidata.Client.Services;
 
@@ -169,6 +171,138 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         return matches;
     }
 
+    public async Task<bool> ExecuteJavascriptAsync(string script)
+    {
+        try
+        {
+            var iife = $"(() => {{ {script} }})()";
+            await jsRuntime.InvokeVoidAsync("eval", iife);
+            return true;
+        }
+        catch (JSException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return false;
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("prerender", StringComparison.InvariantCultureIgnoreCase))
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return false;
+        }
+        catch (JSDisconnectedException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return false;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<(bool success, T result)> ExecuteJavascriptAsync<T>(string script)
+    {
+        try
+        {
+            var iife = $"(() => {{ {script} }})()";
+            var result = await jsRuntime.InvokeAsync<T>("eval", iife);
+            return (true, result);
+        }
+        catch (JSException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return default;
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("prerender", StringComparison.InvariantCultureIgnoreCase))
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return default;
+        }
+        catch (JSDisconnectedException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return default;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine($"Script error: {ex.Message}");
+            return default;
+        }
+    }
+
+    public async Task StoreDataAsync(string name, string value, StoreType storeType)
+    {
+        await Task.Yield();
+
+        var script = storeType == StoreType.Replace
+            ? $"globalThis.${name} = `{value}`;"
+            : $"if (!globalThis.${name}) {{ globalThis.${name} = `{value}`; }} else {{ globalThis.${name} += `{value}`; }}";
+
+        await ExecuteJavascriptAsync(script);
+    }
+
+    public Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public async Task SetVariableAsync(string name, string value)
+    {
+        await Task.Yield();
+
+        var script = $"globalThis.${name} = `{value}`;";
+        await ExecuteJavascriptAsync(script);
+    }
+
+    public async Task RemoveVariableAsync(string name)
+    {
+        await Task.Yield();
+
+        var script = $"globalThis.${name} = null;";
+        await ExecuteJavascriptAsync(script);
+    }
+
+    public Task HoverSelectionAsync(string selection)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task InputToSelectionAsync(string selection, string value)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task KeypressToSelectionAsync(string currentSelection, bool isShiftPressed, bool isCtrlPressed, bool isAltPressed, string keypressed)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task ReloadPageAsync()
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task<byte[]> GetScreenshotAsync()
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task ScrollPageAsync(ScrollType scrollType)
+    {
+        throw new ClientExecutionException();
+    }
+
+    public Task SolveCaptchaAsync()
+    {
+        throw new ClientExecutionException();
+    }
+
     private async Task AddSelectionCssAsync()
     {
         var css = await LoadSelectionCssAsync();
@@ -226,65 +360,5 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
         return result
             .Replace(LD_Document, IFrameContentDocument);
-    }
-
-    private async Task<bool> ExecuteJavascriptAsync(string script)
-    {        
-        try
-        {
-            var iife = $"(() => {{ {script} }})()";            
-            await jsRuntime.InvokeVoidAsync("eval", iife);
-            return true;
-        }
-        catch (JSException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return false;
-        }        
-        catch (InvalidOperationException ex) when (ex.Message.Contains("prerender", StringComparison.InvariantCultureIgnoreCase))
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return false;
-        }
-        catch (JSDisconnectedException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return false;
-        }
-        catch (TaskCanceledException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return false;
-        }
-    }
-
-    private async Task<(bool success, T result)> ExecuteJavascriptAsync<T>(string script)
-    {
-        try
-        {
-            var iife = $"(() => {{ {script} }})()";            
-            var result = await jsRuntime.InvokeAsync<T>("eval", iife);
-            return (true, result);
-        }
-        catch (JSException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return default;
-        }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("prerender", StringComparison.InvariantCultureIgnoreCase))
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return default;
-        }
-        catch (JSDisconnectedException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return default;
-        }
-        catch (TaskCanceledException ex)
-        {
-            Console.WriteLine($"Script error: {ex.Message}");
-            return default;
-        }
-    }
+    }    
 }

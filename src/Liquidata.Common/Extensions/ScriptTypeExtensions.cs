@@ -24,4 +24,22 @@ public static class ScriptTypeExtensions
             _ => throw new Exception($"Unknown script type: {scriptType}")
         };
     }
+
+    public static ScriptType GetMatchingScriptType(this string? script)
+    {
+        if (string.IsNullOrWhiteSpace(script))
+        {
+            return ScriptType.Custom;
+        }
+
+        foreach (var scriptType in Enum.GetValues<ScriptType>())
+        {
+            if (scriptType.BuildScript() == script)
+            {
+                return scriptType;
+            }
+        }
+
+        return ScriptType.Custom;
+    }
 }

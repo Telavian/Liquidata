@@ -25,8 +25,7 @@ public static class ActionTypeExtensions
             ActionType.Conditional => "Define logic to conditionally execute actions",
             ActionType.ExecuteTemplate => "Executes the action template",
             ActionType.Foreach => "Executes actions for each item",
-            ActionType.Jump => "Jump to another local in current temple",
-            ActionType.JumpTarget => "Defines location that can be jumped to",
+            ActionType.Loop => "Loop through actions a number of times",            
 
             ActionType.Click => "Click on current selection",
             ActionType.ExecuteScript => "Execute the defined script",
@@ -63,8 +62,7 @@ public static class ActionTypeExtensions
             ActionType.Conditional => Icons.Material.TwoTone.AccountTree,
             ActionType.ExecuteTemplate => Icons.Material.TwoTone.DatasetLinked,
             ActionType.Foreach => Icons.Material.TwoTone.Loop,
-            ActionType.Jump => Icons.Material.TwoTone.LocationSearching,
-            ActionType.JumpTarget => Icons.Material.TwoTone.MyLocation,
+            ActionType.Loop => Icons.Material.TwoTone.AllInclusive,            
 
             ActionType.Click => Icons.Material.TwoTone.AdsClick,
             ActionType.ExecuteScript => Icons.Material.TwoTone.Code,
