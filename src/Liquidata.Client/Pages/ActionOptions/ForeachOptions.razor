@@ -6,7 +6,7 @@
 
 <MudStack>
     <MudTextField Label="Item name" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.Name" />
+                  @bind-Value="Name" />
 
     <MudSelect Label="Script action" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                MultiSelection="false" @bind-Value="ScriptType">
@@ -18,10 +18,10 @@
 
     <MudTextField Style="word-break: break-all;" Label="Script" Clearable="true"
                   AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.Script" />
+                  @bind-Value="Script" />
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@TypedAction.WaitMilliseconds">
-        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@WaitMilliseconds">
+        @(WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

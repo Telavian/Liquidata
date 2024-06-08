@@ -13,7 +13,7 @@
         }
     </MudSelect>
 
-    @if (TypedAction.ClickType == ClickType.ExecuteTemplate)
+    @if (ClickType == ClickType.ExecuteTemplate)
     {
         <MudSelect Label="Template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                    MultiSelection="false" @bind-Value="ExecutionTemplate">
@@ -26,7 +26,7 @@
 
     <MudStack Row="true">
         <MudSelect Label="Click button" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-                   MultiSelection="false" @bind-Value="TypedAction.ClickButton">
+                   MultiSelection="false" @bind-Value="ClickButton">
             @foreach (var item in Enum.GetValues<ClickButton>())
             {
                 <MudSelectItem Value="@item">@(item.BuildFriendlyName())</MudSelectItem>
@@ -34,18 +34,18 @@
         </MudSelect>
 
         <MudSwitch Class="verticalCenter" Color="Color.Info"
-                   @bind-Value="@TypedAction.IsDoubleClick">
-            @(TypedAction.IsDoubleClick ? "Double" : "Single")
+                   @bind-Value="@IsDoubleClick">
+            @(IsDoubleClick ? "Double" : "Single")
         </MudSwitch>
     </MudStack>
 
     <MudSwitch Class="verticalCenter" Color="Color.Info"
-               @bind-Value="@TypedAction.IsNewPage">
-        @(TypedAction.IsNewPage ? "New page" : "Same page")
+               @bind-Value="@IsNewPage">
+        @(IsNewPage ? "New page" : "Same page")
     </MudSwitch>
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@TypedAction.WaitMilliseconds">
-        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@WaitMilliseconds">
+        @(WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

@@ -5,14 +5,14 @@
 
 <MudStack>
     <MudTextField Label="Name" Clearable="true" AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.Name" />
+                  @bind-Value="Name" />
 
     <MudTextField Style="word-break: break-all;" Label="XPath" Clearable="true" 
                   AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.XPath" />
+                  @bind-Value="XPath" />
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@TypedAction.WaitMilliseconds">
-        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@WaitMilliseconds">
+        @(WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

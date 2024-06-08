@@ -14,7 +14,7 @@
     </MudSelect>
 
     <MudSelect Label="Expression type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.ExpressionType">
+               MultiSelection="false" @bind-Value="ExpressionType">
         @foreach (var type in Enum.GetValues<ExpressionType>())
         {
             <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
@@ -23,5 +23,5 @@
 
     <MudTextField Style="word-break: break-all;" Label="Script" Clearable="true"
                   AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.Script" />
+                  @bind-Value="Script" />
 </MudStack>

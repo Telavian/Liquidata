@@ -8,15 +8,33 @@ namespace Liquidata.Client.Pages.ActionOptions;
 
 public partial class ExtractOptionsViewModel : ActionOptionsViewModelBase<ExtractAction>
 {
-    private ScriptType _scriptType;
     public ScriptType ScriptType
     {
         get => TypedAction.Script.GetMatchingScriptType();
-        set => UpdateProperty(ref _scriptType, value,
-            v =>
-            {
-                _scriptType = value;
-                TypedAction.Script = v.BuildScript();
-            });
+        set
+        {
+            TypedAction.Script = value.BuildScript();
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public string? Script
+    {
+        get => TypedAction.Script;
+        set
+        {
+            TypedAction.Script = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public FieldType FieldType
+    {
+        get => TypedAction.FieldType;
+        set
+        {
+            TypedAction.FieldType = value;
+            _ = ActionUpdatedAsync();
+        }
     }
 }

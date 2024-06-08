@@ -6,7 +6,7 @@
 
 <MudStack>
     <MudSelect Label="Stop type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.StopType">
+               MultiSelection="false" @bind-Value="StopType">
         @foreach (var type in Enum.GetValues<StopType>())
         {
             <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>

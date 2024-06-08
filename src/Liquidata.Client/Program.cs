@@ -1,3 +1,4 @@
+using BlazorComponentBus;
 using Blazored.LocalStorage;
 using CurrieTechnologies.Razor.Clipboard;
 using Liquidata.Client;
@@ -28,6 +29,8 @@ builder.Services.AddBlazoredLocalStorage(o =>
     o.JsonSerializerOptions = new JsonSerializerOptions();
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddScoped<ComponentBus>();
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IBrowserService, ClientBrowserService>();

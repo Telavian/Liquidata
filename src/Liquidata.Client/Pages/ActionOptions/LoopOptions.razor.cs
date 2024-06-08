@@ -10,7 +10,17 @@ public partial class LoopOptionsViewModel : ActionOptionsViewModelBase<LoopActio
         set
         {
             TypedAction.MaxTimesCount = value;
-            _ = RefreshAsync();
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public int WaitMilliseconds
+    {
+        get => TypedAction.WaitMilliseconds;
+        set
+        {
+            TypedAction.WaitMilliseconds = value;
+            _ = ActionUpdatedAsync();
         }
     }
 }

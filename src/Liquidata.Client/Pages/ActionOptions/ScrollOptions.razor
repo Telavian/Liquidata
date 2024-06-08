@@ -6,7 +6,7 @@
 
 <MudStack>
     <MudSelect Label="Direction" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.ScrollType">
+               MultiSelection="false" @bind-Value="ScrollType">
         @foreach (var type in Enum.GetValues<ScrollType>())
         {
             <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>
@@ -14,7 +14,7 @@
     </MudSelect>
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@TypedAction.WaitMilliseconds">
-        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@WaitMilliseconds">
+        @(WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

@@ -15,10 +15,10 @@
 
     <MudTextField Style="word-break: break-all;" Label="Script" Clearable="true"
                   AutoGrow="true" Variant="@Variant.Outlined"
-                  @bind-Value="TypedAction.Script" />
+                  @bind-Value="Script" />
 
     <MudSelect Label="Stop type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
-               MultiSelection="false" @bind-Value="TypedAction.StopType">
+               MultiSelection="false" @bind-Value="StopType">
         @foreach (var type in Enum.GetValues<StopType>())
         {
             <MudSelectItem Value="@type">@(type.BuildFriendlyName())</MudSelectItem>

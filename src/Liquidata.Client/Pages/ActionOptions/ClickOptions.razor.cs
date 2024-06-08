@@ -10,10 +10,49 @@ public partial class ClickOptionsViewModel : ActionOptionsViewModelBase<ClickAct
         get => TypedAction.ClickType;
         set
         {
-            TypedAction.ClickType = value;
-            RefreshAsync();
+            TypedAction.ClickType = value;            
+            _ = ActionUpdatedAsync();
         }
+    }
 
+    public ClickButton ClickButton
+    {
+        get => TypedAction.ClickButton;
+        set
+        {
+            TypedAction.ClickButton = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public bool IsDoubleClick
+    {
+        get => TypedAction.IsDoubleClick;
+        set
+        {
+            TypedAction.IsDoubleClick = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public bool IsNewPage
+    {
+        get => TypedAction.IsNewPage;
+        set
+        {
+            TypedAction.IsNewPage = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public int WaitMilliseconds
+    {
+        get => TypedAction.WaitMilliseconds;
+        set
+        {
+            TypedAction.WaitMilliseconds = value;
+            _ = ActionUpdatedAsync();
+        }
     }
 
     public Template? ExecutionTemplate

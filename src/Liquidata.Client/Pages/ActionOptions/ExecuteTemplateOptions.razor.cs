@@ -12,4 +12,14 @@ public partial class ExecuteTemplateOptionsViewModel : ActionOptionsViewModelBas
             .FirstOrDefault(x => x.ActionId == TypedAction.ExecutionTemplateId);
         set => TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
     }
+
+    public int WaitMilliseconds
+    {
+        get => TypedAction.WaitMilliseconds;
+        set
+        {
+            TypedAction.WaitMilliseconds = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
 }

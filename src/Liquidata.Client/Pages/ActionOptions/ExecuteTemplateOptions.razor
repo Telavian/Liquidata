@@ -13,7 +13,7 @@
     </MudSelect>
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@TypedAction.WaitMilliseconds">
-        @(TypedAction.WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@WaitMilliseconds">
+        @(WaitMilliseconds.BuildWaitTimeText())
     </MudSlider>
 </MudStack>

@@ -6,8 +6,8 @@
 <MudStack>
     <MudTextField Label="Name" Clearable="true" Variant="@Variant.Text"
                   Disabled="@(Action!.Name == Template.MainTemplateName)"
-                  @bind-Value="@TypedAction.Name"  />
+                  @bind-Value="@Name"  />
     <MudTextField Style="word-break: break-all;" Label="Url" 
                   Clearable="true" AutoGrow="true" Variant="@Variant.Text"
-                  @bind-Value="@TypedAction.Url" />
+                  @bind-Value="@Url" />
 </MudStack>

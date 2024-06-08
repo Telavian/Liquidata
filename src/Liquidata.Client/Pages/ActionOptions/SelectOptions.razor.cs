@@ -6,5 +6,23 @@ namespace Liquidata.Client.Pages.ActionOptions;
 
 public partial class SelectOptionsViewModel : ActionOptionsViewModelBase<SelectAction>
 {
+    public string? XPath
+    {
+        get => TypedAction.XPath;
+        set
+        {
+            TypedAction.XPath = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
 
+    public int WaitMilliseconds
+    {
+        get => TypedAction.WaitMilliseconds;
+        set
+        {
+            TypedAction.WaitMilliseconds = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
 }
