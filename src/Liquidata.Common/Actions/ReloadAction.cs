@@ -10,6 +10,7 @@ public class ReloadAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Reload;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public int WaitMilliseconds { get; set; }
 

@@ -12,6 +12,7 @@ public class Template : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Template;
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public string Url { get; set; } = "";
 

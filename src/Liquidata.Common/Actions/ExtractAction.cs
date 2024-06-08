@@ -12,6 +12,7 @@ public class ExtractAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Extract;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => true;
 
     public string? Script { get; set; } = null!;
     public FieldType FieldType { get; set; }

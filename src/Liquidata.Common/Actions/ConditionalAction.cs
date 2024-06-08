@@ -12,7 +12,8 @@ public class ConditionalAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Conditional;
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
-    
+    [JsonIgnore] public override bool IsNameRequired => false;
+
     public string? Script { get; set; } = null!;
 
     public override string[] BuildValidationErrors()

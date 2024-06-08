@@ -12,6 +12,7 @@ public class KeypressAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Keypress;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public bool IsShiftPressed { get; set; }
     public bool IsCtrlPressed { get; set; }

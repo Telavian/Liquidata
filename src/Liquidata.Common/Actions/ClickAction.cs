@@ -12,6 +12,7 @@ public class ClickAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Click;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public ClickType ClickType { get; set; } = ClickType.Continue;
     public bool IsNewPage { get; set; }

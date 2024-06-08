@@ -12,6 +12,7 @@ public class ExecuteScriptAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.ExecuteScript;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public string? Script { get; set; } = null!;
 

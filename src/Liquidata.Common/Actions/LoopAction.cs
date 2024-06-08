@@ -10,7 +10,8 @@ public class LoopAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Loop;
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
-    
+    [JsonIgnore] public override bool IsNameRequired => false;
+
     public int MaxTimesCount { get; set; }
     public int WaitMilliseconds { get; set; }
 

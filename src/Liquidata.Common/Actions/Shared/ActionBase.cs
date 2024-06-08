@@ -38,6 +38,7 @@ public abstract class ActionBase
     [JsonIgnore] public abstract ActionType ActionType { get; }
     [JsonIgnore] public abstract bool AllowChildren { get; }
     [JsonIgnore] public abstract bool IsInteractive { get; }
+    [JsonIgnore] public abstract bool IsNameRequired { get; }
 
     public Guid ActionId { get; init; } = Guid.NewGuid();
     public string Name { get; set; } = "";
@@ -50,10 +51,15 @@ public abstract class ActionBase
     public abstract string[] BuildValidationErrors();
     public abstract Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService service);
 
-    public ActionBase AddChildAction(ActionType actionType)
+    public ActionBase AddChildAction(Project project, ActionType actionType)
     {
         var action = actionType.CreateNewAction();
         action.Parent = this;
+        
+        if (action.IsNameRequired)
+        {
+            action.Name = BuildDefaultActionName(project, action.ActionType);
+        }
 
         ChildActions = (ChildActions ?? [])
             .Concat([action])
@@ -62,10 +68,15 @@ public abstract class ActionBase
         return action;
     }
 
-    public ActionBase AddSiblingAction(ActionType actionType)
+    public ActionBase AddSiblingAction(Project project, ActionType actionType)
     {
         var action = actionType.CreateNewAction();
         action.Parent = Parent;
+
+        if (action.IsNameRequired)
+        {
+            action.Name = BuildDefaultActionName(project, action.ActionType);
+        }
 
         var actionsList = (Parent!.ChildActions ?? [])
             .ToList();
@@ -88,11 +99,6 @@ public abstract class ActionBase
         }
     }
 
-    public ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter)
-    {
-        return FindActions(filter, new List<ActionBase>());
-    }
-
     public void RemoveChild(ActionBase child)
     {
         var actions = (ChildActions ?? [])
@@ -102,6 +108,23 @@ public abstract class ActionBase
 
         ChildActions = actions
             .ToList();
+    }
+
+    public IEnumerable<ActionBase> TraverseTree()
+    {
+        var stack = new Stack<ActionBase>();
+        stack.Push(this);
+
+        while (stack.Count > 0)
+        {
+            var current = stack.Pop();
+            yield return current;
+
+            foreach (var child in current.ChildActions)
+            {
+                stack.Push(child);
+            }
+        }
     }
 
     public override bool Equals(object? o)
@@ -200,5 +223,30 @@ public abstract class ActionBase
         }
 
         return results;
+    }
+
+    private string BuildDefaultActionName(Project project, ActionType actionType)
+    {
+        var nameLookup = project.AllTemplates
+            .SelectMany(x => x.TraverseTree())
+            .Where(x => x.IsNameRequired)
+            .Select(x => x.Name?.ToLower())
+            .ToHashSet();
+
+        // This is only inefficient if all the names are left as default
+        var count = 1;
+        while (true)
+        {
+            // Case insensitive to avoid accidental problems. Select1 vs select1
+            var fullName = $"{actionType}{count}";
+            fullName = char.ToLower(fullName[0]) + fullName.Substring(1);
+
+            if (!nameLookup.Contains(fullName))
+            {
+                return fullName;
+            }
+
+            count++;
+        }
     }
 }

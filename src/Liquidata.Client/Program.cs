@@ -18,6 +18,9 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices(c =>
 {
     c.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+    c.SnackbarConfiguration.ShowTransitionDuration = 500;
+    c.SnackbarConfiguration.VisibleStateDuration = 2500;
+    c.SnackbarConfiguration.HideTransitionDuration = 1000;
 });
 builder.Services.AddClipboard();
 builder.Services.AddBlazoredLocalStorage(o =>

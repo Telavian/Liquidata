@@ -12,6 +12,7 @@ public class StoreAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Store;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => true;
 
     public StoreType StoreType { get; set; }
     public string? Script { get; set; } = null!;

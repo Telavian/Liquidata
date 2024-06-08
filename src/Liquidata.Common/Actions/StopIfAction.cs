@@ -12,6 +12,7 @@ public class StopIfAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.StopIf;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public string? Script { get; set; } = null!;
     public StopType StopType { get; set; }

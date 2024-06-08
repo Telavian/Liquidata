@@ -12,6 +12,7 @@ public class ExecuteTemplateAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.ExecuteTemplate;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public Guid? ExecutionTemplateId { get; set; } = null!;
     public int WaitMilliseconds { get; set; }

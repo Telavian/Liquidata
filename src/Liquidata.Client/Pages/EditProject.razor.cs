@@ -149,7 +149,7 @@ public partial class EditProjectViewModel : ViewModelBase
             return;
         }
 
-        CurrentProject.AllTemplates.Add(templateResult);
+        CurrentProject!.AllTemplates.Add(templateResult);
         SelectedTemplate = templateResult;
     }
 
@@ -164,8 +164,8 @@ public partial class EditProjectViewModel : ViewModelBase
         }
 
         var _ = action.AllowChildren 
-            ? action.AddChildAction(actionType) 
-            : action.AddSiblingAction(actionType);
+            ? action.AddChildAction(CurrentProject, actionType) 
+            : action.AddSiblingAction(CurrentProject, actionType);
     }
 
     private async Task HandleRemoveActionAsync(ActionBase action)
@@ -206,13 +206,15 @@ public partial class EditProjectViewModel : ViewModelBase
                 return;
             }
 
-            CurrentProject.AllTemplates.Remove((action as Template)!);
+            CurrentProject!.AllTemplates.Remove((action as Template)!);
             SelectedTemplate = CurrentProject.AllTemplates.First();
             return;
         }
 
         var isSelected = SelectedAction == action ||
-            action.FindActions(x => x.ActionId == action.ActionId).Any();
+            action.TraverseTree()
+                .Where(x => x.ActionId == action.ActionId)
+                .Any();
 
         action.Parent!.RemoveChild(action);
 

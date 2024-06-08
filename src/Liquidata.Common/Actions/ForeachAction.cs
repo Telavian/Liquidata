@@ -12,6 +12,7 @@ public class ForeachAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Foreach;
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => true;
 
     public string? Script { get; set; } = null!;
     public int WaitMilliseconds { get; set; }

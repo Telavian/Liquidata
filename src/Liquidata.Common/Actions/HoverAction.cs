@@ -10,6 +10,7 @@ public class HoverAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Hover;
     [JsonIgnore] public override bool AllowChildren => false;
     [JsonIgnore] public override bool IsInteractive => true;
+    [JsonIgnore] public override bool IsNameRequired => false;
 
     public int WaitMilliseconds { get; set; }
 

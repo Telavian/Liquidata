@@ -11,11 +11,12 @@ public class ScopeAction : ActionBase
     [JsonIgnore] public override ActionType ActionType => ActionType.Scope;
     [JsonIgnore] public override bool AllowChildren => true;
     [JsonIgnore] public override bool IsInteractive => false;
+    [JsonIgnore] public override bool IsNameRequired => true;
 
     public override string[] BuildValidationErrors()
     {
         return Name.IsNotDefined()
-            ? (["No name defined"])
+            ? (["Name is not defined"])
             : ([]);
     }
 
