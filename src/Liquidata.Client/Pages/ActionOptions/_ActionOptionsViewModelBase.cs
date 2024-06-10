@@ -9,14 +9,10 @@ namespace Liquidata.Client.Pages.ActionOptions;
 public abstract class ActionOptionsViewModelBase<T> : ViewModelBase, IDisposable
     where T : ActionBase
 {
-    [Inject]
-    private ComponentBus _bus { get; set; } = null!;
+    [Inject] private ComponentBus _bus { get; set; } = null!;
 
-    [Parameter]
-    public ActionBase? Action { get; set; }
-
-    [Parameter]
-    public EditProjectViewModel? Parent { get; set; }
+    [Parameter] public ActionBase? Action { get; set; }
+    [Parameter] public EditProjectViewModel? Parent { get; set; }
 
     public T TypedAction => (T)Action!;
 

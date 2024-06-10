@@ -1,6 +1,8 @@
 using BlazorComponentBus;
 using Blazored.LocalStorage;
+using BlazorFileSaver;
 using CurrieTechnologies.Razor.Clipboard;
+using DebounceThrottle;
 using Liquidata.Client;
 using Liquidata.Client.Services;
 using Liquidata.Client.Services.Interfaces;
@@ -31,6 +33,7 @@ builder.Services.AddBlazoredLocalStorage(o =>
 });
 
 builder.Services.AddScoped<ComponentBus>();
+builder.Services.AddBlazorFileSaver();
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IBrowserService, ClientBrowserService>();

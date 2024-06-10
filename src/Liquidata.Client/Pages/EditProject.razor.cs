@@ -14,14 +14,20 @@ using System;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Models;
 using Liquidata.Client.Services.Interfaces;
+using BlazorComponentBus;
+using Liquidata.Client.Messages;
+using System.Text.Json.Serialization;
+using BlazorFileSaver;
 
 namespace Liquidata.Client.Pages;
 
-public partial class EditProjectViewModel : ViewModelBase
+public partial class EditProjectViewModel : ViewModelBase, IDisposable
 {
     private bool _isBrowserInitialized;
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
 
+    [Inject] private ComponentBus _bus { get; set; } = null!;
+    [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;
     [Inject] private IClientBrowserService _browserService { get; set; } = null!;
     [Inject] private IXPathProcessorService _xPathProcessorService { get; set; } = null!;
     [Inject] private IProjectService _projectService { get; set; } = null!;
@@ -89,6 +95,9 @@ public partial class EditProjectViewModel : ViewModelBase
     private Func<Task>? _saveAsProjectAsyncCommand;
     public Func<Task> SaveAsProjectAsyncCommand => _saveAsProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleSaveAsProjectAsync, "Unable to save as project");
 
+    private Func<Task>? _exportProjectAsyncCommand;
+    public Func<Task> ExportProjectAsyncCommand => _exportProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleExportProjectAsync, "Unable to export project");
+
     private Func<Task>? _deleteProjectAsyncCommand;
     public Func<Task> DeleteProjectAsyncCommand => _deleteProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleDeleteProjectAsync, "Unable to delete project");
 
@@ -99,7 +108,12 @@ public partial class EditProjectViewModel : ViewModelBase
         var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection)!;
 
         await _processSelectedItemAction(selection);
-    }    
+    }
+
+    public void Dispose()
+    {
+        _bus.UnSubscribe<ActionUpdatedMessage>(HandleActionUpdatedMessage);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,6 +136,7 @@ public partial class EditProjectViewModel : ViewModelBase
             ? CurrentProject?.Url 
             : SelectedTemplate?.Url;
 
+        _bus.Subscribe<ActionUpdatedMessage>(HandleActionUpdatedMessage);
         await base.OnInitializedAsync();
     }
 
@@ -164,8 +179,8 @@ public partial class EditProjectViewModel : ViewModelBase
         }
 
         var _ = action.AllowChildren 
-            ? action.AddChildAction(CurrentProject, actionType) 
-            : action.AddSiblingAction(CurrentProject, actionType);
+            ? action.AddChildAction(CurrentProject!, actionType) 
+            : action.AddSiblingAction(CurrentProject!, actionType);
     }
 
     private async Task HandleRemoveActionAsync(ActionBase action)
@@ -477,6 +492,20 @@ public partial class EditProjectViewModel : ViewModelBase
         await ShowSnackbarMessageAsync($"Project saved to '{saveAsResult}'");
     }
 
+    private async Task HandleExportProjectAsync()
+    {
+        if (CurrentProject is null)
+        {
+            return;
+        }
+
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new JsonStringEnumConverter());
+
+        var json = JsonSerializer.Serialize(CurrentProject, options);
+        await _blazorFileSaver.SaveAs($"{CurrentProject.Name}.json", json, "application/json");
+    }
+
     private async Task HandleDeleteProjectAsync()
     {
         await Task.Yield();
@@ -493,5 +522,10 @@ public partial class EditProjectViewModel : ViewModelBase
             await _projectService.DeleteProjectAsync(CurrentProject.ProjectId);
             await NavigateToAsync($"{HomeViewModel.NavigationPath}");
         }
+    }
+
+    private void HandleActionUpdatedMessage(MessageArgs message)
+    {
+        throw new NotImplementedException();
     }
 }

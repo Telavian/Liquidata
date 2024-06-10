@@ -30,6 +30,12 @@
                                OnClick="@(() => SaveAsProjectAsyncCommand())" />
             </MudTooltip>
 
+            <MudTooltip Text="Export the current project to a file" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.FileDownload"
+                               OnClick="@(() => ExportProjectAsyncCommand())" />
+            </MudTooltip>
+
             <MudTooltip Text="Delete the current project" Placement="Placement.Right"
                         Delay="500" Color="Color.Primary">
                 <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.Delete"
