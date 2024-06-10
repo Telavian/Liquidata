@@ -25,9 +25,19 @@ public class RelativeSelectAction : SelectionActionBase
 
         foreach (var match in matches)
         {
+            var previousThisValue = "";
+            var previousSelection = "";
+
             try
             {
-                await executionService.Browser.SetVariableAsync(Name, match);                
+                await executionService.Browser.SetVariableAsync(Name, match);
+                
+                previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
+                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, match);
+                
+                previousSelection = executionService.CurrentSelection;
+                executionService.CurrentSelection = match;
+
                 var returnType = await ExecuteChildrenAsync(executionService);
 
                 if (returnType == ExecutionReturnType.StopLoop)
@@ -44,6 +54,8 @@ public class RelativeSelectAction : SelectionActionBase
             finally
             {
                 await executionService.Browser.RemoveVariableAsync(Name);
+                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
+                executionService.CurrentSelection = previousSelection;
             }
         }
 

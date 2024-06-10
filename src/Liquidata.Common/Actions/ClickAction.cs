@@ -35,11 +35,12 @@ public class ClickAction : ActionBase
             // New pages must execute in new template
             var newTemplate = executionService.CurrentProject.AllTemplates
                 .FirstOrDefault(x => x.ActionId == ExecutionTemplateId) 
-                ?? throw new ExecutionException("Unable to find template for click action");            
+                ?? throw new ExecutionException("Unable to find template for click action");
 
+            var selection = executionService.CurrentSelection;
             await executionService.CreateExecutionTaskAsync(async () =>
             {
-                var browser = await executionService.Browser.ClickOpenInNewPageAsync(executionService.CurrentSelection, ClickButton, IsDoubleClick);
+                var browser = await executionService.Browser.ClickOpenInNewPageAsync(selection, ClickButton, IsDoubleClick);
                 executionService = executionService.Clone(selection:"", browser:browser);
 
                 await WaitForDelayAsync(WaitMilliseconds);

@@ -47,6 +47,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await AddSelectionCssAsync();
         await AddXPathJsAsync();
         await AddSelectionJsAsync();
+        await AddSelectionExtensionsJsAsync();
     }
 
     public async Task<bool> CheckIfWebSecurityEnabledAsync()
@@ -260,6 +261,18 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await ExecuteJavascriptAsync(script);
     }
 
+    public async Task<string> GetVariableAsync(string name)
+    {
+        await Task.Yield();
+
+        var script = $"globalThis.${name} ?? ``;";
+        var (isSuccess, result) = await ExecuteJavascriptAsync<string>(script);
+
+        return isSuccess 
+            ? result 
+            : string.Empty;
+    }
+
     public async Task RemoveVariableAsync(string name)
     {
         await Task.Yield();
@@ -328,25 +341,34 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await ExecuteJavascriptAsync(js);
     }
 
+    private async Task AddSelectionExtensionsJsAsync()
+    {
+        var js = await LoadSelectionExtensionsJsAsync();
+        await ExecuteJavascriptAsync(js);
+    }
+
     private Task<string> LoadSelectionCssAsync()
     {
-        return LoadResourceAsync("css.selection.css");
+        return LoadResourceAsync("Liquidata.Common.Resources.css.selection.css");
     }
 
     private Task<string> LoadSelectionJsAsync()
     {        
-        return LoadResourceAsync("javascript.selection.js");        
+        return LoadResourceAsync("Liquidata.Common.Resources.javascript.selection.js");        
     }
 
     private Task<string> LoadXPathJsAsync()
     {
-        return LoadResourceAsync("javascript.xpath.js");
+        return LoadResourceAsync("Liquidata.Common.Resources.javascript.xpath.js");
+    }
+
+    private Task<string> LoadSelectionExtensionsJsAsync()
+    {
+        return LoadResourceAsync("Liquidata.Common.Resources.javascript.selection_extensions.js");
     }
 
     private async Task<string> LoadResourceAsync(string name)
     {
-        name = $"Liquidata.Client.Resources.{name}";
-
         using var stream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream(name);
 

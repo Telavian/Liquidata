@@ -1,6 +1,7 @@
 ﻿@page "/EditProject"
 @layout MainLayout
 @using Liquidata.Client.Extensions
+@using Liquidata.Client.Pages.Execution
 @using Liquidata.Common.Actions
 @using Liquidata.Common.Actions.Enums
 @using MudBlazor
@@ -111,7 +112,7 @@
     <!-- Data -->
     <MudExpansionPanels Style="grid-row: 2; grid-column: 3; margin-right: 5px; margin-bottom: 5px;">
         <MudExpansionPanel Text="Data">
-
+            <LiveExecutionResults />
         </MudExpansionPanel>
     </MudExpansionPanels>
 </div>

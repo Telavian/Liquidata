@@ -1,4 +1,6 @@
 ﻿using Liquidata.Common.Actions;
+using Liquidata.Common.Services.Interfaces;
+using System.Text.Json;
 
 namespace Liquidata.Common;
 
@@ -26,11 +28,38 @@ public class Project
         };
     }
 
+    public bool CheckIfInterative()
+    {
+        return AllTemplates
+            .SelectMany(x => x.TraverseTree())
+            .Any(x => x.IsInteractive);
+    }
+
+    public Project FullClone()
+    {
+        var json = JsonSerializer.Serialize(this);
+        return JsonSerializer.Deserialize<Project>(json)!;
+    }
+
     public void RestoreParentReferences()
     {
         foreach (var template in AllTemplates)
         {
             template.RestoreParentReferences(null);
         }
+    }
+
+    public async Task ExecuteProjectAsync(IExecutionService executionService)
+    {
+        await Task.Yield();
+        var mainTemplate = AllTemplates.FirstOrDefault(x => x.Name == Template.MainTemplateName);
+
+        if (mainTemplate is null)
+        {
+            throw new Exception("Unable to find main template");
+        }
+
+        await mainTemplate.ExecuteActionAsync(executionService);
+        await executionService.WaitForExecutionTasksAsync();
     }
 }

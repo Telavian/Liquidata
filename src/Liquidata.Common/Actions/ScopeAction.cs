@@ -22,9 +22,11 @@ public class ScopeAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        var currentScope = executionService.DataHandler.DataScope;
+
         try
-        {
-            await executionService.DataHandler.AddDataScopeAsync(Name);
+        {            
+            executionService.DataHandler.DataScope = Name;
             var returnType = await ExecuteChildrenAsync(executionService);
 
             if (returnType == ExecutionReturnType.StopLoop)
@@ -40,7 +42,7 @@ public class ScopeAction : ActionBase
         }
         finally
         {
-            await executionService.DataHandler.RemoveDataScopeAsync();
+            executionService.DataHandler.DataScope = currentScope;
         }
     }
 }

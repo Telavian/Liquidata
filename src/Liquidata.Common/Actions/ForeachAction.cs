@@ -4,6 +4,7 @@ using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace Liquidata.Common.Actions;
 
@@ -55,9 +56,19 @@ public class ForeachAction : ActionBase
 
         foreach (var item in result) 
         {
+            var previousThisValue = "";
+            var previousSelection = "";
+
             try
             {
                 await executionService.Browser.SetVariableAsync(Name, item);
+                
+                previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
+                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, item);
+                
+                previousSelection = executionService.CurrentSelection;
+                executionService.CurrentSelection = item;
+
                 var returnType = await ExecuteChildrenAsync(executionService);
 
                 if (returnType == ExecutionReturnType.StopLoop)
@@ -74,6 +85,8 @@ public class ForeachAction : ActionBase
             finally
             {
                 await executionService.Browser.RemoveVariableAsync(Name);
+                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
+                executionService.CurrentSelection = previousSelection;
             }
         }
 

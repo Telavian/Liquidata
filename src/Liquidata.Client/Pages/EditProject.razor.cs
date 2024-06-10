@@ -18,6 +18,7 @@ using BlazorComponentBus;
 using Liquidata.Client.Messages;
 using System.Text.Json.Serialization;
 using BlazorFileSaver;
+using DebounceThrottle;
 
 namespace Liquidata.Client.Pages;
 
@@ -25,7 +26,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 {
     private bool _isBrowserInitialized;
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
-
+    
     [Inject] private ComponentBus _bus { get; set; } = null!;
     [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;
     [Inject] private IClientBrowserService _browserService { get; set; } = null!;
@@ -181,6 +182,8 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         var _ = action.AllowChildren 
             ? action.AddChildAction(CurrentProject!, actionType) 
             : action.AddSiblingAction(CurrentProject!, actionType);
+
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });
     }
 
     private async Task HandleRemoveActionAsync(ActionBase action)
@@ -278,6 +281,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         await _browserService.InitializeBrowserAsync();
 
         await UpdateBrowserSelectionModeAsync();
+        await ExecuteProjectAsync(CurrentProject!);
     }
 
     private async Task HandleItemSelectedAsync(XPathSelection selection)
@@ -526,6 +530,18 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
     private void HandleActionUpdatedMessage(MessageArgs message)
     {
-        throw new NotImplementedException();
+        if (CurrentProject == null)
+        {
+            return;
+        }
+
+        var project = CurrentProject.FullClone();
+        _ = ExecuteProjectAsync(project);
+    }
+
+    private async Task ExecuteProjectAsync(Project project)
+    {
+        await Task.Yield();
+        await _bus.Publish(new ExecuteProjectMessage { Project = project });
     }
 }

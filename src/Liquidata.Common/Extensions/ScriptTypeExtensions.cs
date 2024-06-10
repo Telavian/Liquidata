@@ -14,7 +14,6 @@ public static class ScriptTypeExtensions
             ScriptType.Height => "$this.getHeight()",
             ScriptType.Link => "$this.getLink()",
             ScriptType.PageUrl => "$this.getPageUrl()",
-            ScriptType.Size => "$this.getSize()",
             ScriptType.Source => "$this.getAttr('src')",
             ScriptType.StarRating => "$this.getStarRating('class', 'full', 'half')",
             ScriptType.Text => "$this.getText()",

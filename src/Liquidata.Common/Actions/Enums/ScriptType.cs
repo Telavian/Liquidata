@@ -8,7 +8,6 @@ public enum ScriptType
     Height,
     Link,
     PageUrl,
-    Size,
     Source,
     StarRating,
     Text,

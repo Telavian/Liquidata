@@ -16,6 +16,7 @@ public interface IBrowserService
     Task StoreDataAsync(string name, string value, StoreType storeType);
     Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick);
     Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick);
+    Task<string> GetVariableAsync(string name);
     Task SetVariableAsync(string name, string value);
     Task RemoveVariableAsync(string name);
     Task HoverSelectionAsync(string selection);
