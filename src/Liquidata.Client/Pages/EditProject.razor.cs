@@ -195,7 +195,9 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         if (isConfirmed == true)
         {
             await RemoveActionAsync(action);
-        }        
+        }
+
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });
     }
 
     private async Task HandleToggleBrowserModeAsync()

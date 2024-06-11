@@ -175,7 +175,6 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task<bool> ExecuteJavascriptAsync(string script)
     {
-        Console.WriteLine($"Executing script: {script}");
         try
         {
             var iife = $"(() => {{ {script} }})()";

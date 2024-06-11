@@ -41,7 +41,10 @@ public class ProjectService(ILocalStorageService localStorage) : IProjectService
     public async Task<Project?> LoadProjectAsync(Guid projectId)
     {
         var key = BuildProjectKey(projectId);
-        return await localStorage.GetItemAsync<Project>(key);
+        var project = await localStorage.GetItemAsync<Project>(key);
+
+        project!.RestoreParentReferences();
+        return project;
     }
 
     public async Task<ProjectInfo[]> LoadAllProjectsAsync()

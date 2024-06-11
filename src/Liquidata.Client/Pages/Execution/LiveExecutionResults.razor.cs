@@ -64,6 +64,8 @@ namespace Liquidata.Client.Pages.Execution
             if (project == null)
             {
                 ExecutionMessage = "Project is not loaded";
+                ExecutionResults = null;
+
                 await RefreshAsync();
                 return;
             }
@@ -73,6 +75,8 @@ namespace Liquidata.Client.Pages.Execution
             if (isInteractive)
             {
                 ExecutionMessage = "Project is interactive. To see parser results execute project.";
+                ExecutionResults = null;
+
                 await RefreshAsync();
                 return;
             }
@@ -82,6 +86,8 @@ namespace Liquidata.Client.Pages.Execution
             if (!isFullyDefined)
             {
                 ExecutionMessage = "Project contains errors.";
+                ExecutionResults = null;
+
                 await RefreshAsync();
                 return;
             }
