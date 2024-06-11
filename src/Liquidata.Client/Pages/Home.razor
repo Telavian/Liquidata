@@ -24,7 +24,14 @@
                              @bind-SelectedValue="@SelectedProject">
                         @foreach (var project in AllProjects)
                         {
-                            <MudListItem Value="@project" Text="@project.Name" />
+                            <MudListItem Value="@project">
+                                <MudStack Row="true">
+                                    <MudText Class="verticalCenter">@project.Name</MudText>
+                                    <MudIconButton Icon="@Icons.Material.TwoTone.Clear" Color="Color.Error"                                                   
+                                                   Title="Remove project"
+                                                   OnClick="@(() => RemoveProjectAsyncCommand(project!))" />
+                                </MudStack>
+                            </MudListItem>  
                         }
                     </MudList>
 
