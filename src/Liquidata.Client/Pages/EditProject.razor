@@ -95,11 +95,9 @@
                 </ItemTemplate>
             </MudTreeView>
 
-            <MudExpansionPanels Style="grid-row: 4; grid-column: 1 / span 3;">
-                <MudExpansionPanel Text="Options">
-                    <ActionOptions Action="@SelectedAction" Parent="@this" />
-                </MudExpansionPanel>
-            </MudExpansionPanels>
+            <div style="grid-row: 4; grid-column: 1 / span 3;">
+                <ActionOptions Action="@SelectedAction" Parent="@this" />
+            </div>
         </div>
     </div>
 

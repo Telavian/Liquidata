@@ -102,11 +102,6 @@ code {
     color: #c02d76;
 }
 
-.iconSize75 svg {
-    height: 75px;
-    width: 75px;
-}
-
 .verticalCenter {
     margin-top: auto !important;
     margin-bottom: auto !important;

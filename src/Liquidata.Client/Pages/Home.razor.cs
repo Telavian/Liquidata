@@ -17,8 +17,8 @@ public partial class HomeViewModel : ViewModelBase
     private Func<Task>? _loadProjectAsyncCommand;
     public Func<Task> LoadProjectAsyncCommand => _loadProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleLoadProjectAsync, "Unable to load project");
 
-    private Func<ProjectInfo, Task>? _removeProjectAsyncCommand;
-    public Func<ProjectInfo, Task> RemoveProjectAsyncCommand => _removeProjectAsyncCommand ??= CreateEventCallbackAsyncCommand<ProjectInfo>(HandleRemoveProjectAsync, "Unable to remove project");
+    private Func<Task>? _removeProjectAsyncCommand;
+    public Func<Task> RemoveProjectAsyncCommand => _removeProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleRemoveProjectAsync, "Unable to remove project");
 
     public ProjectInfo[] AllProjects { get; set; } = Array.Empty<ProjectInfo>();
     public ProjectInfo? SelectedProject { get; set; }
@@ -51,8 +51,14 @@ public partial class HomeViewModel : ViewModelBase
         await NavigateToAsync($"/{EditProjectViewModel.NavigationPath}?ProjectId={SelectedProject.ProjectId}");
     }
 
-    private async Task HandleRemoveProjectAsync(ProjectInfo project)
+    private async Task HandleRemoveProjectAsync()
     {
+        var project = SelectedProject;
+        if (project is null)
+        {
+            return;
+        }
+
         var isConfirm = await ConfirmActionAsync("Delete project", $"Remove project '{project.Name}'? This can not be undone.");
 
         if (isConfirm == true)
