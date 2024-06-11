@@ -1,13 +1,18 @@
 ﻿using BlazorComponentBus;
+using BlazorFileSaver;
 using DebounceThrottle;
 using Liquidata.Client.Messages;
 using Liquidata.Client.Pages.Common;
+using Liquidata.Client.Pages.Dialogs;
 using Liquidata.Client.Services;
 using Liquidata.Common;
 using Liquidata.Common.Execution;
 using Liquidata.Common.Services;
+using Liquidata.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Liquidata.Client.Pages.Execution
 {
@@ -16,10 +21,14 @@ namespace Liquidata.Client.Pages.Execution
         private DebounceDispatcher _projectExecutionDebounce = new DebounceDispatcher(500);
         [Inject] private ComponentBus _bus { get; set; } = null!;
         [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
+        [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;
 
         public string ExecutionMessage { get; set; } = "";
         public ExecutionResults? ExecutionResults { get; set; } = null!;
         public bool IsResultsLoading { get; set; } = false;
+
+        private Func<Task>? _saveExecutionResultsAsyncCommand;
+        public Func<Task> SaveExecutionResultsAsyncCommand => _saveExecutionResultsAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleSaveExecutionResultsAsync, "Unable to save execution results");
 
         public void Dispose()
         {
@@ -102,6 +111,20 @@ namespace Liquidata.Client.Pages.Execution
                 IsResultsLoading = false;
                 await RefreshAsync();
             }
+        }
+
+        private async Task HandleSaveExecutionResultsAsync()
+        {
+            if (ExecutionResults is null)
+            {
+                return;
+            }
+
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new JsonStringEnumConverter());
+
+            var json = JsonSerializer.Serialize(ExecutionResults, options);
+            await _blazorFileSaver.SaveAs($"extraction_results.json", json, "application/json");
         }
     }
 }

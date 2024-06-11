@@ -4,38 +4,52 @@
 @using MudBlazor
 @inherits LiveExecutionResultsViewModel
 
-<div style="height: 250px; width: 100%;">
-    @if (!string.IsNullOrWhiteSpace(ExecutionMessage))
-    {
-        <div style="margin-top: auto; margin-bottom: auto;">
-            @(ExecutionMessage)
-        </div>
-    }
-    else if (ExecutionResults is not null)
-    {
-        <MudTable Style="height: 100%;" Hover="true" Loading="@IsResultsLoading" 
-                  LoadingProgressColor="Color.Info" Bordered="true" Dense="true" 
-                  Elevation="3" Height="100%" Virtualize="true"
-                  Items="ExecutionResults.Records">
-            <HeaderContent>
-                @foreach (var column in ExecutionResults.AllColumns)
-                {
-                    <MudTh>@column</MudTh>
-                }
-            </HeaderContent>
+<MudExpansionPanels>
+    <MudExpansionPanel>
+        <TitleContent>
+            <MudStack Row="true">
+                <MudText Style="margin-top: auto !important; margin-bottom: auto !important;">Data</MudText>
+                <MudIconButton Style="margin-left: auto;" Icon="@Icons.Material.TwoTone.FileDownload"
+                               OnClick="@(() => SaveExecutionResultsAsyncCommand())" />
+            </MudStack>
+        </TitleContent>
 
-            <RowTemplate>
-                @foreach (var column in ExecutionResults.AllColumns)
-                {
-                    <MudTd DataLabel="@column">@context.GetRowData(column)</MudTd>
-                }
-            </RowTemplate>
-        </MudTable>
-    }
-    else
-    {
-        <div style="margin-top: auto; margin-bottom: auto;">
-            Unable to execute project
+        <ChildContent>
+            <div style="height: 250px; width: 100%;">
+            @if (!string.IsNullOrWhiteSpace(ExecutionMessage))
+            {
+                <div style="margin-top: auto; margin-bottom: auto;">
+                    @(ExecutionMessage)
+                </div>
+            }
+            else if (ExecutionResults is not null)
+            {
+                <MudTable Style="height: 100%;" Hover="true" Loading="@IsResultsLoading"
+                          LoadingProgressColor="Color.Info" Bordered="true" Dense="true"
+                          Elevation="3" Height="100%" Virtualize="true"
+                          Items="ExecutionResults.Records">
+                    <HeaderContent>
+                        @foreach (var column in ExecutionResults.AllColumns)
+                        {
+                            <MudTh>@column</MudTh>
+                        }
+                    </HeaderContent>
+
+                    <RowTemplate>
+                        @foreach (var column in ExecutionResults.AllColumns)
+                        {
+                            <MudTd DataLabel="@column">@context.GetRowData(column)</MudTd>
+                        }
+                    </RowTemplate>
+                </MudTable>
+            }
+            else
+            {
+                <div style="margin-top: auto; margin-bottom: auto;">
+                    Unable to execute project
+                </div>
+            }
         </div>
-    }
-</div>
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
