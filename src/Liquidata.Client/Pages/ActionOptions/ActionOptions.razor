@@ -5,44 +5,54 @@
 @inherits ActionOptionsViewModel
 
 <MudExpansionPanels>
-    <MudExpansionPanel Text="Options">
-        <div style="width: 315px; margin-top: 15px;">
-            @if (Action?.ActionType == ActionType.Template) { <TemplateOptions Action="Action" Parent="Parent" /> }
+    <MudExpansionPanel>
+        <TitleContent>
+            <MudStack Row="true">
+                <MudText Style="margin-top: auto !important; margin-bottom: auto !important;">Options</MudText>
+                <MudIconButton Style="margin-left: auto;" Icon="@Icons.Material.TwoTone.OpenInNew"
+                               OnClick="@(() => OpenOptionsInDialogAsyncCommand())" />
+            </MudStack>
+        </TitleContent>
 
-            else if (Action?.ActionType == ActionType.Select) { <SelectOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectOptions Action="Action" Parent="Parent" /> }
+        <ChildContent>
+            <div style="width: 315px; margin-top: 15px;">
+                @if (Action?.ActionType == ActionType.Template) { <TemplateOptions Action="Action" Parent="Parent" /> }
 
-            else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Extract) { <ExtractOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Log) { <LogOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Scope) { <ScopeOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Store) { <StoreOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Select) { <SelectOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectOptions Action="Action" Parent="Parent" /> }
 
-            else if (Action?.ActionType == ActionType.Conditional) { <ConditionalOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Foreach) { <ForeachOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Loop) { <LoopOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Extract) { <ExtractOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Log) { <LogOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Scope) { <ScopeOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Store) { <StoreOptions Action="Action" Parent="Parent" /> }
 
-            else if (Action?.ActionType == ActionType.Click) { <ClickOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Hover) { <HoverOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Input) { <InputOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Keypress) { <KeypressOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Reload) { <ReloadOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Scroll) { <ScrollOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Stop) { <StopOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.StopIf) { <StopIfOptions Action="Action" Parent="Parent" /> }
-            else if (Action?.ActionType == ActionType.Wait) { <WaitOptions Action="Action" Parent="Parent" /> }
-            else 
-            {
-                <MudStack>
-                    <MudText>
-                        No options
-                    </MudText>
-                </MudStack>
-            }
-        </div>
+                else if (Action?.ActionType == ActionType.Conditional) { <ConditionalOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Foreach) { <ForeachOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Loop) { <LoopOptions Action="Action" Parent="Parent" /> }
+
+                else if (Action?.ActionType == ActionType.Click) { <ClickOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Hover) { <HoverOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Input) { <InputOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Keypress) { <KeypressOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Reload) { <ReloadOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Scroll) { <ScrollOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Stop) { <StopOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.StopIf) { <StopIfOptions Action="Action" Parent="Parent" /> }
+                else if (Action?.ActionType == ActionType.Wait) { <WaitOptions Action="Action" Parent="Parent" /> }
+                else 
+                {
+                    <MudStack>
+                        <MudText>
+                            No options
+                        </MudText>
+                    </MudStack>
+                }
+            </div>
+        </ChildContent>
     </MudExpansionPanel>
 </MudExpansionPanels>

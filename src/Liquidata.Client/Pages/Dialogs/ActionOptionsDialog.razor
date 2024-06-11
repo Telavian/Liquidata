@@ -1,0 +1,57 @@
+﻿@layout MainLayout
+@using Liquidata.Client.Pages.ActionOptions
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@inherits ActionOptionsDialogViewModel
+
+<MudDialog>
+    <DialogContent>
+        <div style="min-width: 450px;">
+            @if (Action?.ActionType == ActionType.Template) { <TemplateOptions Action="Action" Parent="Parent" /> }
+
+            else if (Action?.ActionType == ActionType.Select) { <SelectOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectOptions Action="Action" Parent="Parent" /> }
+
+            else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Extract) { <ExtractOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Log) { <LogOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Scope) { <ScopeOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Store) { <StoreOptions Action="Action" Parent="Parent" /> }
+
+            else if (Action?.ActionType == ActionType.Conditional) { <ConditionalOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Foreach) { <ForeachOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Loop) { <LoopOptions Action="Action" Parent="Parent" /> }
+
+            else if (Action?.ActionType == ActionType.Click) { <ClickOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Hover) { <HoverOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Input) { <InputOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Keypress) { <KeypressOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Reload) { <ReloadOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Scroll) { <ScrollOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Stop) { <StopOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.StopIf) { <StopIfOptions Action="Action" Parent="Parent" /> }
+            else if (Action?.ActionType == ActionType.Wait) { <WaitOptions Action="Action" Parent="Parent" /> }
+            else 
+            {
+                <MudStack>
+                    <MudText>
+                        No options
+                    </MudText>
+                </MudStack>
+            }
+        </div>
+    </DialogContent>
+
+    <DialogActions>
+        <MudTooltip Text="Close options" Delay="500" Color="Color.Primary">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                       OnClick="@(() => CloseDialogAsyncCommand())">
+                Close
+            </MudButton>
+        </MudTooltip>
+    </DialogActions>
+</MudDialog>
