@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public const string ThisSelectionName = $"$this";
+        public const string ThisSelectionName = "this";
     }
 }

@@ -26,6 +26,11 @@ public class StopIfAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         if (Script.IsNotDefined())
         {
             throw new ExecutionException("Script is not defined for stop if action");

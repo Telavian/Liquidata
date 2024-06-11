@@ -22,6 +22,11 @@ public class ScopeAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         var currentScope = executionService.DataHandler.DataScope;
 
         try

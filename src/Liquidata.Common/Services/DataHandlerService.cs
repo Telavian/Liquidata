@@ -82,37 +82,100 @@ namespace Liquidata.Common.Services
 
             if (fieldType == FieldType.Boolean)
             {
-                var result = ChoiceRecognizer.RecognizeBoolean(data, Culture.English);
-                return GetResolvedValue(result);
+                return ParseBoolean(data);
             }
 
             if (fieldType == FieldType.Datetime)
             {
-                var result = DateTimeRecognizer.RecognizeDateTime(data, Culture.English);
-                return GetResolvedValue(result);
+                return ParseDateTime(data);
             }
 
             if (fieldType == FieldType.Numeric)
             {
-                var result = NumberRecognizer.RecognizeNumber(data, Culture.English);
-                return GetResolvedValue(result);
+                return ParseNumeric(data);
             }
 
             if (fieldType == FieldType.Url)
             {
-                var result = SequenceRecognizer.RecognizeURL(data, Culture.English);
-                return GetResolvedValue(result);
+                return ParseUrl(data);
             }
 
             throw new Exception($"Unknown field type: {fieldType}");
         }
 
+        private string ParseBoolean(string data)
+        {
+            var isValid = bool.TryParse(data, out var value);
+            if (isValid)
+            {
+                return value.ToString();
+            }
+
+            var result = ChoiceRecognizer.RecognizeBoolean(data, Culture.English);
+            return GetResolvedValue(result);
+        }
+
+        private string ParseDateTime(string data)
+        {
+            var isValid = DateTime.TryParse(data, out var value);
+            if (isValid)
+            {
+                return value.ToString();
+            }
+
+            var result = DateTimeRecognizer.RecognizeDateTime(data, Culture.English);
+            return GetResolvedValue(result);
+        }
+
+        private string ParseNumeric(string data)
+        {
+            var isValid = double.TryParse(data, out var value);
+            if (isValid)
+            {
+                return value.ToString();
+            }
+
+            var result = NumberRecognizer.RecognizeNumber(data, Culture.English);
+            return GetResolvedValue(result);
+        }
+
+        private string ParseUrl(string data)
+        {
+            var isValid = Uri.TryCreate(data, UriKind.RelativeOrAbsolute, out var value);
+            if (isValid)
+            {
+                return value!.ToString();
+            }
+
+            var result = SequenceRecognizer.RecognizeURL(data, Culture.English);
+            return GetResolvedValue(result);
+        }
+
         private string GetResolvedValue(List<ModelResult> result)
         {
-            return result
+            var value = result
                 ?.Where(x => x.Resolution.ContainsKey("value"))
                 ?.Select(x => x.Resolution["value"].ToString())
                 ?.FirstOrDefault() ?? "";
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return value;
+            }
+
+            var values = result
+                ?.Where(x => x.Resolution.ContainsKey("values"))
+                ?.SelectMany(x => x.Resolution["values"] as List<Dictionary<string, string>>)
+                ?.Where(x => x is not null && x.ContainsKey("value"))
+                ?.Select(x => x["value"].ToString())
+                ?.FirstOrDefault() ?? "";
+
+            if (!string.IsNullOrWhiteSpace(values))
+            {
+                return values.ToString()!;
+            }
+
+            return "";
         }
     }
 }

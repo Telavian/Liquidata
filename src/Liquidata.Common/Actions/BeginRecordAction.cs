@@ -20,6 +20,10 @@ public class BeginRecordAction : ActionBase
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
         await Task.Yield();
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
 
         executionService.DataHandler
             .AddRecord();

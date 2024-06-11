@@ -6,6 +6,7 @@
         public IBrowserService Browser { get; }
         public IXPathProcessorService XPathProcessor { get; }
 
+        public int Concurrency { get; }
         public string CurrentSelection { get; set; }
         public Project CurrentProject { get; }
 

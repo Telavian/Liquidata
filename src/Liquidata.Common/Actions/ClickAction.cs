@@ -30,6 +30,11 @@ public class ClickAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         if (IsNewPage)
         {
             // New pages must execute in new template

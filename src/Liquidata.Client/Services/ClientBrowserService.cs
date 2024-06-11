@@ -1,5 +1,6 @@
 ﻿using Liquidata.Client.Exceptions;
 using Liquidata.Client.Services.Interfaces;
+using Liquidata.Common;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Models;
@@ -174,6 +175,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task<bool> ExecuteJavascriptAsync(string script)
     {
+        Console.WriteLine($"Executing script: {script}");
         try
         {
             var iife = $"(() => {{ {script} }})()";
@@ -349,27 +351,27 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     private Task<string> LoadSelectionCssAsync()
     {
-        return LoadResourceAsync("Liquidata.Common.Resources.css.selection.css");
+        return LoadResourceAsync(Assembly.GetExecutingAssembly(), "Liquidata.Client.Resources.css.selection.css");
     }
 
     private Task<string> LoadSelectionJsAsync()
     {        
-        return LoadResourceAsync("Liquidata.Common.Resources.javascript.selection.js");        
+        return LoadResourceAsync(Assembly.GetExecutingAssembly(), "Liquidata.Client.Resources.javascript.selection.js");        
     }
 
     private Task<string> LoadXPathJsAsync()
     {
-        return LoadResourceAsync("Liquidata.Common.Resources.javascript.xpath.js");
+        return LoadResourceAsync(Assembly.GetExecutingAssembly(), "Liquidata.Client.Resources.javascript.xpath.js");
     }
 
     private Task<string> LoadSelectionExtensionsJsAsync()
     {
-        return LoadResourceAsync("Liquidata.Common.Resources.javascript.selection_extensions.js");
+        return LoadResourceAsync(typeof(Project).Assembly, "Liquidata.Common.Resources.javascript.selection_extensions.js");
     }
 
-    private async Task<string> LoadResourceAsync(string name)
+    private async Task<string> LoadResourceAsync(Assembly assembly, string name)
     {
-        using var stream = Assembly.GetExecutingAssembly()
+        using var stream = assembly
             .GetManifestResourceStream(name);
 
         if (stream is null)

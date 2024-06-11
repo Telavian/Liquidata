@@ -9,17 +9,17 @@ public static class ScriptTypeExtensions
         return scriptType switch
         {
             ScriptType.Custom => "",
-            ScriptType.Alt => "$this.getAttr('alt')",
-            ScriptType.Class => "$this.getAttr('class')",
-            ScriptType.Height => "$this.getHeight()",
-            ScriptType.Link => "$this.getLink()",
-            ScriptType.PageUrl => "$this.getPageUrl()",
-            ScriptType.Source => "$this.getAttr('src')",
-            ScriptType.StarRating => "$this.getStarRating('class', 'full', 'half')",
-            ScriptType.Text => "$this.getText()",
-            ScriptType.Time => "$this.getTime()",
-            ScriptType.Title => "$this.getAttr('title')",
-            ScriptType.Width => "$this.getWidth()",
+            ScriptType.Alt => "return $this.getAttr('alt');",
+            ScriptType.Class => "return $this.getAttr('class');",
+            ScriptType.Height => "return $this.getHeight();",
+            ScriptType.Link => "return $this.getLink();",
+            ScriptType.PageUrl => "return $this.getPageUrl();",
+            ScriptType.Source => "return $this.getAttr('src');",
+            ScriptType.StarRating => "return $this.getStarRating('class', 'full', 'half');",
+            ScriptType.Text => "return $this.getText();",
+            ScriptType.Time => "return $this.getTime();",
+            ScriptType.Title => "return $this.getAttr('title');",
+            ScriptType.Width => "return $this.getWidth();",
             _ => throw new Exception($"Unknown script type: {scriptType}")
         };
     }

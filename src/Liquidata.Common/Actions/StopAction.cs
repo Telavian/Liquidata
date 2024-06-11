@@ -22,6 +22,11 @@ public class StopAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await Task.Yield();
 
         if (StopType == StopType.Loop)

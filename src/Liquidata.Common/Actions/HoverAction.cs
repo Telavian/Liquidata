@@ -21,6 +21,11 @@ public class HoverAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await executionService.Browser.HoverSelectionAsync(executionService.CurrentSelection);
         await WaitForDelayAsync(WaitMilliseconds);
         return ExecutionReturnType.Continue;

@@ -37,6 +37,11 @@ public class ForeachAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         if (Name.IsNotDefined())
         {
             throw new ExecutionException("Name is not defined for foreach action");

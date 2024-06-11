@@ -30,7 +30,7 @@ Object.defineProperty(String.prototype, "getHeight", {
             return ``;
         }
 
-        return node.getBoundingClientRect().height;
+        return node.getBoundingClientRect().height.toString();
     },
     writable: true,
     configurable: true,
@@ -114,7 +114,7 @@ Object.defineProperty(String.prototype, "getWidth", {
             return ``;
         }
 
-        return node.getBoundingClientRect().width;
+        return node.getBoundingClientRect().width.toString();
     },
     writable: true,
     configurable: true,

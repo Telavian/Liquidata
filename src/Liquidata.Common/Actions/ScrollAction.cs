@@ -22,6 +22,11 @@ public class ScrollAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await executionService.Browser.ScrollPageAsync(ScrollType);
         await WaitForDelayAsync(WaitMilliseconds);
 

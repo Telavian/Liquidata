@@ -21,6 +21,11 @@ public class ReloadAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await executionService.Browser.ReloadPageAsync();
         await WaitForDelayAsync(WaitMilliseconds);
 

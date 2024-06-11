@@ -13,6 +13,11 @@ public class SelectAction : SelectionActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         var selectionXPath = XPath;
 
         if (selectionXPath.IsNotDefined())

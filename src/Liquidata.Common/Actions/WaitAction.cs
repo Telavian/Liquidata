@@ -21,6 +21,11 @@ public class WaitAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await WaitForDelayAsync(WaitMilliseconds);
         return ExecutionReturnType.Continue;
     }

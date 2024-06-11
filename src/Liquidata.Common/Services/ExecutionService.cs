@@ -1,42 +1,114 @@
 ﻿using Liquidata.Common.Services.Interfaces;
+using System.Collections.Concurrent;
 
 namespace Liquidata.Common.Services
 {
-    public class ExecutionService(Project project, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor) : IExecutionService
+    public class ExecutionService : IExecutionService
     {
-        public IDataHandlerService DataHandler => dataHandler;
-        public IBrowserService Browser => browser;
-        public IXPathProcessorService XPathProcessor => xPathProcessor;
+        private ConcurrentQueue<Func<Task>> _executionTasks = new ConcurrentQueue<Func<Task>>();
+        private Task[] _taskExecutors = null!;
+        private Project _project = null!;
+        private IBrowserService _browser = null!;
+        private IDataHandlerService _dataHandler = null!;
+        private IXPathProcessorService _xPathProcessor = null!;
 
+        private bool _isRunning = true;
+
+        public IDataHandlerService DataHandler => _dataHandler;
+        public IBrowserService Browser => _browser;
+        public IXPathProcessorService XPathProcessor => _xPathProcessor;
+
+        public int Concurrency { get; private set; }
         public string CurrentSelection { get; set; } = "";
-        public Project CurrentProject => project;    
+        public Project CurrentProject => _project;
+
+        public IList<string> LoggedErrors { get; private set; } = new List<string>();
+        public IList<string> LoggedMessages { get; private set; } = new List<string>();
+
+        public ExecutionService(Project project, int concurrency, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor)
+        {
+            _project = project;
+            _browser = browser;
+            _dataHandler = dataHandler;
+            _xPathProcessor = xPathProcessor;
+            
+            _taskExecutors = BuildTaskExecutors(concurrency);
+            Concurrency = concurrency;
+        }
+
+        private ExecutionService()
+        {
+            // Nothing
+        }
 
         public IExecutionService Clone(string? selection = null, IBrowserService? browser = null)
         {
-            return new ExecutionService(project, browser ?? Browser, dataHandler, xPathProcessor)
+            return new ExecutionService()
             {
+                _executionTasks = _executionTasks,
+                _taskExecutors = _taskExecutors,
+                _project = _project,
+                _browser = browser ?? Browser,
+                _dataHandler = _dataHandler,
+                _xPathProcessor = _xPathProcessor,
+                LoggedErrors = LoggedErrors,
+                LoggedMessages = LoggedMessages,                
+                Concurrency = Concurrency,
                 CurrentSelection = selection ?? CurrentSelection
             };
         }
 
-        public Task CreateExecutionTaskAsync(Func<Task> action)
+        public async Task CreateExecutionTaskAsync(Func<Task> action)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            _executionTasks.Enqueue(action);
         }
 
-        public Task WaitForExecutionTasksAsync()
+        public async Task WaitForExecutionTasksAsync()
         {
-            throw new NotImplementedException();
+            while (true)
+            {
+                await Task.Delay(100);
+                
+                if (_executionTasks.IsEmpty)
+                {
+                    _isRunning = false;
+                    return;
+                }
+            }
         }
 
-        public Task LogErrorAsync(string message)
+        public async Task LogErrorAsync(string message)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            LoggedErrors.Add(message);
         }
 
-        public Task LogMessageAsync(string message)
+        public async Task LogMessageAsync(string message)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            LoggedMessages.Add(message);
+        }
+
+        private Task[] BuildTaskExecutors(int concurrency)
+        {
+            return Enumerable.Range(0, concurrency)
+                .Select(x => HandleExecutionTaskAsync())
+                .ToArray();
+        }
+
+        private async Task HandleExecutionTaskAsync()
+        {
+            while (_isRunning)
+            {
+                await Task.Delay(100);
+                var isFound = _executionTasks.TryDequeue(out var task);
+
+                if (isFound) 
+                {
+                    await task!();
+                }
+            }
         }
     }
 }

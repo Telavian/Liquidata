@@ -22,6 +22,11 @@ public class LoopAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         var count = 0;
 
         var maxCount = MaxTimesCount <= 0

@@ -13,7 +13,9 @@
     }
     else if (ExecutionResults is not null)
     {
-        <MudTable Hover="true" Loading="@IsResultsLoading" LoadingProgressColor="Color.Info"
+        <MudTable Style="height: 100%;" Hover="true" Loading="@IsResultsLoading" 
+                  LoadingProgressColor="Color.Info" Bordered="true" Dense="true" 
+                  Elevation="3" Height="100%" Virtualize="true"
                   Items="ExecutionResults.Records">
             <HeaderContent>
                 @foreach (var column in ExecutionResults.AllColumns)

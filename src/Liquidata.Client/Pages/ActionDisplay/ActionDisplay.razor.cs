@@ -1,4 +1,6 @@
-﻿using Liquidata.Client.Extensions;
+﻿using BlazorComponentBus;
+using Liquidata.Client.Extensions;
+using Liquidata.Client.Messages;
 using Liquidata.Client.Pages.Common;
 using Liquidata.Common.Actions.Shared;
 using Microsoft.AspNetCore.Components;
@@ -6,8 +8,10 @@ using MudBlazor;
 
 namespace Liquidata.Client.Pages.ActionDisplay;
 
-public partial class ActionDisplayViewModel : ViewModelBase
+public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
 {
+    [Inject] private ComponentBus _bus { get; set; } = null!;
+
     [Parameter]
     public ActionBase? Action { get; set; }
 
@@ -16,9 +20,23 @@ public partial class ActionDisplayViewModel : ViewModelBase
 
     public bool IsMouseOver { get; set; }
 
+    public bool IsDisabled
+    {
+        get => Action!.IsDisabled;
+        set
+        {
+            Action!.IsDisabled = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
     private Func<bool, Task>? _updateIsMouseOverAsyncCommand;
     public Func<bool, Task> UpdateIsMouseOverAsyncCommand => _updateIsMouseOverAsyncCommand ??= CreateEventCallbackAsyncCommand<bool>(UpdateIsMouseOverAsync, "Unable to update is mouse over");
 
+    public void Dispose()
+    {
+        _bus.UnSubscribe<ActionUpdatedMessage>(HandleActionUpdatedMessage);
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -26,6 +44,8 @@ public partial class ActionDisplayViewModel : ViewModelBase
 
         // TODO: Optimize
         await RefreshAsync();
+
+        _bus.Subscribe<ActionUpdatedMessage>(HandleActionUpdatedMessage);
     }
 
     protected string BuildItemVisibility(params bool[] states)
@@ -70,9 +90,30 @@ public partial class ActionDisplayViewModel : ViewModelBase
         return (MarkupString)$"Validation errors: {string.Join("", formattedErrors)}";
     }
 
+
+    protected async Task ActionUpdatedAsync()
+    {
+        await Task.Yield();
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = Action?.ActionId ?? Guid.Empty });
+        await RefreshAsync();
+    }
+
     private async Task UpdateIsMouseOverAsync(bool isOver)
     {
         await Task.Yield();
         IsMouseOver = isOver;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("AsyncUsage", "AsyncFixer03:Fire-and-forget async-void methods or delegates", Justification = "<Pending>")]
+    private async void HandleActionUpdatedMessage(MessageArgs message)
+    {
+        var typedMessage = message.GetMessage<ActionUpdatedMessage>();
+        if (typedMessage is null || typedMessage.ActionId != Action?.ActionId)
+        {
+            return;
+        }
+
+        await Task.Yield();
+        await RefreshAsync();
     }
 }

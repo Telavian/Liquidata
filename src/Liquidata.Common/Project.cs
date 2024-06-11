@@ -35,6 +35,14 @@ public class Project
             .Any(x => x.IsInteractive);
     }
 
+    public bool CheckIfFullyDefined()
+    {
+        return !AllTemplates
+            .SelectMany(x => x.TraverseTree())
+            .SelectMany(x => x.BuildValidationErrors())
+            .Any();
+    }
+
     public Project FullClone()
     {
         var json = JsonSerializer.Serialize(this);

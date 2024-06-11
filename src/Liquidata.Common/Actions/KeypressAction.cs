@@ -29,6 +29,11 @@ public class KeypressAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         if (Keypressed.IsNotDefined())
         {
             throw new ExecutionException("Key pressed is not defined for keypress action");

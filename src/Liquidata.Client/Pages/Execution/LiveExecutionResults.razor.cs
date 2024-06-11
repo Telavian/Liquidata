@@ -68,6 +68,16 @@ namespace Liquidata.Client.Pages.Execution
                 return;
             }
 
+            var isFullyDefined = project.CheckIfFullyDefined();
+
+            if (!isFullyDefined)
+            {
+                ExecutionMessage = "Project contains errors.";
+                await RefreshAsync();
+                return;
+            }
+
+            ExecutionMessage = "";
             IsResultsLoading = true;
             await RefreshAsync();
             
@@ -77,9 +87,10 @@ namespace Liquidata.Client.Pages.Execution
                 var dataHandler = new DataHandlerService();
                 var xPathProcessor = new XPathProcessorService(browser);
 
-                var executionService = new ExecutionService(project, browser, dataHandler, xPathProcessor);
+                var executionService = new ExecutionService(project, 1, browser, dataHandler, xPathProcessor);                
                 await project.ExecuteProjectAsync(executionService);
 
+                await executionService.WaitForExecutionTasksAsync();
                 ExecutionResults = dataHandler.GetExecutionResults();
             }
             catch (Exception ex)

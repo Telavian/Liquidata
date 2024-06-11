@@ -8,9 +8,9 @@
           onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
           onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
     <MudTooltip Text="Toggles whether the action is executed" Delay="500" Color="Color.Primary">
-        <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, Action!.IsDisabled)"
+        <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, IsDisabled)"
                              Icon="@Icons.Material.TwoTone.Block" ToggledIcon="@Icons.Material.TwoTone.Block" ToggledColor="Color.Error"
-                             @bind-Toggled="Action!.IsDisabled" />
+                             @bind-Toggled="IsDisabled" />
     </MudTooltip>
 
     <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />

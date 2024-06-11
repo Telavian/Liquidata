@@ -24,6 +24,11 @@ public class Template : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
         await Task.Yield();
         var returnType = await ExecuteChildrenAsync(executionService);
 
