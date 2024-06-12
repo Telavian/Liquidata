@@ -278,7 +278,7 @@ public partial class ViewModelBase : LayoutComponentBase
 
     protected async Task NavigateToAsync(string url, bool forceLoad = false, bool replace = false)
     {
-        await Task.Yield();
+        await Task.Yield();        
         _navigationManager!.NavigateTo(url, forceLoad, replace);
     }
 

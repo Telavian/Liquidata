@@ -9,19 +9,24 @@ using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
-using static MudBlazor.Colors;
 
 namespace Liquidata.Client.Services;
 
 public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 {
+    private bool _initialized = false;
+
     private const string LD_Document = "LD_Document";
-    private const string IFrameContentDocument = "document.getElementById('liquidata_browser').contentDocument";
+    private string IFrameContentDocument => $"document.getElementById('{BrowserId}').contentDocument";
 
     private const string SelectedCSSClass = "liquidata_selected";
     private const string RelativeSelectedCSSClass = "liquidata_relative";
     private const string RelativeSelectedParentCSSClass = "liquidata_relative_parent";
     private const string SelectorHighlightCSSClass = "liquidata_selector_highlight";
+
+    public string RootPage { get; set; } = "";
+    public string BrowserId { get; set; } = GlobalConstants.LDBrowser_Name;
+    public bool IsBrowserInitialized { get; set; }
 
     public async Task UpdateBrowserSelectionModeAsync(ActionBase? action, BrowserMode browserMode)
     {
@@ -45,6 +50,12 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task InitializeBrowserAsync()
     {
+        if (_initialized)
+        {
+            return;
+        }
+
+        _initialized = true;
         await AddSelectionCssAsync();
         await AddXPathJsAsync();
         await AddSelectionJsAsync();
@@ -94,6 +105,28 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         }
 
         Console.WriteLine("Browser was not ready in time");
+        return false;
+    }
+
+    public async Task<bool> WaitForBrowserInitializationAsync(TimeSpan waitTime)
+    {
+        var startTime = Stopwatch.StartNew();
+
+        while (true)
+        {
+            await Task.Delay(100);
+            if (_initialized)
+            {
+                return true;
+            }
+
+            if (startTime.Elapsed > waitTime)
+            {
+                break;
+            }
+        }
+
+        Console.WriteLine("Browser was not initialized in time");
         return false;
     }
 

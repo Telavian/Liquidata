@@ -47,9 +47,17 @@ public class ClickAction : ActionBase
             {
                 var browser = await executionService.Browser.ClickOpenInNewPageAsync(selection, ClickButton, IsDoubleClick);
                 executionService = executionService.Clone(selection:"", browser:browser);
+                await executionService.RegisterBrowserAsync(browser);
 
-                await WaitForDelayAsync(WaitMilliseconds);
-                await newTemplate.ExecuteActionAsync(executionService);
+                try
+                {
+                    await WaitForDelayAsync(WaitMilliseconds);
+                    await newTemplate.ExecuteActionAsync(executionService);
+                }                
+                finally
+                {
+                    await executionService.UnregisterBrowserAsync(browser);
+                }
             });
 
             return ExecutionReturnType.Continue;

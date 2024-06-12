@@ -1,6 +1,5 @@
 ﻿using Liquidata.Client.Pages.Common;
 using Liquidata.Client.Pages.Dialogs;
-using Liquidata.Client.Services;
 using Liquidata.Common;
 using Liquidata.Common.Actions;
 using Liquidata.Common.Actions.Shared;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Text.Json;
-using System;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Models;
 using Liquidata.Client.Services.Interfaces;
@@ -18,7 +16,7 @@ using BlazorComponentBus;
 using Liquidata.Client.Messages;
 using System.Text.Json.Serialization;
 using BlazorFileSaver;
-using DebounceThrottle;
+using Liquidata.Common.Services;
 
 namespace Liquidata.Client.Pages;
 
@@ -28,12 +26,13 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
     
     [Inject] private ComponentBus _bus { get; set; } = null!;
+    [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
     [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;
     [Inject] private IClientBrowserService _browserService { get; set; } = null!;
     [Inject] private IXPathProcessorService _xPathProcessorService { get; set; } = null!;
     [Inject] private IProjectService _projectService { get; set; } = null!;
 
-    public const string NavigationPath = "EditProject";    
+    public const string NavigationPath = "EditProject";
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -98,6 +97,9 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
     private Func<Task>? _exportProjectAsyncCommand;
     public Func<Task> ExportProjectAsyncCommand => _exportProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleExportProjectAsync, "Unable to export project");
+
+    private Func<Task>? _runProjectAsyncCommand;
+    public Func<Task> RunProjectAsyncCommand => _runProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleRunProjectAsync, "Unable to run project");
 
     private Func<Task>? _deleteProjectAsyncCommand;
     public Func<Task> DeleteProjectAsyncCommand => _deleteProjectAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleDeleteProjectAsync, "Unable to delete project");
@@ -272,8 +274,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             }
 
             _isBrowserInitialized = true;
-            await ShowAlertAsync("<b>Web security is currently enabled or the site can't be embedded. Many features will not work correctly</b><br>" +
-                "<a href='https://xyz.com'><u>Discover ways to work around this limitation</u></a>", true);
+            await ShowAlertAsync(Constants.WebSecurityErrorMessage, true);
             return;
         }
 
@@ -512,6 +513,26 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         await _blazorFileSaver.SaveAs($"{CurrentProject.Name}.json", json, "application/json");
     }
 
+    private async Task HandleRunProjectAsync()
+    {
+        await Task.Yield();
+
+        if (CurrentProject is null)
+        {
+            return;
+        }
+
+        var isConfirm = await ConfirmActionAsync("Run", "Save current changes and run complete project?");
+
+        if (isConfirm == true)
+        {
+            await SaveProjectAsyncCommand();
+            var url = $"/RunProject?ProjectId={CurrentProject.ProjectId}";
+
+            await _jsRuntime!.InvokeVoidAsync("open", url, "_blank");
+        }
+    }
+
     private async Task HandleDeleteProjectAsync()
     {
         await Task.Yield();
@@ -544,6 +565,14 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
     private async Task ExecuteProjectAsync(Project project)
     {
         await Task.Yield();
-        await _bus.Publish(new ExecuteProjectMessage { Project = project });
+
+        var dataHandler = new DataHandlerService();
+        var browserRegistration = () => Task.CompletedTask;
+
+        var executionService = new ExecutionService(CurrentProject!, 1, _browserService, dataHandler, _xPathProcessorService, browserRegistration);
+        await executionService.RegisterBrowserAsync(_browserService);
+
+        await _bus.Publish(new ExecuteProjectMessage { Project = project, AllowInteractive = false, ExecutionService = executionService });
+        await executionService.UnregisterBrowserAsync(_browserService);
     }
 }

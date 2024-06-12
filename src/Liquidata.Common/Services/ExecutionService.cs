@@ -11,6 +11,7 @@ namespace Liquidata.Common.Services
         private IBrowserService _browser = null!;
         private IDataHandlerService _dataHandler = null!;
         private IXPathProcessorService _xPathProcessor = null!;
+        private Func<Task> _browserRegistration = () => Task.CompletedTask;
 
         private bool _isRunning = true;
 
@@ -24,14 +25,16 @@ namespace Liquidata.Common.Services
 
         public IList<string> LoggedErrors { get; private set; } = new List<string>();
         public IList<string> LoggedMessages { get; private set; } = new List<string>();
+        public IList<IBrowserService> AllBrowsers { get; private set; } = new List<IBrowserService>();
 
-        public ExecutionService(Project project, int concurrency, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor)
+        public ExecutionService(Project project, int concurrency, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor, Func<Task> browserRegistration)
         {
             _project = project;
             _browser = browser;
             _dataHandler = dataHandler;
             _xPathProcessor = xPathProcessor;
-            
+            _browserRegistration = browserRegistration;
+
             _taskExecutors = BuildTaskExecutors(concurrency);
             Concurrency = concurrency;
         }
@@ -51,8 +54,10 @@ namespace Liquidata.Common.Services
                 _browser = browser ?? Browser,
                 _dataHandler = _dataHandler,
                 _xPathProcessor = _xPathProcessor,
+                _browserRegistration = _browserRegistration,
                 LoggedErrors = LoggedErrors,
-                LoggedMessages = LoggedMessages,                
+                LoggedMessages = LoggedMessages,
+                AllBrowsers = AllBrowsers,
                 Concurrency = Concurrency,
                 CurrentSelection = selection ?? CurrentSelection
             };
@@ -81,13 +86,51 @@ namespace Liquidata.Common.Services
         public async Task LogErrorAsync(string message)
         {
             await Task.Yield();
-            LoggedErrors.Add(message);
+            lock (LoggedErrors)
+            {
+                LoggedErrors.Add(message);
+            }
         }
 
         public async Task LogMessageAsync(string message)
         {
             await Task.Yield();
-            LoggedMessages.Add(message);
+
+            lock (LoggedMessages)
+            {
+                LoggedMessages.Add(message);
+            }
+        }
+
+        public async Task RegisterBrowserAsync(IBrowserService browser)
+        {
+            await Task.Yield();
+
+            lock (AllBrowsers)
+            {
+                if (AllBrowsers.Contains(browser) == false)
+                {
+                    AllBrowsers.Add(browser);
+                }
+            }
+
+            await _browserRegistration();
+        }
+
+        public async Task UnregisterBrowserAsync(IBrowserService browser)
+        {
+            await Task.Yield();
+            
+            lock (AllBrowsers)
+            {
+                // Always keep the first
+                if (AllBrowsers.Count > 1)
+                {
+                    AllBrowsers.Remove(browser);
+                }
+            }
+
+            await _browserRegistration();
         }
 
         private Task[] BuildTaskExecutors(int concurrency)

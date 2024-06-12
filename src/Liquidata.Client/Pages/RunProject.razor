@@ -1,0 +1,51 @@
+﻿@page "/RunProject"
+@layout MainLayout
+@using Liquidata.Client.Extensions
+@using Liquidata.Client.Pages.Execution
+@using Liquidata.Common.Actions
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@using Liquidata.Client.Pages.ActionDisplay
+@using Liquidata.Client.Pages.ActionOptions
+@inherits RunProjectViewModel
+
+<div style="height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; grid-gap: 5px; background-color: darkgray;">
+    <!-- Page Selector -->
+    <div style="grid-row: 1; grid-column: 1; background-color: lightgray; margin-left: 5px; margin-top: 5px;">
+        <MudPaper Style="height: 100%; padding: 5px;">
+            <MudStack Style="height: 100%;">
+                <MudPaper Style="height: 100%; width: 100%;" Elevation="30" Outlined="true">
+                    <MudStack Style="height: 100%; margin: 5px;">
+                        <h1>Pages</h1>
+
+                        <MudList Style="height: 100%; width: 250px;" SelectionMode="SelectionMode.SingleSelection" ReadOnly="false" Color="Color.Primary"
+                                 @bind-SelectedValue="@SelectedBrowser">
+                            @foreach (var browser in (ExecutionService?.AllBrowsers ?? []))
+                            {
+                                <MudListItem Value="@browser">
+                                    <MudStack Row="true">
+                                        <MudText Style="word-wrap: break-word; width: 100%;" Class="verticalCenter">@browser.RootPage</MudText>
+                                    </MudStack>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </MudStack>
+                </MudPaper>
+            </MudStack>
+        </MudPaper>
+    </div>
+
+    <!-- Browser -->
+    <div style="grid-row: 1; grid-column: 2;">
+        @foreach (var browser in (ExecutionService?.AllBrowsers ?? []))
+        {
+            <iframe id="@(browser.BrowserId)" src="@(browser.RootPage)"
+                    onload="@(() => BrowserLoadedAsyncCommand(browser))" />
+        }
+    </div>
+
+    <!-- Data -->
+    <div style="grid-row: 2; grid-column: 1 / span 2; margin-left: 5px; margin-right: 5px; margin-bottom: 5px;">
+        <LiveExecutionResults />
+    </div>
+</div>

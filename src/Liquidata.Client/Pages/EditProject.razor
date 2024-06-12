@@ -9,7 +9,7 @@
 @using Liquidata.Client.Pages.ActionOptions
 @inherits EditProjectViewModel
 
-<div style="height: 100%; display: grid; grid-template-columns: auto auto 1fr; grid-template-rows: 1fr auto; grid-gap: 5px; background-color: lightgray;">
+<div style="height: 100%; display: grid; grid-template-columns: auto auto 1fr; grid-template-rows: 1fr auto; grid-gap: 5px; background-color: darkgray;">
     <!-- Navigation -->
     <div style="grid-row: 1 / span 2; grid-column: 1; background-color: gray; padding: 5px;">
         <MudStack>
@@ -35,6 +35,12 @@
                         Delay="500" Color="Color.Primary">
                 <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.FileDownload"
                                OnClick="@(() => ExportProjectAsyncCommand())" />
+            </MudTooltip>
+
+            <MudTooltip Text="Run the project" Placement="Placement.Right"
+                        Delay="500" Color="Color.Primary">
+                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.QueuePlayNext"
+                               OnClick="@(() => RunProjectAsyncCommand())" />
             </MudTooltip>
 
             <MudTooltip Text="Delete the current project" Placement="Placement.Right"
@@ -103,7 +109,7 @@
 
     <!-- Browser -->
     <div style="grid-row: 1; grid-column: 3;">
-        <iframe id="liquidata_browser" src="@ActiveUrl"
+        <iframe id="@(GlobalConstants.LDBrowser_Name)" src="@ActiveUrl"
                 onload="@(() => BrowserLoadedAsyncCommand())" />
     </div>
 

@@ -112,7 +112,7 @@ public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
         {
             return;
         }
-
+        
         await Task.Yield();
         await RefreshAsync();
     }

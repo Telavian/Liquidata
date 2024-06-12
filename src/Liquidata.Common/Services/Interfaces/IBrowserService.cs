@@ -5,9 +5,14 @@ namespace Liquidata.Common.Services.Interfaces;
 
 public interface IBrowserService
 {        
+    string RootPage { get; set; }
+    string BrowserId { get; set; }
+    bool IsBrowserInitialized { get; set; }
+
     Task InitializeBrowserAsync();
     Task<bool> CheckIfWebSecurityEnabledAsync();
     Task<bool> WaitForBrowserReadyAsync(TimeSpan waitTime);
+    Task<bool> WaitForBrowserInitializationAsync(TimeSpan waitTime);
     Task<SelectionInfo> GetSelectionInfoAsync(string xpath);
     Task<string[]> GetAllMatchesAsync(string xpath);
 

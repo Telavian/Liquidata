@@ -51,15 +51,16 @@ namespace Liquidata.Client.Pages.Execution
                 return;
             }
 
+            
             await Task.Yield();
             await _projectExecutionDebounce.DebounceAsync(async () =>
             {
-                await ExecuteProjectAsync(typedMessage.Project);
+                await ExecuteProjectAsync(typedMessage.Project, typedMessage.AllowInteractive, typedMessage.ExecutionService);
                 await RefreshAsync();
             });
         }
 
-        private async Task ExecuteProjectAsync(Project project)
+        private async Task ExecuteProjectAsync(Project project, bool allowInteractive, IExecutionService executionService)
         {
             if (project == null)
             {
@@ -72,7 +73,7 @@ namespace Liquidata.Client.Pages.Execution
 
             var isInteractive = project.CheckIfInterative();
 
-            if (isInteractive)
+            if (!allowInteractive && isInteractive)
             {
                 ExecutionMessage = "Project is interactive. To see parser results execute project.";
                 ExecutionResults = null;
@@ -98,15 +99,11 @@ namespace Liquidata.Client.Pages.Execution
             
             try
             {
-                var browser = new ClientBrowserService(_jsRuntime!);
-                var dataHandler = new DataHandlerService();
-                var xPathProcessor = new XPathProcessorService(browser);
-
-                var executionService = new ExecutionService(project, 1, browser, dataHandler, xPathProcessor);                
+                Console.WriteLine($"Executing project '{project.Name}'");
                 await project.ExecuteProjectAsync(executionService);
 
                 await executionService.WaitForExecutionTasksAsync();
-                ExecutionResults = dataHandler.GetExecutionResults();
+                ExecutionResults = executionService.DataHandler.GetExecutionResults();
             }
             catch (Exception ex)
             {

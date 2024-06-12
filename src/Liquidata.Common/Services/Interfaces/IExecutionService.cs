@@ -10,6 +10,8 @@
         public string CurrentSelection { get; set; }
         public Project CurrentProject { get; }
 
+        public Task RegisterBrowserAsync(IBrowserService browser);
+        public Task UnregisterBrowserAsync(IBrowserService browser);
         public Task CreateExecutionTaskAsync(Func<Task> action);
         public Task WaitForExecutionTasksAsync();
         public Task LogErrorAsync(string message);
