@@ -20,13 +20,14 @@ public interface IBrowserService
     Task<(bool success, T result)> ExecuteJavascriptAsync<T>(string script);
     Task StoreDataAsync(string name, string value, StoreType storeType);
     Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick);
-    Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick);
+    Task<bool> CheckSelectionDisabledAsync(string selection);
+    Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick, bool isShift, bool isCtrl, bool isAlt);
     Task<string> GetVariableAsync(string name);
     Task SetVariableAsync(string name, string value);
     Task RemoveVariableAsync(string name);
     Task HoverSelectionAsync(string selection);
     Task InputToSelectionAsync(string selection, string value);
-    Task KeypressToSelectionAsync(string currentSelection, bool isShiftPressed, bool isCtrlPressed, bool isAltPressed, string keypressed);
+    Task KeypressToSelectionAsync(string selection, bool isShift, bool isCtrl, bool isAlt, string keypressed);
     Task ReloadPageAsync();
     Task<byte[]> GetScreenshotAsync();
     Task ScrollPageAsync(ScrollType scrollType);

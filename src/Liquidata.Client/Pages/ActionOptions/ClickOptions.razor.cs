@@ -45,6 +45,36 @@ public partial class ClickOptionsViewModel : ActionOptionsViewModelBase<ClickAct
         }
     }
 
+    public bool IsShift
+    {
+        get => TypedAction.IsShift;
+        set
+        {
+            TypedAction.IsShift = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public bool IsCtrl
+    {
+        get => TypedAction.IsCtrl;
+        set
+        {
+            TypedAction.IsCtrl = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public bool IsAlt
+    {
+        get => TypedAction.IsAlt;
+        set
+        {
+            TypedAction.IsAlt = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
     public int WaitMilliseconds
     {
         get => TypedAction.WaitMilliseconds;

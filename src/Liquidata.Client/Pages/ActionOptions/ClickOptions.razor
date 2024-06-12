@@ -44,6 +44,23 @@
         @(IsNewPage ? "New page" : "Same page")
     </MudSwitch>
 
+    <MudStack Row="true">
+        <MudSwitch Class="verticalCenter" Color="Color.Tertiary"
+                   @bind-Value="@IsShift">
+            @(IsShift ? "Shift" : "No shift")
+        </MudSwitch>
+
+        <MudSwitch Class="verticalCenter" Color="Color.Tertiary"
+                   @bind-Value="@IsCtrl">
+            @(IsCtrl ? "Ctrl" : "No ctrl")
+        </MudSwitch>
+
+        <MudSwitch Class="verticalCenter" Color="Color.Tertiary"
+                   @bind-Value="@IsAlt">
+            @(IsAlt ? "Alt" : "No alt")
+        </MudSwitch>
+    </MudStack>
+
     <MudSlider Min="0" Max="5000" Step="250"
                @bind-Value="@WaitMilliseconds">
         @(WaitMilliseconds.BuildWaitTimeText())

@@ -44,6 +44,18 @@ namespace Liquidata.Client.Pages
             _ = ExecuteProjectAsync(CurrentProject!);
         }
 
+        protected string BuildBrowserStyle(string browserId, IBrowserService? browser)
+        {
+            if (browser is not null && browserId == browser.BrowserId)
+            {
+                return "z-index: 1;";
+            }
+            else
+            {
+                return "z-index: -1;";
+            }
+        }
+
         private async Task HandleBrowserLoadedAsync(IBrowserService browser)
         {
             await Task.Yield();

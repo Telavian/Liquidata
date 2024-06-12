@@ -19,6 +19,9 @@ public class ClickAction : ActionBase
     public Guid? ExecutionTemplateId { get; set; } = null!;
     public ClickButton ClickButton { get; set; } = ClickButton.Left;
     public bool IsDoubleClick { get; set; }
+    public bool IsShift { get; set; }
+    public bool IsCtrl { get; set; }
+    public bool IsAlt { get; set; }
     public int WaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()
@@ -30,6 +33,14 @@ public class ClickAction : ActionBase
 
     public override async Task<ExecutionReturnType> ExecuteActionAsync(IExecutionService executionService)
     {
+        if (IsDisabled)
+        {
+            return ExecutionReturnType.Continue;
+        }
+
+        var isSelectionDisabled = await executionService.Browser
+            .CheckSelectionDisabledAsync(executionService.CurrentSelection);
+
         if (IsDisabled)
         {
             return ExecutionReturnType.Continue;
@@ -63,7 +74,7 @@ public class ClickAction : ActionBase
             return ExecutionReturnType.Continue;
         }
 
-        await executionService.Browser.ClickSelectionAsync(executionService.CurrentSelection, ClickButton, IsDoubleClick);
+        await executionService.Browser.ClickSelectionAsync(executionService.CurrentSelection, ClickButton, IsDoubleClick, IsShift, IsCtrl, IsAlt);
         await WaitForDelayAsync(WaitMilliseconds);
 
         if (ClickType == ClickType.ExecuteTemplate)

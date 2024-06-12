@@ -50,7 +50,6 @@ namespace Liquidata.Client.Pages.Execution
             {
                 return;
             }
-
             
             await Task.Yield();
             await _projectExecutionDebounce.DebounceAsync(async () =>

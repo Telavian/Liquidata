@@ -11,7 +11,7 @@ namespace Liquidata.Common.Services
         private IBrowserService _browser = null!;
         private IDataHandlerService _dataHandler = null!;
         private IXPathProcessorService _xPathProcessor = null!;
-        private Func<Task> _browserRegistration = () => Task.CompletedTask;
+        private Func<Task> _browserRegistrationAction = () => Task.CompletedTask;
 
         private bool _isRunning = true;
 
@@ -27,13 +27,13 @@ namespace Liquidata.Common.Services
         public IList<string> LoggedMessages { get; private set; } = new List<string>();
         public IList<IBrowserService> AllBrowsers { get; private set; } = new List<IBrowserService>();
 
-        public ExecutionService(Project project, int concurrency, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor, Func<Task> browserRegistration)
+        public ExecutionService(Project project, int concurrency, IBrowserService browser, IDataHandlerService dataHandler, IXPathProcessorService xPathProcessor, Func<Task> browserRegistrationAction)
         {
             _project = project;
             _browser = browser;
             _dataHandler = dataHandler;
             _xPathProcessor = xPathProcessor;
-            _browserRegistration = browserRegistration;
+            _browserRegistrationAction = browserRegistrationAction;
 
             _taskExecutors = BuildTaskExecutors(concurrency);
             Concurrency = concurrency;
@@ -54,7 +54,7 @@ namespace Liquidata.Common.Services
                 _browser = browser ?? Browser,
                 _dataHandler = _dataHandler,
                 _xPathProcessor = _xPathProcessor,
-                _browserRegistration = _browserRegistration,
+                _browserRegistrationAction = _browserRegistrationAction,
                 LoggedErrors = LoggedErrors,
                 LoggedMessages = LoggedMessages,
                 AllBrowsers = AllBrowsers,
@@ -114,7 +114,7 @@ namespace Liquidata.Common.Services
                 }
             }
 
-            await _browserRegistration();
+            await _browserRegistrationAction();
         }
 
         public async Task UnregisterBrowserAsync(IBrowserService browser)
@@ -130,7 +130,7 @@ namespace Liquidata.Common.Services
                 }
             }
 
-            await _browserRegistration();
+            await _browserRegistrationAction();
         }
 
         private Task[] BuildTaskExecutors(int concurrency)

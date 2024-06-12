@@ -48,6 +48,12 @@ namespace Liquidata.Common.Services
         public async Task AddScreenshotAsync(string name, byte[] screenshot)
         {
             await Task.Yield();
+
+            if (screenshot is null || screenshot.Length == 0)
+            {
+                return;
+            }
+
             name = $"name_{DateTime.Now.ToString("s")}";
             _screenshots.Add(name, screenshot);
         }

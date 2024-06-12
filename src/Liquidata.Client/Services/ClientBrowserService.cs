@@ -3,9 +3,11 @@ using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
+using Liquidata.Common.Exceptions;
 using Liquidata.Common.Models;
 using Liquidata.Common.Services.Interfaces;
 using Microsoft.JSInterop;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
@@ -15,6 +17,7 @@ namespace Liquidata.Client.Services;
 public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 {
     private bool _initialized = false;
+    private static int _totalBrowserCount;
 
     private const string LD_Document = "LD_Document";
     private string IFrameContentDocument => $"document.getElementById('{BrowserId}').contentDocument";
@@ -277,14 +280,62 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await ExecuteJavascriptAsync(script);
     }
 
-    public Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick)
-    {
-        throw new ClientExecutionException();
+    public async Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick)
+    {        
+        var link = await GetSelectionLinkAsync(selection);
+
+        if (string.IsNullOrWhiteSpace(link))
+        {
+            // TODO: No link - How to get new page?
+            await ClickSelectionAsync(selection, clickButton, isDoubleClick, false, false, false);
+            return this;
+        }
+
+        var browserCount = Interlocked.Increment(ref _totalBrowserCount);
+        var browser = new ClientBrowserService(jsRuntime)
+        {
+            RootPage = link,
+            BrowserId = $"{GlobalConstants.LDBrowser_Name}{browserCount}"
+        };
+
+        return browser;
     }
 
-    public Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick)
+    public async Task<bool> CheckSelectionDisabledAsync(string selection)
     {
-        throw new ClientExecutionException();
+        var script = $"return `{selection}`.getDisabled();";
+        var (success, result) = await ExecuteJavascriptAsync<string>(script);
+
+        if (success)
+        {
+            var isValid = bool.TryParse(result, out var isDisabled);
+            return isValid && isDisabled;
+        }
+
+        throw new ExecutionException("Unable to determine whether selection is disabled");
+    }
+
+    public async Task ClickSelectionAsync(string selection, ClickButton clickButton, bool isDoubleClick, bool isShift, bool isCtrl, bool isAlt)
+    {
+        var button = clickButton switch
+        {
+            ClickButton.Left => 0,
+            ClickButton.Middle => 1,
+            ClickButton.Right => 2,
+            _ => throw new Exception($"Unknown click button: {clickButton}")
+        };
+
+        var eventType = isDoubleClick
+            ? "dblclick"
+            : "click";
+
+        var script = $"`{selection}`.{eventType}({button}, {isShift.ToString().ToLower()}, {isCtrl.ToString().ToLower()}, {isAlt.ToString().ToLower()});";
+        var isSuccess = await ExecuteJavascriptAsync(script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Unable to click selection");
+        }
     }
 
     public async Task SetVariableAsync(string name, string value)
@@ -315,39 +366,76 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await ExecuteJavascriptAsync(script);
     }
 
-    public Task HoverSelectionAsync(string selection)
+    public async Task HoverSelectionAsync(string selection)
     {
-        throw new ClientExecutionException();
+        var script = $"`{selection}`.hover();";
+        var success = await ExecuteJavascriptAsync(script);
+
+        if (!success)
+        {
+            throw new ExecutionException("Unable to hover selection");
+        }
     }
 
-    public Task InputToSelectionAsync(string selection, string value)
+    public async Task InputToSelectionAsync(string selection, string value)
     {
-        throw new ClientExecutionException();
+        var script = $"`{selection}`.input(`{value}`);";
+        var success = await ExecuteJavascriptAsync(script);
+
+        if (!success)
+        {
+            throw new ExecutionException("Unable to input value");
+        }
     }
 
-    public Task KeypressToSelectionAsync(string currentSelection, bool isShiftPressed, bool isCtrlPressed, bool isAltPressed, string keypressed)
+    public async Task KeypressToSelectionAsync(string selection, bool isShift, bool isCtrl, bool isAlt, string keypressed)
     {
-        throw new ClientExecutionException();
+        var script = $"`{selection}`.keypress(`{keypressed}`, {isShift.ToString().ToLower()}, {isCtrl.ToString().ToLower()}, {isAlt.ToString().ToLower()});";
+        var isSuccess = await ExecuteJavascriptAsync(script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Unable to keypress selection");
+        }
     }
 
-    public Task ReloadPageAsync()
+    public async Task ReloadPageAsync()
     {
-        throw new ClientExecutionException();
+        var script = $"{IFrameContentDocument}.defaultView.location.reload();";
+        var isSuccess = await ExecuteJavascriptAsync(script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Unable to reload page");
+        }
     }
 
-    public Task<byte[]> GetScreenshotAsync()
+    public async Task<byte[]> GetScreenshotAsync()
     {
-        throw new ClientExecutionException();
+        await Task.Yield();
+
+        // TODO - html2canvas and domToImage seem to fail for testing
+        return Array.Empty<byte>();
     }
 
-    public Task ScrollPageAsync(ScrollType scrollType)
+    public async Task ScrollPageAsync(ScrollType scrollType)
     {
-        throw new ClientExecutionException();
+        var script = scrollType == ScrollType.Bottom
+            ? $"{IFrameContentDocument}.defaultView.scrollTo({{ left: 0, top: {IFrameContentDocument}.body.scrollHeight, behavior: 'smooth' }});"
+            : $"{IFrameContentDocument}.defaultView.scrollTo({{ left: 0, top: 0, behavior: 'smooth' }});";
+        
+        var isSuccess = await ExecuteJavascriptAsync(script);
+
+        if (!isSuccess)
+        {
+            throw new ExecutionException("Unable to reload page");
+        }
     }
 
     public Task SolveCaptchaAsync()
     {
-        throw new ClientExecutionException();
+        // Not implemented yet
+        return Task.CompletedTask;
     }
 
     private async Task AddSelectionCssAsync()
@@ -416,5 +504,43 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
         return result
             .Replace(LD_Document, IFrameContentDocument);
-    }    
+    }
+
+    private async Task<string> GetSelectionLinkAsync(string selection)
+    {
+        var script = $"return `{selection}`.getLink();";
+        var (success, result) = await ExecuteJavascriptAsync<string>(script);
+
+        if (!success)
+        {
+            throw new ExecutionException("Unable to get selection link");
+        }
+
+        var isValid = Uri.TryCreate(result, UriKind.Absolute, out var uri);
+        if (isValid && uri is not null)
+        {
+            return uri.ToString();
+        }
+
+        script = "return location.href;";
+        (success, result) = await ExecuteJavascriptAsync<string>(script);
+
+        if (!success)
+        {
+            throw new ExecutionException("Unable to get selection link root");
+        }
+
+        isValid = Uri.TryCreate(result, UriKind.Absolute, out var uriRoot);
+        if (isValid && uriRoot is not null)
+        {
+            isValid = Uri.TryCreate(uri, uriRoot, out var fullUri);
+
+            if (isValid && fullUri is not null)
+            {
+                return fullUri.ToString();
+            }
+        }
+
+        throw new ExecutionException("Unable to build selection link");
+    }
 }

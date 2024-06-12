@@ -39,7 +39,7 @@
     <div style="grid-row: 1; grid-column: 2;">
         @foreach (var browser in (ExecutionService?.AllBrowsers ?? []))
         {
-            <iframe id="@(browser.BrowserId)" src="@(browser.RootPage)"
+            <iframe id="@(browser.BrowserId)" src="@(browser.RootPage)" style="@BuildBrowserStyle(browser.BrowserId, SelectedBrowser)"
                     onload="@(() => BrowserLoadedAsyncCommand(browser))" />
         }
     </div>

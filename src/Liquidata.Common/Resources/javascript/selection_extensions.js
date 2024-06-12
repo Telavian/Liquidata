@@ -119,3 +119,133 @@ Object.defineProperty(String.prototype, "getWidth", {
     writable: true,
     configurable: true,
 });
+
+Object.defineProperty(String.prototype, "getDisabled", {
+    value: function getDisabled() {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        return (!!(node.disabled)).toString();
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "click", {
+    value: function click(button, shift, ctrl, alt) {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        var mouseEvent = new MouseEvent('click', {
+            'view': LD_Document.defaultView,
+            'button': button,
+            'shiftKey': shift,
+            'ctrlKey': ctrl,
+            'altKey': alt,
+            'bubbles': true,
+            'cancelable': true
+        });
+
+        node.dispatchEvent(mouseEvent);
+        return `true`;
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "dblclick", {
+    value: function dblclick(button, shift, ctrl, alt) {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        var mouseEvent = new MouseEvent('dblclick', {
+            'view': LD_Document.defaultView,
+            'button': button,
+            'shiftKey': shift,
+            'ctrlKey': ctrl,
+            'altKey': alt,
+            'bubbles': true,
+            'cancelable': true
+        });
+
+        node.dispatchEvent(mouseEvent);
+        return `true`;
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "hover", {
+    value: function hover() {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        var event = new MouseEvent('mouseover', {
+            'view': LD_Document.defaultView,
+            'bubbles': true,
+            'cancelable': true
+        });
+
+        node.dispatchEvent(event);
+        return `true`;
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "input", {
+    value: function input(value) {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        node.input = value;
+        return `true`;
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "keypress", {
+    value: function keypress(key, shift, ctrl, alt) {
+        var node = getNode(this);
+
+        if (node == null) {
+            return `false`;
+        }
+
+        var kdEvent = new KeyboardEvent('keydown', {
+            'key': key,
+            'shiftKey': shift,
+            'ctrlKey': ctrl,
+            'altKey': alt,
+        });
+
+        var kuEvent = new KeyboardEvent('keyup', {
+            'key': key,
+            'shiftKey': shift,
+            'ctrlKey': ctrl,
+            'altKey': alt,
+        });
+
+        node.dispatchEvent(kdEvent);
+        node.dispatchEvent(kuEvent);
+        return `true`;
+    },
+    writable: true,
+    configurable: true,
+});
