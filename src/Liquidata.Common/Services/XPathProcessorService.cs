@@ -71,7 +71,7 @@ public class XPathProcessorService(IBrowserService browserService) : IXPathProce
 
     private async Task<IList<string>> BreakXPathIntoSegmentsAsync(string xpath)
     {
-        var fullXPathMatches = await browserService.GetAllMatchesAsync(xpath);
+        var fullXPathMatches = await browserService.GetAllMatchesAsync(xpath, 0);
         var fullXPath = fullXPathMatches.FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(fullXPath))
@@ -139,7 +139,7 @@ public class XPathProcessorService(IBrowserService browserService) : IXPathProce
             return expressions.StringJoin(_xpathConcatenator);
         }
 
-        var matches = (await browserService.GetAllMatchesAsync(currentXPath))
+        var matches = (await browserService.GetAllMatchesAsync(currentXPath, 0))
             .ToHashSet();
 
         matches.Remove(newXPath);

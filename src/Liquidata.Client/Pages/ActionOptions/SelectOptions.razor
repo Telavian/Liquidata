@@ -12,7 +12,12 @@
                   @bind-Value="XPath" />
 
     <MudSlider Min="0" Max="5000" Step="250"
-               @bind-Value="@WaitMilliseconds">
-        @(WaitMilliseconds.BuildWaitTimeText())
+               @bind-Value="@ItemWaitMilliseconds">
+        @(ItemWaitMilliseconds.BuildWaitTimeText()) after item
+    </MudSlider>
+
+    <MudSlider Min="0" Max="60000" Step="250"
+               @bind-Value="@SelectionWaitMilliseconds">
+        @(SelectionWaitMilliseconds.BuildWaitTimeText()) for selection
     </MudSlider>
 </MudStack>

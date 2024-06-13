@@ -26,7 +26,7 @@ public class RelativeSelectAction : SelectionActionBase
             throw new ExecutionException("Relative selection is not defined");
         }
 
-        var matches = await executionService.Browser.GetAllMatchesAsync(selectionXPath!);
+        var matches = await executionService.Browser.GetAllMatchesAsync(selectionXPath!, SelectionWaitMilliseconds);
 
         foreach (var match in matches)
         {
@@ -54,7 +54,7 @@ public class RelativeSelectAction : SelectionActionBase
                     return returnType;
                 }
 
-                await WaitForDelayAsync(WaitMilliseconds);
+                await WaitForDelayAsync(ItemWaitMilliseconds);
             }
             finally
             {

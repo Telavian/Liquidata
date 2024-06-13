@@ -14,7 +14,7 @@ public interface IBrowserService
     Task<bool> WaitForBrowserReadyAsync(TimeSpan waitTime);
     Task<bool> WaitForBrowserInitializationAsync(TimeSpan waitTime);
     Task<SelectionInfo> GetSelectionInfoAsync(string xpath);
-    Task<string[]> GetAllMatchesAsync(string xpath);
+    Task<string[]> GetAllMatchesAsync(string xpath, int waitTimeMs);
 
     Task<bool> ExecuteJavascriptAsync(string script);
     Task<(bool success, T result)> ExecuteJavascriptAsync<T>(string script);

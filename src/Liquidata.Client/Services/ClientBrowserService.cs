@@ -196,17 +196,35 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         return info;
     }
 
-    public async Task<string[]> GetAllMatchesAsync(string xpath)
+    public async Task<string[]> GetAllMatchesAsync(string xpath, int waitTimeMs)
     {
-        var result = await ExecuteJavascriptAsync<string>($"return globalThis.liquidata_getXPathMatches(`{xpath}`)");
+        var startTime = Stopwatch.StartNew();
 
-        if (!result.success || string.IsNullOrWhiteSpace(result.result))
+        while (true)
         {
-            throw new Exception("Unable to determine xpath matches");
-        }
+            var result = await ExecuteJavascriptAsync<string>($"return globalThis.liquidata_getXPathMatches(`{xpath}`)");
 
-        var matches = JsonSerializer.Deserialize<string[]>(result.result)!;
-        return matches;
+            if (!result.success || string.IsNullOrWhiteSpace(result.result))
+            {
+                throw new Exception("Unable to determine xpath matches");
+            }
+
+            var matches = JsonSerializer.Deserialize<string[]>(result.result)!;
+
+            if (matches is not null && matches.Length > 0)
+            {
+                return matches;
+            }
+
+            if (startTime.ElapsedMilliseconds > waitTimeMs)
+            {
+                return [];
+            }
+            else
+            {
+                continue;
+            }
+        }
     }
 
     public async Task<bool> ExecuteJavascriptAsync(string script)

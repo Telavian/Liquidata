@@ -16,12 +16,22 @@ public partial class SelectOptionsViewModel : ActionOptionsViewModelBase<SelectA
         }
     }
 
-    public int WaitMilliseconds
+    public int ItemWaitMilliseconds
     {
-        get => TypedAction.WaitMilliseconds;
+        get => TypedAction.ItemWaitMilliseconds;
         set
         {
-            TypedAction.WaitMilliseconds = value;
+            TypedAction.ItemWaitMilliseconds = value;
+            _ = ActionUpdatedAsync();
+        }
+    }
+
+    public int SelectionWaitMilliseconds
+    {
+        get => TypedAction.SelectionWaitMilliseconds;
+        set
+        {
+            TypedAction.SelectionWaitMilliseconds = value;
             _ = ActionUpdatedAsync();
         }
     }

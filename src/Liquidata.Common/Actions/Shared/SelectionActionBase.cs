@@ -10,7 +10,8 @@ public abstract class SelectionActionBase : ActionBase
     [JsonIgnore] public override bool IsNameRequired => true;
 
     public string? XPath { get; set; }
-    public int WaitMilliseconds { get; set; }
+    public int ItemWaitMilliseconds { get; set; }
+    public int SelectionWaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()
     {

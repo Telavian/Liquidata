@@ -25,7 +25,7 @@ public class SelectAction : SelectionActionBase
             throw new ExecutionException("Selection is not defined");
         }
 
-        var matches = await executionService.Browser.GetAllMatchesAsync(selectionXPath!);
+        var matches = await executionService.Browser.GetAllMatchesAsync(selectionXPath!, SelectionWaitMilliseconds);
 
         foreach (var match in matches)
         {
@@ -53,7 +53,7 @@ public class SelectAction : SelectionActionBase
                     return returnType;
                 }
 
-                await WaitForDelayAsync(WaitMilliseconds);
+                await WaitForDelayAsync(ItemWaitMilliseconds);
             }
             finally
             {
