@@ -10,7 +10,9 @@
 
     @if (TypedAction.Url.IsDefined())
 {
-    <MudIconButton Icon="@Icons.Material.TwoTone.Link" Color="Color.Primary"
-                       OnClick="@(() => LoadTemplateUrlAsyncCommand())" />
+    <MudTooltip Text="Load the template url" Delay="500" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.TwoTone.Link" Color="Color.Primary"
+                           OnClick="@(() => LoadTemplateUrlAsyncCommand())" />
+    </MudTooltip>    
 }
 </MudStack>

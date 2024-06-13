@@ -181,10 +181,11 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             return;
         }
 
-        var _ = action.AllowChildren 
+        var newAction = action.AllowChildren 
             ? action.AddChildAction(CurrentProject!, actionType) 
             : action.AddSiblingAction(CurrentProject!, actionType);
 
+        await PerformActionInitializationAsync(newAction);
         await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });
     }
 
@@ -263,6 +264,8 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         Console.WriteLine("Initializing browser");
 
         // https://stackoverflow.com/questions/35432749/disable-web-security-in-chrome-48
+        // CSP Unblock
+        // Cors Unblock
         var isWebSecurity = await _browserService.CheckIfWebSecurityEnabledAsync();
 
         if (isWebSecurity)
@@ -574,5 +577,35 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
         await _bus.Publish(new ExecuteProjectMessage { Project = project, AllowInteractive = false, ExecutionService = executionService });
         await executionService.UnregisterBrowserAsync(_browserService);
+    }
+
+    private async Task PerformActionInitializationAsync(ActionBase action)
+    {
+        await Task.Yield();
+
+        if (action.ActionType == ActionType.Select)
+        {
+            await PerformSelectActionInitializationAsync(action);
+            return;
+        }
+    }
+
+    private async Task PerformSelectActionInitializationAsync(ActionBase action)
+    {
+        await Task.Yield();
+
+        var existingSelect = CurrentProject!.AllTemplates
+            .SelectMany(x => x.TraverseTree())
+            .Where(x => x.ActionType == ActionType.Select && x.ActionId != action.ActionId)
+            .Any();
+
+        if (existingSelect)
+        {
+            return;
+        }
+
+        // Add these for convenience
+        action.AddChildAction(CurrentProject!, ActionType.BeginRecord);
+        action.AddChildAction(CurrentProject!, ActionType.Extract);
     }
 }

@@ -14,7 +14,7 @@ namespace Liquidata.Client.Services;
 
 public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 {
-    private bool _initialized = false;
+    private bool _initialized;
     private static int _totalBrowserCount;
 
     private const string LD_Document = "LD_Document";
@@ -51,16 +51,12 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task InitializeBrowserAsync()
     {
-        if (_initialized)
-        {
-            return;
-        }
-
-        _initialized = true;
+        Console.WriteLine($"Initializing browser: {BrowserId}");
         await AddSelectionCssAsync();
         await AddXPathJsAsync();
         await AddSelectionJsAsync();
         await AddSelectionExtensionsJsAsync();
+        _initialized = true;
     }
 
     public async Task<bool> CheckIfWebSecurityEnabledAsync()
@@ -464,25 +460,44 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
                     {IFrameContentDocument}.head.appendChild(style);";
 
-        await ExecuteJavascriptAsync(js);
+        var result = await ExecuteJavascriptAsync(js);
+        if (!result)
+        {
+            throw new ExecutionException("Unable to add selection css");
+        }
     }
 
     private async Task AddXPathJsAsync()
     {
         var js = await LoadXPathJsAsync();
-        await ExecuteJavascriptAsync(js);
+
+        var result = await ExecuteJavascriptAsync(js);
+        if (!result)
+        {
+            throw new ExecutionException("Unable to add xpath js");
+        }
     }
 
     private async Task AddSelectionJsAsync()
     {
         var js = await LoadSelectionJsAsync();
-        await ExecuteJavascriptAsync(js);
+
+        var result = await ExecuteJavascriptAsync(js);
+        if (!result)
+        {
+            throw new ExecutionException("Unable to add selection js");
+        }
     }
 
     private async Task AddSelectionExtensionsJsAsync()
     {
         var js = await LoadSelectionExtensionsJsAsync();
-        await ExecuteJavascriptAsync(js);
+
+        var result = await ExecuteJavascriptAsync(js);
+        if (!result)
+        {
+            throw new ExecutionException("Unable to add selection extensions js");
+        }
     }
 
     private Task<string> LoadSelectionCssAsync()
