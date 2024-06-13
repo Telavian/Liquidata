@@ -8,7 +8,12 @@ public partial class ExecuteTemplateOptionsViewModel : ActionOptionsViewModelBas
     {
         get => Parent?.CurrentProject?.AllTemplates
             .FirstOrDefault(x => x.ActionId == TypedAction.ExecutionTemplateId);
-        set => TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
+
+        set
+        {
+            TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
+            _ = ActionUpdatedAsync();
+        }
     }
 
     public int WaitMilliseconds

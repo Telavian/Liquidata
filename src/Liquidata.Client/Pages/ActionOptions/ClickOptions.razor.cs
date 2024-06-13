@@ -89,6 +89,11 @@ public partial class ClickOptionsViewModel : ActionOptionsViewModelBase<ClickAct
     {
         get => Parent?.CurrentProject?.AllTemplates
             .FirstOrDefault(x => x.ActionId == TypedAction.ExecutionTemplateId);
-        set => TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
+
+        set
+        {
+            TypedAction.ExecutionTemplateId = value?.ActionId ?? null;
+            _ = ActionUpdatedAsync();
+        }
     }
 }
