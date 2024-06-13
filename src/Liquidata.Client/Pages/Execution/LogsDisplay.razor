@@ -1,0 +1,18 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@inherits LogsDisplayViewModel
+
+<MudTable Style="height: 250px;" Hover="true"
+          LoadingProgressColor="Color.Info" Bordered="true" Dense="true"
+          Elevation="3" Height="100%" Virtualize="true"
+          Items="@ExecutionResults.LoggedMessages">
+    <HeaderContent>
+        <MudTh>Message</MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd DataLabel="Message">@context</MudTd>
+    </RowTemplate>
+</MudTable>

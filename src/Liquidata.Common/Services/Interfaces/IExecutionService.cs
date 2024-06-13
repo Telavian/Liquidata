@@ -9,6 +9,9 @@
         public int Concurrency { get; }
         public string CurrentSelection { get; set; }
         public Project CurrentProject { get; }
+        IList<string> LoggedErrors { get; }
+        IList<string> LoggedMessages { get; }
+        IList<IBrowserService> AllBrowsers { get; }
 
         public Task RegisterBrowserAsync(IBrowserService browser);
         public Task UnregisterBrowserAsync(IBrowserService browser);

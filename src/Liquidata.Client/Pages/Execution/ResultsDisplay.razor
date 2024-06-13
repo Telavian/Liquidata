@@ -1,0 +1,24 @@
+﻿@layout MainLayout
+@using Liquidata.Common.Actions
+@using Liquidata.Common.Actions.Enums
+@using MudBlazor
+@inherits ResultsDisplayViewModel
+
+<MudTable Style="height: 250px;" Hover="true"
+          LoadingProgressColor="Color.Info" Bordered="true" Dense="true"
+          Elevation="3" Height="100%" Virtualize="true"
+          Items="@ExecutionResults.Records">
+    <HeaderContent>
+        @foreach (var column in ExecutionResults.AllColumns)
+        {
+            <MudTh>@column</MudTh>
+        }
+    </HeaderContent>
+
+    <RowTemplate>
+        @foreach (var column in ExecutionResults.AllColumns)
+        {
+            <MudTd DataLabel="@column">@context.GetRowData(column)</MudTd>
+        }
+    </RowTemplate>
+</MudTable>

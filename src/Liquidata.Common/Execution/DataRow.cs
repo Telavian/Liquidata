@@ -8,8 +8,7 @@ namespace Liquidata.Common.Execution
     {
         private Dictionary<string, string> _data = new Dictionary<string, string>();
 
-        [JsonIgnore]
-        public string[] AllColumns => _data.Keys.ToArray();
+        [JsonIgnore] public string[] AllColumns => _data.Keys.ToArray();
 
         public bool HasData()
         {

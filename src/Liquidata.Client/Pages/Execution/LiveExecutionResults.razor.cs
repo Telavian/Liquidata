@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Liquidata.Client.Pages.Execution
 {
@@ -19,6 +20,9 @@ namespace Liquidata.Client.Pages.Execution
         [Inject] private ComponentBus _bus { get; set; } = null!;
         [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
         [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;
+
+        [Parameter] public bool ShowResults { get; set; } = true;
+        [Parameter] public bool ShowLogs { get; set; } = false;        
 
         public string ExecutionMessage { get; set; } = "";
         public ExecutionResults? ExecutionResults { get; set; } = null!;
@@ -41,7 +45,7 @@ namespace Liquidata.Client.Pages.Execution
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("AsyncUsage", "AsyncFixer03:Fire-and-forget async-void methods or delegates", Justification = "<Pending>")]
         private async void HandleExecuteProjectMessage(MessageArgs message)
-        {
+        {            
             var typedMessage = message.GetMessage<ExecuteProjectMessage>();
             if (typedMessage is null || typedMessage.Project is null)
             {
@@ -99,7 +103,12 @@ namespace Liquidata.Client.Pages.Execution
                 await project.ExecuteProjectAsync(executionService);
 
                 await executionService.WaitForExecutionTasksAsync();
-                ExecutionResults = executionService.DataHandler.GetExecutionResults();
+                
+                var executionResults = executionService.DataHandler.GetExecutionResults();
+                executionResults.LoggedMessages = executionService.LoggedMessages
+                    .ToArray();
+
+                ExecutionResults = executionResults;
             }
             catch (Exception ex)
             {
