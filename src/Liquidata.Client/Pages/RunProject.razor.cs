@@ -23,7 +23,14 @@ namespace Liquidata.Client.Pages
         public Project? CurrentProject { get; set; } = new Project();
         public string? ActiveUrl { get; set; } = "";
         public ExecutionService? ExecutionService { get; set; }
-        public IBrowserService? SelectedBrowser { get; set; }
+
+        private IBrowserService? _selectedBrowser;
+        public IBrowserService? SelectedBrowser
+        {
+            get => _selectedBrowser;
+            set => UpdateProperty(ref _selectedBrowser, value,
+                v => ProcessSelectedBrowserChangedAsync());
+        }
 
         private Func<IBrowserService, Task>? _browserLoadedAsyncCommand;
         public Func<IBrowserService, Task> BrowserLoadedAsyncCommand => _browserLoadedAsyncCommand ??= CreateEventCallbackAsyncCommand<IBrowserService>(HandleBrowserLoadedAsync, "Unable to process browser loaded");
@@ -48,11 +55,11 @@ namespace Liquidata.Client.Pages
         {
             if (browser is not null && browserId == browser.BrowserId)
             {
-                return "z-index: 1;";
+                return "position: absolute; z-index: 0;";
             }
             else
             {
-                return "z-index: -1;";
+                return "position: absolute; z-index: -1;";
             }
         }
 
@@ -102,6 +109,12 @@ namespace Liquidata.Client.Pages
 
             await _bus.Publish(new ExecuteProjectMessage { Project = project, AllowInteractive = true, ExecutionService = ExecutionService });
             await ExecutionService.UnregisterBrowserAsync(_browserService);
+        }
+
+        private async Task ProcessSelectedBrowserChangedAsync()
+        {
+            await Task.Yield();
+            await RefreshAsync();
         }
     }
 }

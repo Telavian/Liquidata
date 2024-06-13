@@ -1,4 +1,5 @@
-﻿using Liquidata.Common.Services.Interfaces;
+﻿using Liquidata.Common.Actions.Enums;
+using Liquidata.Common.Services.Interfaces;
 using System.Collections.Concurrent;
 
 namespace Liquidata.Common.Services
@@ -104,13 +105,12 @@ namespace Liquidata.Common.Services
 
         public async Task RegisterBrowserAsync(IBrowserService browser)
         {
-            await Task.Yield();
-
+            await Task.Yield();                        
             lock (AllBrowsers)
             {
-                if (AllBrowsers.Contains(browser) == false)
-                {
-                    AllBrowsers.Add(browser);
+                if (!AllBrowsers.Contains(browser))
+                {                    
+                    AllBrowsers.Add(browser);                    
                 }
             }
 

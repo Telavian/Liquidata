@@ -4,7 +4,6 @@ using Liquidata.Client.Pages.Dialogs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using System.Text.Json;
 
 namespace Liquidata.Client.Pages.Common;
 
@@ -47,7 +46,7 @@ public partial class ViewModelBase : LayoutComponentBase
     {
         var isSupported = await InvokeAsync(async () => await _clipboard!.IsSupportedAsync());
 
-        if (isSupported == false)
+        if (!isSupported)
         {
             return;
         }

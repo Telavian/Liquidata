@@ -1,5 +1,4 @@
-﻿using Liquidata.Client.Exceptions;
-using Liquidata.Client.Services.Interfaces;
+﻿using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
@@ -7,7 +6,6 @@ using Liquidata.Common.Exceptions;
 using Liquidata.Common.Models;
 using Liquidata.Common.Services.Interfaces;
 using Microsoft.JSInterop;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
@@ -299,7 +297,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
     }
 
     public async Task<IBrowserService> ClickOpenInNewPageAsync(string selection, ClickButton clickButton, bool isDoubleClick)
-    {        
+    {
         var link = await GetSelectionLinkAsync(selection);
 
         if (string.IsNullOrWhiteSpace(link))

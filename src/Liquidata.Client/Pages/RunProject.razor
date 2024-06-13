@@ -36,7 +36,7 @@
     </div>
 
     <!-- Browser -->
-    <div style="grid-row: 1; grid-column: 2;">
+    <div style="grid-row: 1; grid-column: 2; position: relative; overflow: hidden;">
         @foreach (var browser in (ExecutionService?.AllBrowsers ?? []))
         {
             <iframe id="@(browser.BrowserId)" src="@(browser.RootPage)" style="@BuildBrowserStyle(browser.BrowserId, SelectedBrowser)"

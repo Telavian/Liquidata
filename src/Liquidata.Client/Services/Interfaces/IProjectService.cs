@@ -1,5 +1,4 @@
-﻿using Liquidata.Common;
-using Liquidata.Common.Models;
+﻿using Liquidata.Common.Models;
 
 namespace Liquidata.Common.Services.Interfaces;
 
