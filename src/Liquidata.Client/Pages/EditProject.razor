@@ -75,7 +75,7 @@
             <div style="grid-row: 2; grid-column: 1 / span 2; margin-top: 5px;">
                 <MudSelect Dense="true" Label="Active template" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                            MultiSelection="false" @bind-Value="SelectedTemplate">
-                    @foreach (var template in CurrentProject.AllTemplates)
+                    @foreach (var template in (CurrentProject?.AllTemplates ?? []))
                     {
                         <MudSelectItem Value="@template" />
                     }
@@ -89,13 +89,24 @@
                 </MudTooltip>
             </div>
 
-            <MudTreeView Style="grid-row: 3; grid-column: 1 / span 3; height: 100%; margin-top: 5px;" ExpandOnDoubleClick="true"
-                         SelectionMode="SelectionMode.SingleSelection" Color="Color.Success" ReadOnly="false" Hover="true"
+            <MudTreeView Style="grid-row: 3; grid-column: 1 / span 3; height: 100%; margin-top: 5px;"
+                         SelectionMode="SelectionMode.SingleSelection" Color="Color.Success"
+                         ReadOnly="false" Hover="true" ExpandOnDoubleClick="true"
                          @bind-SelectedValue="SelectedAction" Items="@TemplateActionItems">
                 <ItemTemplate Context="item">
                     <MudTreeViewItem Value="@item" Items="@item!.ChildActions" Expanded="true">
                         <BodyContent>
-                            <ActionDisplay Action="@item" Parent="@this" />
+                            <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
+                                <ActivatorContent>
+                                    <ActionDisplay Action="@item" Parent="@this" />
+                                </ActivatorContent>
+
+                                <ChildContent>
+                                    <MudMenuItem  OnClick="@(() => ShowActionOptionsAsyncCommand(item))">
+                                        Show options
+                                    </MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>                            
                         </BodyContent>
                     </MudTreeViewItem>
                 </ItemTemplate>

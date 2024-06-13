@@ -15,7 +15,7 @@ namespace Liquidata.Client.Pages.Execution
 {
     public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
     {
-        private DebounceDispatcher _projectExecutionDebounce = new DebounceDispatcher(500);
+        private DebounceDispatcher _projectExecutionDebounce = new DebounceDispatcher(1000);
         [Inject] private ComponentBus _bus { get; set; } = null!;
         [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
         [Inject] private IBlazorFileSaver _blazorFileSaver { get; set; } = null!;

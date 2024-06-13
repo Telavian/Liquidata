@@ -86,6 +86,9 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
     private Func<string, Task>? _loadTemplateUrlAsyncCommand;
     public Func<string, Task> LoadTemplateUrlAsyncCommand => _loadTemplateUrlAsyncCommand ??= CreateEventCallbackAsyncCommand<string>(HandleLoadTemplateUrlAsync, "Unable to load template url");
 
+    private Func<ActionBase, Task>? _showActionOptionsAsyncCommand;
+    public Func<ActionBase, Task> ShowActionOptionsAsyncCommand => _showActionOptionsAsyncCommand ??= CreateEventCallbackAsyncCommand<ActionBase>(HandleShowActionOptionsAsync, "Unable to show action options");
+
     private Func<Task>? _navigateHomeAsyncCommand;
     public Func<Task> NavigateHomeAsyncCommand => _navigateHomeAsyncCommand ??= CreateEventCallbackAsyncCommand(HandleNavigateHomeAsync, "Unable to navigate home");
 
@@ -459,6 +462,19 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         {
             ActiveUrl = url;
         }        
+    }
+
+    private async Task HandleShowActionOptionsAsync(ActionBase action)
+    {
+        await Task.Yield();
+        
+        var parameters = new DialogParameters
+        {
+            { nameof(ActionOptionsDialogViewModel.Action), action },
+            { nameof(ActionOptionsDialogViewModel.Parent), this }
+        };
+
+        await ShowDialogAsync<ActionOptionsDialog>("Options", parameters);
     }
 
     private async Task HandleNavigateHomeAsync()
