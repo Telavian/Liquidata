@@ -44,7 +44,39 @@ Object.defineProperty(String.prototype, "getLink", {
             return ``;
         }
 
-        return node.getAttribute('href');
+        var startNode = node;
+
+        while (node != null) {
+            if (node.getAttribute('href') != null) {
+                return node.getAttribute('href');
+            }        
+
+            if (node.getAttribute('data-filter-url') != null) {
+                return node.getAttribute('data-filter-url');
+            } 
+
+            node = node.parentElement;
+        }
+
+        var searchNodes = [startNode];
+
+        while (searchNodes.length > 0) {
+            var current = searchNodes.pop();
+
+            if (current.getAttribute('href') != null) {
+                return current.getAttribute('href');
+            }
+
+            if (current.getAttribute('data-filter-url') != null) {
+                return current.getAttribute('data-filter-url');
+            } 
+
+            for (let child of current.children) {
+                searchNodes.push(child);
+            }
+        }
+
+        return ``;
     },
     writable: true,
     configurable: true,
