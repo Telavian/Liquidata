@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Emporium.Pages;
 
-public class CategoryListViewModel : ViewModelBase
+public partial class CategoryListViewModel : ViewModelBase
 {
     [Parameter] public EmporiumData Data { get; set; }
     

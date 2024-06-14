@@ -6,5 +6,5 @@ public interface IEmporiumService
 {
     Task<EmporiumData?> LoadDataAsync();
     Task<EmporiumData> GenerateDataAsync(Func<Task> initialAction, Func<int, int, Task> refreshAction);
-    Task<EmporiumItem> LoadDataItem(Guid productId);
+    Task<EmporiumItem> LoadDataItemAsync(Guid productId, Func<Task> initialAction, Func<int, int, Task> refreshAction);
 }

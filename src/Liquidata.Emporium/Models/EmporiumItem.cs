@@ -12,5 +12,5 @@ public class EmporiumItem
     public EmporiumCategory Category { get; set; } = null!;
     public string Description { get; set; } = "";
     public EmporiumReview[] Reviews { get; set; } = [];
-    public Dictionary<string, string> Attributes = new Dictionary<string, string>();
+    public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 }

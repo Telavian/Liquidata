@@ -46,13 +46,12 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
         await Parallel.ForAsync(0, totalCount,
             async (x, c) =>
             {
-                await refreshAction(x, totalCount);                
+                await refreshAction(x, totalCount);
 
                 var category = faker.Random.ArrayElement(categories);                
                 var result = GenerateDataItem(faker, category);
                 lock (items) { items.Add(result); }
             });
-
 
         data = new EmporiumData
         {
@@ -72,7 +71,7 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
         return await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey);
     }
 
-    public async Task<EmporiumItem> LoadDataItem(Guid productId)
+    public async Task<EmporiumItem> LoadDataItemAsync(Guid productId, Func<Task> initialAction, Func<int, int, Task> refreshAction)
     {
         var productKey = EmporiumItemKey(productId);
         var product = await localStorage.GetItemAsync<EmporiumItem>(productKey);
@@ -93,17 +92,29 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
             throw new Exception("Product not found");
         }
 
-        var faker = new Faker();
-        product.Reviews = Enumerable.Range(0, faker.Random.Number(10, 500))
-            .AsParallel()
-            .Select(x => new EmporiumReview
-            {
-                Reviewer = new Bogus.Person().FullName,
-                StarRating = GetRandomStarRating(product.StarRating),
-                Review = faker.Rant.Review(product.Name)
-            })
-            .ToArray();
+        await initialAction();
 
+        var faker = new Faker();
+
+        var items = new List<EmporiumReview>();
+        var totalCount = faker.Random.Number(10, 500);
+
+        await Parallel.ForAsync(0, totalCount,
+            async (x, c) =>
+            {
+                await refreshAction(x, totalCount);
+
+                var review = new EmporiumReview
+                {
+                    Reviewer = new Bogus.Person().FullName,
+                    StarRating = GetRandomStarRating(product.StarRating),
+                    Review = faker.Rant.Review(product.Name)
+                };
+
+                lock (items) { items.Add(review); }
+            });
+
+        product.Reviews = items.ToArray();
         await localStorage.SetItemAsync(productKey, product);
         return product;
     }
