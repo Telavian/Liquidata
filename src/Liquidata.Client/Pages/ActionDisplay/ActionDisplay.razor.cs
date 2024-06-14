@@ -1,8 +1,8 @@
 ﻿using BlazorComponentBus;
 using Liquidata.Client.Extensions;
 using Liquidata.Client.Messages;
-using Liquidata.Client.Pages.Common;
 using Liquidata.Common.Actions.Shared;
+using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 

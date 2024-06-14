@@ -1,8 +1,8 @@
-﻿using Liquidata.Client.Pages.Common;
+﻿using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Liquidata.Client.Pages.Dialogs;
+namespace Liquidata.UI.Common.Pages.Dialogs;
 
 public class DialogViewModelBase : ViewModelBase
 {

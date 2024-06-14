@@ -1,5 +1,4 @@
-﻿using Liquidata.Client.Pages.Common;
-using Liquidata.Common;
+﻿using Liquidata.Common;
 using Microsoft.AspNetCore.Components;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Client.Services.Interfaces;
@@ -7,6 +6,7 @@ using Liquidata.Client.Messages;
 using BlazorComponentBus;
 using Liquidata.Client.Services;
 using Liquidata.Common.Services;
+using Liquidata.UI.Common.Pages.Common;
 
 namespace Liquidata.Client.Pages
 {

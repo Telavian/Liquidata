@@ -1,5 +1,5 @@
-﻿
-using Liquidata.Common.Actions.Shared;
+﻿using Liquidata.Common.Actions.Shared;
+using Liquidata.UI.Common.Pages.Dialogs;
 using Microsoft.AspNetCore.Components;
 
 namespace Liquidata.Client.Pages.Dialogs;

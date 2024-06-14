@@ -1,17 +1,17 @@
 ﻿using Blazored.LocalStorage;
 using CurrieTechnologies.Razor.Clipboard;
-using Liquidata.Client.Pages.Dialogs;
+using Liquidata.UI.Common.Pages.Dialogs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 
-namespace Liquidata.Client.Pages.Common;
+namespace Liquidata.UI.Common.Pages.Common;
 
 public partial class ViewModelBase : LayoutComponentBase
 {
     private bool _isUpdated = true;
 
-    [Inject] private ILocalStorageService _localStorage { get; set; } = null!;    
+    [Inject] private ILocalStorageService _localStorage { get; set; } = null!;
     [Inject] private IJSRuntime? _jsRuntime { get; set; } = null!;
     [Inject] private ClipboardService _clipboard { get; set; } = null!;
     [Inject] private IDialogService _dialogService { get; set; } = null!;
@@ -76,7 +76,7 @@ public partial class ViewModelBase : LayoutComponentBase
         property = newValue;
         _isUpdated = true;
 
-        AttemptAction(() => action(newValue), "Unable to process property changed");        
+        AttemptAction(() => action(newValue), "Unable to process property changed");
     }
 
     protected void UpdateProperty<T>(ref T property, T newValue, Func<T, Task> action)
@@ -189,7 +189,7 @@ public partial class ViewModelBase : LayoutComponentBase
             var options = new MessageBoxOptions
             {
                 MarkupMessage = new MarkupString(message),
-                Title = "Alert"                
+                Title = "Alert"
             };
 
             await _dialogService!.ShowMessageBox(options, dialogOptions);
@@ -218,7 +218,7 @@ public partial class ViewModelBase : LayoutComponentBase
     {
         await Task.Yield();
         var result = await _dialogService!.ShowAsync<TDialog>();
-        
+
         if (result is null)
         {
             return (false, default);
@@ -236,9 +236,9 @@ public partial class ViewModelBase : LayoutComponentBase
 
     protected async Task<(bool success, TResult? value)> ShowDialogAsync<TDialog, TResult>(string title, DialogParameters parameters = null!)
         where TDialog : IComponent
-    {        
+    {
         await Task.Yield();
-        
+
         parameters ??= new DialogParameters();
         var result = await _dialogService!.ShowAsync<TDialog>(title, parameters);
 
@@ -266,7 +266,7 @@ public partial class ViewModelBase : LayoutComponentBase
     protected async Task ShowSnackbarMessageAsync(string message, Action<SnackbarOptions> configure)
     {
         await Task.Yield();
-        _snackbar.Add(message, configure:configure);
+        _snackbar.Add(message, configure: configure);
     }
 
     protected Task RefreshAsync()
@@ -277,7 +277,7 @@ public partial class ViewModelBase : LayoutComponentBase
 
     protected async Task NavigateToAsync(string url, bool forceLoad = false, bool replace = false)
     {
-        await Task.Yield();        
+        await Task.Yield();
         _navigationManager!.NavigateTo(url, forceLoad, replace);
     }
 
@@ -285,7 +285,7 @@ public partial class ViewModelBase : LayoutComponentBase
     {
         var options = new DialogOptions
         {
-            FullWidth = true   
+            FullWidth = true
         };
 
         return _dialogService!.ShowMessageBox(title, message, cancelText: "CANCEL", options: options);

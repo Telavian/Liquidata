@@ -1,4 +1,6 @@
-﻿namespace Liquidata.Client.Pages.Dialogs;
+﻿using Liquidata.UI.Common.Pages.Dialogs;
+
+namespace Liquidata.Client.Pages.Dialogs;
 
 public class SaveAsProjectSettingsDialogViewModel : DialogViewModelBase
 {
