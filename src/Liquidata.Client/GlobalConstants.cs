@@ -1,7 +1,6 @@
-﻿namespace Liquidata.Client
+﻿namespace Liquidata.Client;
+
+public static class GlobalConstants
 {
-    public static class GlobalConstants
-    {
-        public const string LDBrowser_Name = "liquidata_browser";
-    }
+    public const string LDBrowser_Name = "liquidata_browser";
 }

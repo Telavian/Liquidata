@@ -1,0 +1,20 @@
+﻿@layout MainLayout
+@using MudBlazor
+@inherits CategoryListViewModel
+
+<MudStack Spacing="1">
+    <MudText Style="margin-left: 15px; margin-top: 15px; margin-bottom: 25px;" Typo="Typo.h6">Categories</MudText>
+
+    <MudList SelectionMode="SelectionMode.SingleSelection" ReadOnly="false" Dense="true"
+             @bind-SelectedValue="SelectedCategory">
+
+        @foreach (var category in (Data?.AllCategories ?? []))
+        {
+            var link = $"/Category/{category.Name}";
+
+            <MudListItem Icon="@category.Icon">
+                <MudLink Href="@link">@category.Name</MudLink>
+            </MudListItem>
+        }
+    </MudList>
+</MudStack>

@@ -1,7 +1,6 @@
-﻿namespace Liquidata.Client.Messages
+﻿namespace Liquidata.Client.Messages;
+
+public class ActionUpdatedMessage
 {
-    public class ActionUpdatedMessage
-    {
-        public Guid ActionId { get; set; }
-    }
+    public Guid ActionId { get; set; }
 }

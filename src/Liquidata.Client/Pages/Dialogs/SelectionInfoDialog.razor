@@ -9,56 +9,56 @@
             <MudText Style="font-weight: bold;">Path</MudText>
             <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
                 @{
-                var tags = BuildPathTags();
+            var tags = BuildPathTags();
 
 
-                @for (var x = 0; x < tags.Count; x++)
-                {
-                    var tag = tags[x];
-                    var isEnd = x >= (tags.Count - 1);
+            @for (var x = 0; x < tags.Count; x++)
+            {
+                var tag = tags[x];
+                var isEnd = x >= (tags.Count - 1);
 
-                    <MudStack Row="true" Wrap="Wrap.NoWrap" Spacing="0">
+                <MudStack Row="true" Wrap="Wrap.NoWrap" Spacing="0">
                             @{                            
                                 <MudText Color="Color.Info">@tag.name</MudText>
 
-                            if (!string.IsNullOrWhiteSpace(tag.index))
-                            {
-                                <MudText Color="Color.Secondary">[@tag.index]</MudText>
-                            }
-
-                            if (!isEnd)
-                            {
-                                <MudIcon Style="margin-top: auto; margin-bottom: auto;" Icon="@Icons.Material.TwoTone.PlayArrow" Size="Size.Small" Color="Color.Success" />
-                            }                               
+                        if (!string.IsNullOrWhiteSpace(tag.index))
+                        {
+                            <MudText Color="Color.Secondary">[@tag.index]</MudText>
                         }
+
+                        if (!isEnd)
+                        {
+                            <MudIcon Style="margin-top: auto; margin-bottom: auto;" Icon="@Icons.Material.TwoTone.PlayArrow" Size="Size.Small" Color="Color.Success" />
+                        }                               
+                    }
                         </MudStack>
-                }
+            }
                 }               
             </MudStack>
 
             <MudText Style="margin-top: 35px; font-weight: bold;">Attributes</MudText>
             <div style="display: grid; grid-template-columns: auto 1fr;">
                 @{
-                var attributes = BuildAttributes();
+            var attributes = BuildAttributes();
 
-                for (var x=0; x < attributes.Count; x++)
-                {
-                    var item = attributes[x];
-                    var col1 = $"grid-column: 1; grid-row: {x + 1}";
-                    var col2 = $"grid-column: 2; grid-row: {x + 1}; margin-left: 25px;";
+            for (var x=0; x < attributes.Count; x++)
+            {
+                var item = attributes[x];
+                var col1 = $"grid-column: 1; grid-row: {x + 1}";
+                var col2 = $"grid-column: 2; grid-row: {x + 1}; margin-left: 25px;";
 
-                    <MudText Style="@col1" Color="Color.Success">@item.name</MudText>
+                <MudText Style="@col1" Color="Color.Success">@item.name</MudText>
                         <MudText Style="@col2">@item.value</MudText>
-                }
             }
+        }
             </div>           
 
             <MudText Style="margin-top: 35px; font-weight: bold;">Text</MudText>
             <MudText>
                 @(string.IsNullOrWhiteSpace(Info.Text)
-                ? "No text"
-                : Info.Text
-            )
+            ? "No text"
+            : Info.Text
+        )
             </MudText>
         </MudStack>
     </DialogContent>

@@ -1,0 +1,69 @@
+﻿@page "/Category/{CategoryName}"
+@layout MainLayout
+@using MudBlazor
+@inherits CategoryViewModel
+
+<div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px;">
+    <MudLink Href="/"><MudText Typo="Typo.h4" Style="grid-column: 1 / span 2; grid-row: 1;">Emporium</MudText></MudLink>
+
+    <MudPaper Style="grid-column: 1; grid-row: 2; width: 250px; margin-top: 5px;" Outlined="true" Elevation="5">
+        <MudPaper Style="grid-column: 1; grid-row: 2; width: 250px;" Outlined="true" Elevation="5">
+            <CategoryList Data="@EmporiumData" />
+        </MudPaper>
+    </MudPaper>
+
+    <MudPaper Style="grid-column: 2; grid-row: 2; margin-top: 5px; margin-bottom: 5px;"
+              Outlined="true" Elevation="5">
+        <MudStack Style="margin-left: 15px; margin-right: 15px;">
+            <MudText Style="margin-top: 15px; margin-bottom: 25px;" Typo="Typo.h5">@(CategoryName) Products</MudText>
+
+            <MudStack Row="true">
+                <MudTextField Style="width: 100%" Label="Product filter" Variant="@Variant.Outlined" Clearable="true"
+                              @bind-Value="SearchText"
+                              OnClearButtonClick="@(args => SearchProductsAsyncCommand())"
+                              OnKeyDown="@(args => SearchKeyPressedAsyncCommand(args))" />
+
+                <div style="margin-top: auto; margin-bottom: auto;">
+                    <MudTooltip Text="Filter the category products" Delay="500" Color="Color.Primary">
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                                   OnClick="@(() => SearchProductsAsyncCommand())">
+                            Search
+                        </MudButton>
+                    </MudTooltip>
+                </div>
+            </MudStack>
+
+            @foreach (var item in ItemsOnPage)
+            {
+                var itemLink = $"/Details/{item.ProductId}";
+
+                <MudPaper Elevation="3">
+                    <MudStack Style="margin: 5px;" Row="true">
+                        <MudLink Href="@itemLink">
+                            <MudImage Src="@item.ImageLink" Height="300" Width="300" Elevation="10" ObjectPosition="ObjectPosition.Center" />
+                        </MudLink>
+
+                        <MudStack>
+                            <MudLink Href="@itemLink">
+                                <MudText Typo="Typo.h4" Align="Align.Left">
+                                    @item.Name
+                                </MudText>
+                            </MudLink>
+
+                            <MudText Align="Align.Left">Manufactured by @item.Manufacturer</MudText>
+                            <MudRating Style="margin-right: auto;"
+                                       MaxValue="10" ReadOnly="true" title="@($"{item.StarRating} rating")"
+                                       SelectedValue="@((int)item.StarRating)" />
+                            <MudText Align="Align.Left">$@(item.Price)</MudText>
+                            <MudText Align="Align.Left">@(item.Quantity) available</MudText>
+                            <MudText Align="Align.Left">@item.Description</MudText>
+                        </MudStack>                        
+                    </MudStack>
+                </MudPaper>
+            }
+
+            <MudPagination Style="margin-bottom: 25px;" Rectangular="true" Variant="Variant.Text" Count="@TotalPages"
+                           @bind-Selected="@SelectedPageIndex" />
+        </MudStack>
+    </MudPaper>
+</div>

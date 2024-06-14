@@ -1,6 +1,10 @@
-﻿namespace Liquidata.Emporium.Services.Interfaces;
+﻿using Liquidata.Emporium.Models;
+
+namespace Liquidata.Emporium.Services.Interfaces;
 
 public interface IEmporiumService
 {
-    Task GenerateDataAsync();
+    Task<EmporiumData?> LoadDataAsync();
+    Task<EmporiumData> GenerateDataAsync(Func<Task> initialAction, Func<int, int, Task> refreshAction);
+    Task<EmporiumItem> LoadDataItem(Guid productId);
 }

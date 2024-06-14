@@ -3,38 +3,56 @@ using Bogus;
 using Liquidata.Emporium.Models;
 using Liquidata.Emporium.Services.Interfaces;
 using Liquidata.Common.Extensions;
-using Bogus.Distributions.Gaussian;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Reflection;
 
 namespace Liquidata.Emporium.Services;
 
 public class EmporiumService(ILocalStorageService localStorage) : IEmporiumService
 {
     private const string EmporiumDataKey = "EmporiumData";
+    private static string EmporiumItemKey(Guid productId) => $"EmporiumItem_{productId}";
 
-    public async Task GenerateDataAsync()
+    public async Task<EmporiumData> GenerateDataAsync(Func<Task> initialAction, Func<int, int, Task> refreshAction)
     {
         await Task.Yield();
         var data = await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey);
 
         if (data is not null)
         {
-            return;
+            return data;
         }
+
+        await initialAction();
+
+        var iconFields = typeof(MudBlazor.Icons.Material.TwoTone)
+            .GetFields(BindingFlags.Public | BindingFlags.Static);        
 
         var faker = new Faker();
-        var categories = faker.Commerce.Categories(25);
+        var categories = faker.Commerce.Categories(100)
+            .Distinct()
+            .Take(25)
+            .OrderBy(x => x)
+            .Select(x => new EmporiumCategory
+            {
+                Name = x,
+                Icon = (string)faker.Random.ArrayElement(iconFields).GetRawConstantValue()!
+            })
+            .ToArray();
+
         var items = new List<EmporiumItem>();
+        var totalCount = 1000;
 
-        for (var x = 0; x < 10; x++)
-        {
-            await Task.Yield();
+        await Parallel.ForAsync(0, totalCount,
+            async (x, c) =>
+            {
+                await refreshAction(x, totalCount);                
 
-            var category = faker.Random.ArrayElement(categories);
-            var item = GenerateDataItem(faker, category);
-            items.Add(item);
-        }
+                var category = faker.Random.ArrayElement(categories);                
+                var result = GenerateDataItem(faker, category);
+                lock (items) { items.Add(result); }
+            });
+
 
         data = new EmporiumData
         {
@@ -44,36 +62,79 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
         };
 
         var json = JsonSerializer.Serialize(data);
-
-        Console.WriteLine(json.Length);
         await localStorage.SetItemAsync(EmporiumDataKey, data);
+
+        return data;
     }
 
-    private EmporiumItem GenerateDataItem(Faker faker, string category)
+    public async Task<EmporiumData?> LoadDataAsync()
+    {
+        return await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey);
+    }
+
+    public async Task<EmporiumItem> LoadDataItem(Guid productId)
+    {
+        var productKey = EmporiumItemKey(productId);
+        var product = await localStorage.GetItemAsync<EmporiumItem>(productKey);
+
+        if (product is not null)
+        {
+            return product;
+        }
+
+        var data = await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey) 
+            ?? throw new Exception("No data found");
+
+        product = data.AllItems
+            .FirstOrDefault(x => x.ProductId == productId);
+
+        if (product is null)
+        {
+            throw new Exception("Product not found");
+        }
+
+        var faker = new Faker();
+        product.Reviews = Enumerable.Range(0, faker.Random.Number(10, 500))
+            .AsParallel()
+            .Select(x => new EmporiumReview
+            {
+                Reviewer = new Bogus.Person().FullName,
+                StarRating = GetRandomStarRating(product.StarRating),
+                Review = faker.Rant.Review(product.Name)
+            })
+            .ToArray();
+
+        await localStorage.SetItemAsync(productKey, product);
+        return product;
+    }
+
+    private float GetRandomStarRating(float targetValue)
+    {
+        var scale = targetValue * 2;
+        var result = (float)((Random.Shared.NextDouble() * scale) - (scale / 2) + targetValue);
+        result = result.RoundDownToNearest(0.5F);
+
+        if (result >= 10)
+        {
+            return 10F;
+        }
+
+        return result;
+    }
+
+    private EmporiumItem GenerateDataItem(Faker faker, EmporiumCategory category)
     {
         var item = new EmporiumItem
         {
             Category = category,
-            ImageLink = faker.Image.PicsumUrl(300, 300),            
+            ImageLink = $"https://picsum.photos/id/{Random.Shared.Next(0, 1084)}/300/300",
             Manufacturer = faker.Company.CompanyName(),
             Name = faker.Commerce.ProductName(),
             Price = float.Parse(faker.Commerce.Price()),
             Quantity = faker.Random.Number(0, 1000),
-            Description = faker.Commerce.ProductDescription()
+            Description = faker.Commerce.ProductDescription(),
+            StarRating = faker.Random.Number(0, 10)
         };
-
-        item.Reviews = Enumerable.Range(0, faker.Random.Number(10, 100))
-            .Select(x => new EmporiumReview
-            {
-                Reviewer = new Bogus.Person().FullName,
-                StarRating = faker.Random.Float(0, 5).RoundDownToNearest(0.5F),
-                Review = faker.Rant.Review(item.Name)
-            })
-            .ToArray();
-
-        item.StarRating = item.Reviews
-            .Average(x => x.StarRating)
-            .RoundDownToNearest(0.5F);
 
         if (faker.Random.Bool())
         {

@@ -2,10 +2,9 @@
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 
-namespace Liquidata.Client.Pages.Execution
+namespace Liquidata.Client.Pages.Execution;
+
+public class ResultsDisplayViewModel : ViewModelBase
 {
-    public class ResultsDisplayViewModel : ViewModelBase
-    {
-        [Parameter] public ExecutionResults ExecutionResults { get; set; } = null!;
-    }
+    [Parameter] public ExecutionResults ExecutionResults { get; set; } = null!;
 }

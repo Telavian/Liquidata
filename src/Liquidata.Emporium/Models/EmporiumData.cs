@@ -2,6 +2,6 @@
 
 public class EmporiumData
 {
-    public string[] AllCategories { get; set; } = [];
+    public EmporiumCategory[] AllCategories { get; set; } = [];
     public EmporiumItem[] AllItems { get; set; } = [];
 }
