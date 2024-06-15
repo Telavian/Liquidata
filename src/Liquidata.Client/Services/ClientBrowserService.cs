@@ -216,6 +216,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
             }
             else
             {
+                await Task.Delay(250);
                 continue;
             }
         }
