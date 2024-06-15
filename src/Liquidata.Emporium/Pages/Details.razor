@@ -87,18 +87,18 @@
                 <MudStack Spacing="1">
                     @foreach (var review in ReviewsOnPage)
                     {
-                        <MudPaper Elevation="1">
-                            <MudStack Style="margin: 5px;">
-                                <MudStack Row="true">
-                                    <MudText Align="Align.Left">@review.Reviewer</MudText>
+                        <MudStack Style="margin: 5px; margin-bottom: 15px;">
+                            <MudStack Row="true">
+                                <MudIcon Icon="@Icons.Material.TwoTone.Person" />
 
-                                    <MudRating MaxValue="10" ReadOnly="true" title="@($"{review.StarRating} rating")"
-                                               SelectedValue="@((int)review.StarRating)" />
-                                </MudStack>
+                                <MudText Align="Align.Left">@review.Reviewer</MudText>
 
-                                <MudText Align="Align.Left">@review.Review</MudText>
+                                <MudRating MaxValue="10" ReadOnly="true" title="@($"{review.StarRating} rating")"
+                                            SelectedValue="@((int)review.StarRating)" />
                             </MudStack>
-                        </MudPaper>
+
+                            <MudText Align="Align.Left">@review.Review</MudText>
+                        </MudStack>
                     }
                 </MudStack>
 

@@ -25,7 +25,7 @@ public class DetailsViewModel : ViewModelBase
     public EmporiumReview[] AllReviews { get; set; } = [];
     public EmporiumReview[] FilteredReviews { get; set; } = [];
     public string? SearchText { get; set; }
-    public int ReviewsPerPage { get; set; } = 25;
+    public int ReviewsPerPage { get; set; } = 10;
 
     public int TotalPages { get; set; }
     public EmporiumReview[] ReviewsOnPage { get; set; } = [];
