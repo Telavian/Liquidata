@@ -13,10 +13,12 @@
     <!-- Navigation -->
     <div style="grid-row: 1 / span 2; grid-column: 1; background-color: gray; padding: 5px;">
         <MudStack>
-            <MudTooltip Text="Home" Placement="Placement.Right"
+            <MudTooltip RootStyle="margin-left: auto; margin-right: auto;" 
+                        Text="Home" Placement="Placement.Right"
                         Delay="500" Color="Color.Primary">
-                <MudIconButton Variant="Variant.Text" Icon="@Icons.Material.TwoTone.Home"
-                               OnClick="@(() => NavigateHomeAsyncCommand())" />
+                <MudLink OnClick="@(() => NavigateHomeAsyncCommand())">
+                    <MudImage Style="margin-left: auto; margin-right: auto;" Src="/icon.png" Height="35" Width="35" />
+                </MudLink>
             </MudTooltip>
 
             <MudTooltip Text="Save the current project" Placement="Placement.Right"

@@ -4,7 +4,10 @@
 @inherits DetailsViewModel
 
 <div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px;">
-    <MudLink Href="/"><MudText Typo="Typo.h4" Style="grid-column: 1 / span 2; grid-row: 1;">Emporium</MudText></MudLink>
+    <MudStack Row="true">
+        <MudImage Src="/icon.png" Height="45" Width="45" />
+        <MudLink Style="margin-top: 5px;" Href="/"><MudText Typo="Typo.h4" Style="">Emporium</MudText></MudLink>
+    </MudStack>
 
     @if (IsGeneratingData)
     {

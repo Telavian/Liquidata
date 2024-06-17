@@ -5,53 +5,64 @@
 
 <div style="height: 100%; display: grid; grid-template-columns: 1fr 750px 1fr; grid-template-rows: 1fr 500px 1fr; background-color: darkgray">
     <div style="grid-row: 2; grid-column: 2;">
-        <MudPaper Style="height: 100%; padding: 5px;">
-            <MudStack Style="height: 100%;">
-                <MudPaper Style="height: 100%; width: 100%;" Elevation="30" Outlined="true">
-                    <MudStack Style="height: 100%; margin: 5px;">
-                        <h1>Load Existing</h1>
-
-                        <MudList Style="height: 100%;" ReadOnly="false" Color="@Color.Success"
-                                 SelectionMode="@SelectionMode.SingleSelection"
-                                 @bind-SelectedValue="@SelectedProject"
-                                 ondblclick="@(() => LoadProjectAsyncCommand())">
-                            @foreach (var project in AllProjects)
-                            {
-                                <MudListItem Value="@project">
-                                    <MudStack Row="true">
-                                        <MudText Class="verticalCenter">@project.Name</MudText>
-                                    </MudStack>
-                                </MudListItem>
-                            }
-                        </MudList>
-
-                        <div style="margin-bottom: 5px; padding-bottom: 5px; margin-left: auto;">
-                            <MudStack Row="true">
-                                <MudTooltip Text="Create new project" Delay="500" Color="Color.Primary">
-                                    <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.Category" Color="Color.Info"
-                                               OnClick="@(() => CreateProjectAsyncCommand())">
-                                        Create
-                                    </MudButton>
-                                </MudTooltip>
-
-                                <MudTooltip Text="Delete project" Delay="500" Color="Color.Primary">
-                                    <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.Delete" Color="Color.Error"
-                                               OnClick="@(() => RemoveProjectAsyncCommand())">
-                                        Delete
-                                    </MudButton>
-                                </MudTooltip>
-
-                                <MudTooltip Text="Load existing project" Delay="500" Color="Color.Primary">
-                                    <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.FileOpen" Color="Color.Primary"
-                                               OnClick="@(() => LoadProjectAsyncCommand())">
-                                        Load
-                                    </MudButton>
-                                </MudTooltip>
-                            </MudStack>
-                        </div>
-                    </MudStack>
-                </MudPaper>
+        <MudStack Style="height: 100%;" Spacing="0">
+            <MudStack Row="true">
+                <MudImage Src="/icon.png" Height="45" Width="45" />
+                <MudLink Style="margin-top: 5px;" Href="/">
+                    <MudText Typo="Typo.h4">
+                        Liquidata
+                    </MudText>
+                </MudLink>
             </MudStack>
-        </MudPaper>
+
+            <MudPaper Style="height: 100%;">
+                <MudStack Style="height: 100%;">
+                    <MudPaper Style="height: 100%; width: 100%;" Elevation="30" Outlined="true">
+                        <MudStack Style="height: 100%; margin: 5px;">
+                            <h1>Load Existing</h1>
+
+                            <MudList Style="height: 100%;" ReadOnly="false" Color="@Color.Success"
+                                     SelectionMode="@SelectionMode.SingleSelection"
+                                     @bind-SelectedValue="@SelectedProject"
+                                     ondblclick="@(() => LoadProjectAsyncCommand())">
+                                @foreach (var project in AllProjects)
+                                {
+                                    <MudListItem Value="@project">
+                                        <MudStack Row="true">
+                                            <MudText Class="verticalCenter">@project.Name</MudText>
+                                        </MudStack>
+                                    </MudListItem>
+                                }
+                            </MudList>
+
+                            <div style="margin-bottom: 5px; padding-bottom: 5px; margin-left: auto;">
+                                <MudStack Row="true">
+                                    <MudTooltip Text="Create new project" Delay="500" Color="Color.Primary">
+                                        <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.Category" Color="Color.Info"
+                                                   OnClick="@(() => CreateProjectAsyncCommand())">
+                                            Create
+                                        </MudButton>
+                                    </MudTooltip>
+
+                                    <MudTooltip Text="Delete project" Delay="500" Color="Color.Primary">
+                                        <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.Delete" Color="Color.Error"
+                                                   OnClick="@(() => RemoveProjectAsyncCommand())">
+                                            Delete
+                                        </MudButton>
+                                    </MudTooltip>
+
+                                    <MudTooltip Text="Load existing project" Delay="500" Color="Color.Primary">
+                                        <MudButton Style="width: 100px;" Variant="Variant.Filled" StartIcon="@Icons.Material.TwoTone.FileOpen" Color="Color.Primary"
+                                                   OnClick="@(() => LoadProjectAsyncCommand())">
+                                            Load
+                                        </MudButton>
+                                    </MudTooltip>
+                                </MudStack>
+                            </div>
+                        </MudStack>
+                    </MudPaper>
+                </MudStack>
+            </MudPaper>
+        </MudStack>
     </div>
 </div>
