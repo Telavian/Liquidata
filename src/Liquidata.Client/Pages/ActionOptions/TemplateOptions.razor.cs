@@ -9,7 +9,7 @@ public partial class TemplateOptionsViewModel : ActionOptionsViewModelBase<Templ
         get => TypedAction.Url;
         set
         {
-            TypedAction.Url = value;
+            TypedAction.Url = value ?? "";
             _ = ActionUpdatedAsync();
         }
     }
