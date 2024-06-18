@@ -12,7 +12,7 @@
 
         @foreach (var category in (Data?.AllCategories ?? []))
         {
-            var link = $"/Emporium/Category/{category.Name}";
+            var link = EmporiumCategory.BuildNavigationLink(category.Name);
 
             <MudListItem Icon="@category.Icon">
                 <MudLink Href="@link">@category.Name</MudLink>
