@@ -263,31 +263,24 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
     private async Task HandleBrowserLoadedAsync()
     {
-        await Task.Yield();
         Console.WriteLine("Initializing browser");
 
         // https://stackoverflow.com/questions/35432749/disable-web-security-in-chrome-48
         // CSP Unblock
-        // Cors Unblock
-        var isWebSecurity = await _browserService.CheckIfWebSecurityEnabledAsync();
+        // Cors Unblock        
+        var hasAccess = await _browserService.CheckForDocumentAccessAsync();        
 
-        if (isWebSecurity)
+        if (!hasAccess)
         {
-            // iframe onload fires event twice: https://stackoverflow.com/questions/10781880/dynamically-created-iframe-triggers-onload-event-twice
-            if (_isBrowserInitialized)
-            {
-                return;
-            }
-
             _isBrowserInitialized = true;
             await ShowAlertAsync(Constants.WebSecurityErrorMessage, true);
             return;
         }
 
         _isBrowserInitialized = true;
-        Console.WriteLine("Executing browser initialization");
-        await _browserService.WaitForBrowserReadyAsync(TimeSpan.FromSeconds(10));
+        Console.WriteLine("Executing browser initialization");        
         await _browserService.InitializeBrowserAsync();
+        await _browserService.WaitForBrowserReadyAsync(TimeSpan.FromSeconds(10));
 
         await UpdateBrowserSelectionModeAsync();
         await ExecuteProjectAsync(CurrentProject!);

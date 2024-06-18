@@ -65,20 +65,13 @@ public partial class RunProjectViewModel : ViewModelBase
 
     private async Task HandleBrowserLoadedAsync(IBrowserService browser)
     {
-        await Task.Yield();
         Console.WriteLine("Initializing browser");
 
-        // https://stackoverflow.com/questions/35432749/disable-web-security-in-chrome-48
-        var isWebSecurity = await browser.CheckIfWebSecurityEnabledAsync();
+        // https://stackoverflow.com/questions/35432749/disable-web-security-in-chrome-48        
+        var hasAccess = await browser.CheckForDocumentAccessAsync();        
 
-        if (isWebSecurity)
+        if (!hasAccess)
         {
-            // iframe onload fires event twice: https://stackoverflow.com/questions/10781880/dynamically-created-iframe-triggers-onload-event-twice
-            if (browser.IsBrowserInitialized)
-            {
-                return;
-            }
-
             browser.IsBrowserInitialized = true;
             await ShowAlertAsync(Constants.WebSecurityErrorMessage, true);
             return;

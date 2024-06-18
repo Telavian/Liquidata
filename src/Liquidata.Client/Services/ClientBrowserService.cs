@@ -59,18 +59,12 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         _initialized = true;
     }
 
-    public async Task<bool> CheckIfWebSecurityEnabledAsync()
-    {        
-        await Task.Yield();
-        var js = $@"
-                if ({IFrameContentDocument} == null)
-                {{
-                    return true;
-                }}
-
-                return false;";
+    public async Task<bool> CheckForDocumentAccessAsync()
+    {
+        var js = $@"return ({IFrameContentDocument} != null && {IFrameContentDocument}.children.length > 0);";
 
         var result = await ExecuteJavascriptAsync<bool>(js);
+        Console.WriteLine($"Access: {result.success}, {result.result}");
         return result.success && result.result;
     }
 
@@ -78,16 +72,10 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
     {
         var startTime = Stopwatch.StartNew();
         await Task.Yield();
-        var js = $@"
-                if ({IFrameContentDocument}.readyState === 'complete')
-                {{
-                    return true;
-                }}
-
-                return false;";
+        var js = $@"return ({IFrameContentDocument}.readyState === 'complete');";
 
         while (true)
-        {
+        {            
             var result = await ExecuteJavascriptAsync<bool>(js);
             if (result.success && result.result)
             {
@@ -99,6 +87,8 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
             {                
                 break;
             }
+
+            await Task.Delay(100);
         }
 
         Console.WriteLine("Browser was not ready in time");
@@ -110,8 +100,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         var startTime = Stopwatch.StartNew();
 
         while (true)
-        {
-            await Task.Delay(100);
+        {            
             if (_initialized)
             {
                 return true;
@@ -121,6 +110,8 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
             {
                 break;
             }
+
+            await Task.Delay(100);
         }
 
         Console.WriteLine("Browser was not initialized in time");

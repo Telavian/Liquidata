@@ -10,7 +10,7 @@ public interface IBrowserService
     bool IsBrowserInitialized { get; set; }
 
     Task InitializeBrowserAsync();
-    Task<bool> CheckIfWebSecurityEnabledAsync();
+    Task<bool> CheckForDocumentAccessAsync();
     Task<bool> WaitForBrowserReadyAsync(TimeSpan waitTime);
     Task<bool> WaitForBrowserInitializationAsync(TimeSpan waitTime);
     Task<SelectionInfo> GetSelectionInfoAsync(string xpath);
