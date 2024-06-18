@@ -56,10 +56,8 @@ public class EmporiumDetailsViewModel : ViewModelBase
         return $"EmporiumDetails/{productId}";
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await base.OnInitializedAsync();
-
         EmporiumData = await _emporiumService.LoadDataAsync();
 
         if (EmporiumData is null || !Guid.TryParse(ProductId, out var idValue))
@@ -69,6 +67,7 @@ public class EmporiumDetailsViewModel : ViewModelBase
         }
 
         _ = GenerateDataAsync(idValue);
+        await base.OnParametersSetAsync();
     }
 
     private async Task GenerateDataAsync(Guid productId)

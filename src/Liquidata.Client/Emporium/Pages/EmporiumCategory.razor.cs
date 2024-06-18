@@ -50,10 +50,8 @@ public class EmporiumCategoryViewModel : ViewModelBase
         return $"EmporiumCategory/{category}";
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await base.OnInitializedAsync();
-
         EmporiumData = await _emporiumService.LoadDataAsync();
 
         if (EmporiumData is null)
@@ -68,6 +66,7 @@ public class EmporiumCategoryViewModel : ViewModelBase
         await RefreshAsync();
 
         _ = SearchProductsAsyncCommand();
+        await base.OnParametersSetAsync();
     }
 
     private async Task HandleSearchProductsAsync()

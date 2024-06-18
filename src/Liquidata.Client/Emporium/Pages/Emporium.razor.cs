@@ -19,12 +19,12 @@ public partial class EmporiumViewModel : ViewModelBase
     public EmporiumData EmporiumData { get; set; } = null!;
     public EmporiumFeaturedCategory[] FeaturedCategories { get; set; } = [];
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnParametersSetAsync()
     {
-        await base.OnInitializedAsync();
         _ = InitializeDataAsync();
+        return base.OnParametersSetAsync();
     }
-
+    
     private async Task InitializeDataAsync()
     {
         await GenerateDataAsync();

@@ -17,7 +17,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -87,8 +87,26 @@ a, .btn-link {
             transition: stroke-dasharray 0.05s ease-in-out;
         }
 
-.loading-progress-text {
-    position: absolute;
+.linear-progress {
+    background: silver;
+    width: 50vw;    
+    height: 2rem;
+    border-radius: 10rem;
+    overflow: hidden;
+    position: relative;
+}
+
+    .linear-progress:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: blue;
+        scale: var(--blazor-load-percentage, 0%) 100%;
+        transform-origin: left top;
+        transition: scale ease-out 0.5s;
+    }
+
+.loading-progress-text {    
     text-align: center;
     font-weight: bold;
     inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
