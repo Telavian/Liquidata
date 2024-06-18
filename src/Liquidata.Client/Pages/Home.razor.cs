@@ -22,7 +22,7 @@ public partial class HomeViewModel : ViewModelBase
     public ProjectInfo[] AllProjects { get; set; } = Array.Empty<ProjectInfo>();
     public ProjectInfo? SelectedProject { get; set; }
 
-    public const string NavigationPath = "/";
+    public const string NavigationPath = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,7 +47,7 @@ public partial class HomeViewModel : ViewModelBase
             return;
         }
 
-        await NavigateToAsync($"/{EditProjectViewModel.NavigationPath}?ProjectId={SelectedProject.ProjectId}");
+        await NavigateToAsync($"{EditProjectViewModel.NavigationPath}?ProjectId={SelectedProject.ProjectId}");
     }
 
     private async Task HandleRemoveProjectAsync()
