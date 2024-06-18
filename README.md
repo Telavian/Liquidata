@@ -6,7 +6,7 @@ Liquiddata is a free and open source web based data extraction system that can t
 ## Capabilities
 Liquidata allows for a data to be extracted through a sequence of actions. Each action represents a specific operation to perform during the execution of the project. At the end of execution then the extracted data can be visualized or exported in a json form which can be used elsewhere for specific purposes.
 
-The actions themselves are added and configured through the use of the <a href="">Liquidata Client</a> application. The actions are grouped together in a reusable form in a project that represents the overall data extraction tasks to perform.
+The actions themselves are added and configured through the use of the <a href="https://telavian.github.io/Liquidata">Liquidata Client</a> application. The actions are grouped together in a reusable form in a project that represents the overall data extraction tasks to perform.
 
 ### Overview
 - Simple point and click application
@@ -18,12 +18,12 @@ The actions themselves are added and configured through the use of the <a href="
 # <a href="/docs/Tutorial/00-Introduction.md;">Get Started</a>
 
 ## Client
-<a href="">Liquidata Client</a> is the heart of the system. This is the application that is used to build the projects for each data extraction need. Each extractor consists of a single project, which in turn consists of one or more templates. The <strong>main</strong> template is automatically the entrypoint for the extractor and acts as the starting point for everything.
+<a href="https://telavian.github.io/Liquidata">Liquidata Client</a> is the heart of the system. This is the application that is used to build the projects for each data extraction need. Each extractor consists of a single project, which in turn consists of one or more templates. The <strong>main</strong> template is automatically the entrypoint for the extractor and acts as the starting point for everything.
 
 Each template consists of a series of actions that define the options to perform and the data to be extracted. In most cases the <strong>main</strong> template is sufficent. However in advanced cases complicated sites may need multiple templates, where each one has a specific purpose. Each action can then be configured and customized for the project's specific needs.
 
 ### Emporium
-<a href="">Liquidata Emporium</a> is a simple fake ecommerce website that can be used to test the many capabilities of Liquidata. All the information is randomly generated the first time the site is loaded and then reused. This means the Emporium can be used as many times as needed to perfect data extraction without fear of being blocked, or getting the dreaded CAPTCHAs.
+<a href="https://telavian.github.io/Liquidata/Emporium">Liquidata Emporium</a> is a simple fake ecommerce website that can be used to test the many capabilities of Liquidata. All the information is randomly generated the first time the site is loaded and then reused. This means the Emporium can be used as many times as needed to perfect data extraction without fear of being blocked, or getting the dreaded CAPTCHAs.
 
 ### Offscreen
 <a href="">Liquidata Offscreen</a> is a way to run the Liquidata projects in the background so that projects can be repeatedly run without user interaction or on a schedule. This greatly simplifies the case where data is needed more than a single time or where complicated projects take some time to run.
