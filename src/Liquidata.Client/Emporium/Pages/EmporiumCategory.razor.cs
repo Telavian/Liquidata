@@ -47,7 +47,7 @@ public class EmporiumCategoryViewModel : ViewModelBase
 
     public static string BuildNavigationLink(string category)
     {
-        return $"Emporium/Category/{category}";
+        return $"EmporiumCategory/{category}";
     }
 
     protected override async Task OnInitializedAsync()

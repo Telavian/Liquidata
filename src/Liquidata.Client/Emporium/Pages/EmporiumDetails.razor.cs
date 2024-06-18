@@ -1,10 +1,8 @@
-﻿using Bogus.Bson;
-using Liquidata.Client.Emporium.Models;
+﻿using Liquidata.Client.Emporium.Models;
 using Liquidata.Client.Services.Interfaces;
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using static MudBlazor.CategoryTypes;
 
 namespace Liquidata.Client.Emporium.Pages;
 
@@ -55,7 +53,7 @@ public class EmporiumDetailsViewModel : ViewModelBase
 
     public static string BuildNavigationLink(Guid productId)
     {
-        return $"Emporium/Details/{productId}";
+        return $"EmporiumDetails/{productId}";
     }
 
     protected override async Task OnInitializedAsync()
