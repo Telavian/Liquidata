@@ -42,28 +42,28 @@ An action is a single building block that performs a specific operation. Multipl
 <div><a href="docs/Actions/RelativeSelect.md">Relative Select</a></div>
 
 ### Data
-<a href="docs/Actions/BeginRecord.md">Begin Record</a>
-<a href="docs/Actions/Extract.md">Extract</a>
-<a href="docs/Actions/Log.md">Log</a>
-<a href="docs/Actions/Scope.md">Scope</a>
-<a href="docs/Actions/ScreenCapture.md">Screen Capture</a>
-<a href="docs/Actions/Store.md">Store</a>
+<div><a href="docs/Actions/BeginRecord.md">Begin Record</a></div>
+<div><a href="docs/Actions/Extract.md">Extract</a></div>
+<div><a href="docs/Actions/Log.md">Log</a></div>
+<div><a href="docs/Actions/Scope.md">Scope</a></div>
+<div><a href="docs/Actions/ScreenCapture.md">Screen Capture</a></div>
+<div><a href="docs/Actions/Store.md">Store</a></div>
 
 ### Logic
-<a href="docs/Actions/Conditional.md">Conditional</a>
-<a href="docs/Actions/ExecuteTemplate.md">Execute Template</a>
-<a href="docs/Actions/Foreach.md">Foreach</a>
-<a href="docs/Actions/Loop.md">Loop</a>
+<div><a href="docs/Actions/Conditional.md">Conditional</a></div>
+<div><a href="docs/Actions/ExecuteTemplate.md">Execute Template</a></div>
+<div><a href="docs/Actions/Foreach.md">Foreach</a></div>
+<div><a href="docs/Actions/Loop.md">Loop</a></div>
 
 ### Interaction
-<a href="docs/Actions/Click.md">Click</a>
-<a href="docs/Actions/ExecuteScript.md">Execute Script</a>
-<a href="docs/Actions/Hover.md">Hover</a>
-<a href="docs/Actions/Input.md">Input</a>
-<a href="docs/Actions/Keypress.md">Keypress</a>
-<a href="docs/Actions/Reload.md">Reload</a>
-<a href="docs/Actions/Scroll.md">Scroll</a>
-<a href="docs/Actions/SolveCaptcha.md">Solve Captcha</a>
-<a href="docs/Actions/Stop.md">Stop</a>
-<a href="docs/Actions/StopIf.md">Stop If</a>
-<a href="docs/Actions/Wait.md">Wait</a>
+<div><a href="docs/Actions/Click.md">Click</a></div>
+<div><a href="docs/Actions/ExecuteScript.md">Execute Script</a></div>
+<div><a href="docs/Actions/Hover.md">Hover</a></div>
+<div><a href="docs/Actions/Input.md">Input</a></div>
+<div><a href="docs/Actions/Keypress.md">Keypress</a></div>
+<div><a href="docs/Actions/Reload.md">Reload</a></div>
+<div><a href="docs/Actions/Scroll.md">Scroll</a></div>
+<div><a href="docs/Actions/SolveCaptcha.md">Solve Captcha</a></div>
+<div><a href="docs/Actions/Stop.md">Stop</a></div>
+<div><a href="docs/Actions/StopIf.md">Stop If</a></div>
+<div><a href="docs/Actions/Wait.md">Wait</a></div>
