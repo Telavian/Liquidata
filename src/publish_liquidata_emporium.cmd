@@ -1,1 +1,0 @@
-dotnet publish Liquidata.Emporium/Liquidata.Emporium.csproj -c Release -p:RunAOTCompilation=true -o ../app/Emporium
