@@ -171,7 +171,7 @@ namespace Liquidata.Common.Services
 
             var values = result
                 ?.Where(x => x.Resolution.ContainsKey("values"))
-                ?.SelectMany(x => x.Resolution["values"] as List<Dictionary<string, string>>)
+                ?.SelectMany(x => (x.Resolution["values"] as List<Dictionary<string, string>>)!)
                 ?.Where(x => x is not null && x.ContainsKey("value"))
                 ?.Select(x => x["value"].ToString())
                 ?.FirstOrDefault() ?? "";
