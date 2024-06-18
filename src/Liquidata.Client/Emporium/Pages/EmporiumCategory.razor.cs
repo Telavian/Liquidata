@@ -12,7 +12,7 @@ public class EmporiumCategoryViewModel : ViewModelBase
 
     [Parameter]
     [SupplyParameterFromQuery]
-    public string CategoryName { get; set; } = "";
+    public string Category { get; set; } = "";
 
     public EmporiumData? EmporiumData { get; set; } = null!;
     public EmporiumItem[] AllItems { get; set; } = [];
@@ -63,7 +63,7 @@ public class EmporiumCategoryViewModel : ViewModelBase
         }
 
         AllItems = EmporiumData.AllItems
-            .Where(x => string.Equals(x.Category.Name, CategoryName, StringComparison.OrdinalIgnoreCase))
+            .Where(x => string.Equals(x.Category.Name, Category, StringComparison.OrdinalIgnoreCase))
             .ToArray();
         await RefreshAsync();
 

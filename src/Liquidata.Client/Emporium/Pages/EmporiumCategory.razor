@@ -1,4 +1,4 @@
-﻿@page "/Emporium/Category/{CategoryName}"
+﻿@page "/Emporium/Category/{Category}"
 @layout MainLayout
 @using MudBlazor
 @using Liquidata.Client.Emporium.Pages
@@ -25,7 +25,7 @@
     <MudPaper Style="grid-column: 2; grid-row: 2; margin-top: 5px; margin-bottom: 5px;"
               Outlined="true" Elevation="5">
         <MudStack Style="margin-left: 15px; margin-right: 15px;">
-            <MudText Style="margin-top: 15px; margin-bottom: 25px;" Typo="Typo.h5">@(CategoryName) Products</MudText>
+            <MudText Style="margin-top: 15px; margin-bottom: 25px;" Typo="Typo.h5">@(Category) Products</MudText>
 
             <MudStack Row="true">
                 <MudTextField Style="width: 100%" Label="Product filter" Variant="@Variant.Outlined" Clearable="true"
