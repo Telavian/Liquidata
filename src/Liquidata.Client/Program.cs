@@ -34,6 +34,7 @@ builder.Services.AddBlazoredLocalStorage(o =>
 builder.Services.AddScoped<ComponentBus>();
 builder.Services.AddBlazorFileSaver();
 
+builder.Services.AddScoped<IEmporiumService, EmporiumService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IBrowserService, ClientBrowserService>();
 builder.Services.AddScoped<IClientBrowserService, ClientBrowserService>();

@@ -17,61 +17,62 @@
         <ChildContent>
             <div style="width: 100%;">
                 @if (!string.IsNullOrWhiteSpace(ExecutionMessage))
-                {
-                    <div style="margin-top: auto; margin-bottom: auto;">
+            {
+                <div style="margin-top: auto; margin-bottom: auto;">
                             @(ExecutionMessage)
                         </div>
-                }
-                else if (ExecutionResults is not null)
-                {
-                    var isMultipleDisplay = new bool[] { ShowResults, ShowLogs }
-                        .Where(x => x == true)
-                        .Count() > 1;
+            }
+            else if (ExecutionResults is not null)
+            {
+                var isMultipleDisplay = new bool[] { ShowResults, ShowLogs }
+                    .Where(x => x == true)
+                    .Count() > 1;
 
-                    if (isMultipleDisplay)
-                    {
-                        <MudTabs Style="height: 100%;">
+                if (isMultipleDisplay)
+                {
+                    <MudTabs Style="height: 100%;">
 
                             @if (ShowResults)
-                            {
-                                <MudTabPanel Style="height: 100%" Text="Results">
+                        {
+                            <MudTabPanel Style="height: 100%" Text="Results">
                                         <ChildContent>
                                             <ResultsDisplay ExecutionResults="@ExecutionResults" />
                                         </ChildContent>
                                     </MudTabPanel>
-                            }
+                        }
 
                             @if (ShowLogs)
-                            {
-                                <MudTabPanel Style="height: 100%" Text="Logs">
+                        {
+                            <MudTabPanel Style="height: 100%" Text="Logs">
                                         <ChildContent>
                                             <LogsDisplay ExecutionResults="@ExecutionResults" />
                                         </ChildContent>
                                     </MudTabPanel>
-                            }
+                        }
                         </MudTabs>
-                    }
-                    else
-                    {
-                        if (ShowResults)
-                        {
-                            <ResultsDisplay ExecutionResults="@ExecutionResults" />
-                        }
-                        else if (ShowLogs)
-                        {
-                            <LogsDisplay ExecutionResults="@ExecutionResults" />
-                        }
-                    }
                 }
                 else
                 {
-                    <div style="display: flex !important; justify-content: center !important;">
+                    if (ShowResults)
+                    {
+                        <ResultsDisplay ExecutionResults="@ExecutionResults" />
+                    }
+                    else if (ShowLogs)
+                    {
+                        <LogsDisplay ExecutionResults="@ExecutionResults" />
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <div style="display: flex !important; justify-content: center !important;">
                         <MudStack>
                             <MudProgressCircular Color="Color.Primary" Style="height:125px; width:125px;" Indeterminate="true" />
                             <MudText Typo="Typo.h5" Align="Align.Center">Loading</MudText>
                         </MudStack>
                     </div>                    
-                }
+            }
             </div>
         </ChildContent>
     </MudExpansionPanel>

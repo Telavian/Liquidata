@@ -1,5 +1,5 @@
-﻿using Liquidata.Common.Models;
-using Liquidata.Common.Services.Interfaces;
+﻿using Liquidata.Client.Services.Interfaces;
+using Liquidata.Common.Models;
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 

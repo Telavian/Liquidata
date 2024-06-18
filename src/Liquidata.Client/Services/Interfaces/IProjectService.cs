@@ -1,6 +1,7 @@
-﻿using Liquidata.Common.Models;
+﻿using Liquidata.Common;
+using Liquidata.Common.Models;
 
-namespace Liquidata.Common.Services.Interfaces;
+namespace Liquidata.Client.Services.Interfaces;
 
 public interface IProjectService
 {

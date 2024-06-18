@@ -1,7 +1,7 @@
 ﻿using Blazored.LocalStorage;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.Common;
 using Liquidata.Common.Models;
-using Liquidata.Common.Services.Interfaces;
 
 namespace Liquidata.Client.Services;
 

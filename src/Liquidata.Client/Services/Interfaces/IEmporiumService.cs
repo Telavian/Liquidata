@@ -1,6 +1,6 @@
-﻿using Liquidata.Emporium.Models;
+﻿using Liquidata.Client.Emporium.Models;
 
-namespace Liquidata.Emporium.Services.Interfaces;
+namespace Liquidata.Client.Services.Interfaces;
 
 public interface IEmporiumService
 {

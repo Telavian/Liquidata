@@ -1,17 +1,22 @@
-﻿@page "/"
+﻿@page "/Emporium"
 @layout MainLayout
 @using MudBlazor
-@inherits HomeViewModel
+@using Liquidata.Client.Emporium.Pages
+@inherits EmporiumViewModel
 
-<div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px;">
-    <MudStack Row="true">
-        <MudImage Src="icon.png" Height="45" Width="45" />
-        <MudLink Style="margin-top: 5px;" Href="/">
-            <MudText Typo="Typo.h4">
-                Liquidata
-            </MudText>
-        </MudLink>
-    </MudStack>
+<PageTitle>Liquidata Emporium</PageTitle>
+
+<div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px; overflow: auto; scrollbar-color: grey white; scrollbar-width: auto;">
+    <div style="grid-row: 1; grid-column: 1 / span 2">
+        <MudStack Row="true">
+            <MudImage Src="icon.png" Height="45" Width="45" />
+            <MudLink Style="margin-top: 5px;" Href="@Emporium.NavigationPath">
+                <MudText Typo="Typo.h4">
+                    Liquidata Emporium
+                </MudText>
+            </MudLink>
+        </MudStack>
+    </div>
 
     @if (IsGeneratingData)
     {
@@ -29,7 +34,7 @@
     else
     {
         <MudPaper Style="grid-column: 1; grid-row: 2; width: 250px;" Outlined="true" Elevation="5">
-            <CategoryList Data="@EmporiumData" />
+            <EmporiumCategoryList Data="@EmporiumData" />
         </MudPaper>
 
         <MudPaper Style="grid-column: 2; grid-row: 2; padding-bottom: 25px;" Outlined="true" Elevation="5">
@@ -38,7 +43,7 @@
 
                 @foreach (var category in FeaturedCategories)
                 {
-                    var categoryLink = $"/Category/{category.Category.Name}";
+                    var categoryLink = EmporiumCategory.BuildNavigationLink(category.Category.Name);
                     <MudLink Href="@categoryLink">
                         <MudText Typo="Typo.h6">
                             @category.Category.Name
@@ -48,7 +53,7 @@
                     <MudStack Row="true">
                         @foreach (var item in category.Items)
                         {
-                            var productLink = $"/Details/{item.ProductId}";
+                            var productLink = EmporiumDetails.BuildNavigationLink(item.ProductId);
 
                             <MudStack>
                                 <MudLink Href="@productLink">

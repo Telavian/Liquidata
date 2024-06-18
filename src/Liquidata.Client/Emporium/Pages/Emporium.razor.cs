@@ -1,21 +1,23 @@
-﻿using Liquidata.Emporium.Models;
-using Liquidata.Emporium.Services.Interfaces;
-using Liquidata.UI.Common.Pages.Common;
+﻿using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using Liquidata.Common.Extensions;
+using Liquidata.Client.Services.Interfaces;
+using Liquidata.Client.Emporium.Models;
 
-namespace Liquidata.Emporium.Pages;
+namespace Liquidata.Client.Emporium.Pages;
 
-public partial class HomeViewModel : ViewModelBase
+public partial class EmporiumViewModel : ViewModelBase
 {
     [Inject] private IEmporiumService _emporiumService { get; set; } = null!;
+
+    public const string NavigationPath = "Emporium";
 
     public bool IsGeneratingData { get; set; }
     public int GeneratedCount { get; set; }
     public int GeneratedTotal { get; set; }
-    
-    public EmporiumData EmporiumData { get; set; } = null!;    
-    public FeaturedCategory[] FeaturedCategories { get; set; } = [];
+
+    public EmporiumData EmporiumData { get; set; } = null!;
+    public EmporiumFeaturedCategory[] FeaturedCategories { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,7 +59,7 @@ public partial class HomeViewModel : ViewModelBase
         var categories = EmporiumData.AllCategories.TakeRandom(3);
 
         FeaturedCategories = categories
-            .Select(x => new FeaturedCategory
+            .Select(x => new EmporiumFeaturedCategory
             {
                 Category = x,
                 Items = EmporiumData.AllItems

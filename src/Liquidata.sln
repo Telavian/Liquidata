@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.Client", "Liquida
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.Common", "Liquidata.Common\Liquidata.Common.csproj", "{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquidata.Emporium", "Liquidata.Emporium\Liquidata.Emporium.csproj", "{0EB268BE-657A-4C26-8F2E-62A8A32BE186}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquidata.UI.Common", "Liquidata.UI.Common\Liquidata.UI.Common.csproj", "{0527E7BD-D225-4A8D-8BE8-2EAC11FDDB56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.UI.Common", "Liquidata.UI.Common\Liquidata.UI.Common.csproj", "{0527E7BD-D225-4A8D-8BE8-2EAC11FDDB56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48E145C4-3FA7-4B20-9932-E86EC6F2F11F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EB268BE-657A-4C26-8F2E-62A8A32BE186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EB268BE-657A-4C26-8F2E-62A8A32BE186}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EB268BE-657A-4C26-8F2E-62A8A32BE186}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EB268BE-657A-4C26-8F2E-62A8A32BE186}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0527E7BD-D225-4A8D-8BE8-2EAC11FDDB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0527E7BD-D225-4A8D-8BE8-2EAC11FDDB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0527E7BD-D225-4A8D-8BE8-2EAC11FDDB56}.Release|Any CPU.ActiveCfg = Release|Any CPU

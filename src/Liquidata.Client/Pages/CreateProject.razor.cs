@@ -1,6 +1,6 @@
-﻿using Liquidata.Common;
+﻿using Liquidata.Client.Services.Interfaces;
+using Liquidata.Common;
 using Liquidata.Common.Actions;
-using Liquidata.Common.Services.Interfaces;
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 
@@ -46,7 +46,7 @@ public partial class CreateProjectViewModel : ViewModelBase
         }
 
         var projectId = await SaveProjectAsync();
-        await NavigateToAsync($"/{EditProjectViewModel.NavigationPath}?projectId={projectId}");
+        await NavigateToAsync($"{EditProjectViewModel.NavigationPath}?projectId={projectId}");
     }
 
     private async Task<Guid> SaveProjectAsync()

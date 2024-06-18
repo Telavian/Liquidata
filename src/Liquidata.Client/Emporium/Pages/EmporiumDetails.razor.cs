@@ -1,13 +1,14 @@
 ﻿using Bogus.Bson;
-using Liquidata.Emporium.Models;
-using Liquidata.Emporium.Services.Interfaces;
+using Liquidata.Client.Emporium.Models;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using static MudBlazor.CategoryTypes;
 
-namespace Liquidata.Emporium.Pages;
+namespace Liquidata.Client.Emporium.Pages;
 
-public class DetailsViewModel : ViewModelBase
+public class EmporiumDetailsViewModel : ViewModelBase
 {
     [Inject] private IEmporiumService _emporiumService { get; set; } = null!;
 
@@ -52,6 +53,11 @@ public class DetailsViewModel : ViewModelBase
     private Func<KeyboardEventArgs, Task>? _searchKeyPressedAsyncCommand;
     public Func<KeyboardEventArgs, Task> SearchKeyPressedAsyncCommand => _searchKeyPressedAsyncCommand ??= CreateEventCallbackAsyncCommand<KeyboardEventArgs>(HandleSearchKeyPressedAsync, "Unable to handle key pressed");
 
+    public static string BuildNavigationLink(Guid productId)
+    {
+        return $"Emporium/Details/{productId}";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -60,7 +66,7 @@ public class DetailsViewModel : ViewModelBase
 
         if (EmporiumData is null || !Guid.TryParse(ProductId, out var idValue))
         {
-            await NavigateToAsync("/");
+            await NavigateToAsync($"{EmporiumViewModel.NavigationPath}");
             return;
         }
 
@@ -107,7 +113,7 @@ public class DetailsViewModel : ViewModelBase
                 .ToArray();
         }
 
-        TotalPages = (int)Math.Ceiling(((double)FilteredReviews.Length) / ReviewsPerPage);
+        TotalPages = (int)Math.Ceiling((double)FilteredReviews.Length / ReviewsPerPage);
         SelectedPageIndex = 1;
     }
 

@@ -1,12 +1,19 @@
-﻿@page "/Details/{ProductId}"
+﻿@page "/Emporium/Details/{ProductId}"
 @layout MainLayout
 @using MudBlazor
-@inherits DetailsViewModel
+@using Liquidata.Client.Emporium.Pages
+@inherits EmporiumDetailsViewModel
 
-<div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px;">
+<PageTitle>Liquidata Emporium</PageTitle>
+
+<div style="width:100%; height: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; padding: 25px; overflow: auto; scrollbar-color: grey white; scrollbar-width: auto;">
     <MudStack Row="true">
         <MudImage Src="icon.png" Height="45" Width="45" />
-        <MudLink Style="margin-top: 5px;" Href="/"><MudText Typo="Typo.h4" Style="">Emporium</MudText></MudLink>
+        <MudLink Style="margin-top: 5px;" Href="@Emporium.NavigationPath">
+            <MudText Typo="Typo.h4" Style="">
+                Liquidata Emporium
+            </MudText>
+        </MudLink>
     </MudStack>
 
     @if (IsGeneratingData)
@@ -27,7 +34,7 @@
 
         <MudPaper Style="grid-column: 1; grid-row: 2; width: 250px; margin-top: 5px;" Outlined="true" Elevation="5">
             <MudPaper Style="grid-column: 1; grid-row: 2; width: 250px;" Outlined="true" Elevation="5">
-                <CategoryList Data="@EmporiumData" />
+                <EmporiumCategoryList Data="@EmporiumData" />
             </MudPaper>
         </MudPaper>
 

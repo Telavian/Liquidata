@@ -27,6 +27,7 @@
     <PackageReference Include="BlazorComponentBus" Version="2.2.0" />
     <PackageReference Include="DebounceThrottle" Version="2.0.0" />
     <PackageReference Include="BlazorFileSaver" Version="3.1.1" />
+    <PackageReference Include="Bogus" Version="35.5.1" />
     <PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.2.0" />
   </ItemGroup>
 

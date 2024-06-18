@@ -1,4 +1,4 @@
-﻿namespace Liquidata.Emporium.Models;
+﻿namespace Liquidata.Client.Emporium.Models;
 
 public class EmporiumItem
 {

@@ -1,6 +1,8 @@
 ﻿@layout MainLayout
 @using MudBlazor
-@inherits CategoryListViewModel
+@inherits EmporiumCategoryListViewModel
+
+<PageTitle>Liquidata Emporium</PageTitle>
 
 <MudStack Spacing="1">
     <MudText Style="margin-left: 15px; margin-top: 15px; margin-bottom: 25px;" Typo="Typo.h6">Categories</MudText>
@@ -10,7 +12,7 @@
 
         @foreach (var category in (Data?.AllCategories ?? []))
         {
-            var link = $"/Category/{category.Name}";
+            var link = $"/Emporium/Category/{category.Name}";
 
             <MudListItem Icon="@category.Icon">
                 <MudLink Href="@link">@category.Name</MudLink>

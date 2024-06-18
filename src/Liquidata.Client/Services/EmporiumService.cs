@@ -1,12 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using Bogus;
-using Liquidata.Emporium.Models;
-using Liquidata.Emporium.Services.Interfaces;
 using Liquidata.Common.Extensions;
 using System.Text.Json;
 using System.Reflection;
+using Liquidata.Client.Services.Interfaces;
+using Liquidata.Client.Emporium.Models;
 
-namespace Liquidata.Emporium.Services;
+namespace Liquidata.Client.Services;
 
 public class EmporiumService(ILocalStorageService localStorage) : IEmporiumService
 {
@@ -26,7 +26,7 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
         await initialAction();
 
         var iconFields = typeof(MudBlazor.Icons.Material.TwoTone)
-            .GetFields(BindingFlags.Public | BindingFlags.Static);        
+            .GetFields(BindingFlags.Public | BindingFlags.Static);
 
         var faker = new Faker();
         var categories = faker.Commerce.Categories(100)
@@ -48,7 +48,7 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
             {
                 await refreshAction(x, totalCount);
 
-                var category = faker.Random.ArrayElement(categories);                
+                var category = faker.Random.ArrayElement(categories);
                 var result = GenerateDataItem(faker, category);
                 lock (items) { items.Add(result); }
             });
@@ -81,7 +81,7 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
             return product;
         }
 
-        var data = await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey) 
+        var data = await localStorage.GetItemAsync<EmporiumData>(EmporiumDataKey)
             ?? throw new Exception("No data found");
 
         product = data.AllItems
@@ -122,7 +122,7 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
     private float GetRandomStarRating(float targetValue)
     {
         var scale = targetValue * 2;
-        var result = (float)((Random.Shared.NextDouble() * scale) - (scale / 2) + targetValue);
+        var result = (float)(Random.Shared.NextDouble() * scale - scale / 2 + targetValue);
         result = result.RoundDownToNearest(0.5F);
 
         if (result >= 10)

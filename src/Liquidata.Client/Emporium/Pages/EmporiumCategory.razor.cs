@@ -1,12 +1,12 @@
-﻿using Liquidata.Emporium.Models;
-using Liquidata.Emporium.Services.Interfaces;
+﻿using Liquidata.Client.Emporium.Models;
+using Liquidata.Client.Services.Interfaces;
 using Liquidata.UI.Common.Pages.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace Liquidata.Emporium.Pages;
+namespace Liquidata.Client.Emporium.Pages;
 
-public class CategoryViewModel : ViewModelBase
+public class EmporiumCategoryViewModel : ViewModelBase
 {
     [Inject] private IEmporiumService _emporiumService { get; set; } = null!;
 
@@ -17,7 +17,7 @@ public class CategoryViewModel : ViewModelBase
     public EmporiumData? EmporiumData { get; set; } = null!;
     public EmporiumItem[] AllItems { get; set; } = [];
     public EmporiumItem[] FilteredItems { get; set; } = [];
-    public string? SearchText { get; set; }    
+    public string? SearchText { get; set; }
     public int ItemsPerPage { get; set; } = 5;
 
     public int TotalPages { get; set; }
@@ -45,15 +45,20 @@ public class CategoryViewModel : ViewModelBase
     private Func<KeyboardEventArgs, Task>? _searchKeyPressedAsyncCommand;
     public Func<KeyboardEventArgs, Task> SearchKeyPressedAsyncCommand => _searchKeyPressedAsyncCommand ??= CreateEventCallbackAsyncCommand<KeyboardEventArgs>(HandleSearchKeyPressedAsync, "Unable to handle key pressed");
 
+    public static string BuildNavigationLink(string category)
+    {
+        return $"Emporium/Category/{category}";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        EmporiumData = await _emporiumService.LoadDataAsync();        
+        EmporiumData = await _emporiumService.LoadDataAsync();
 
         if (EmporiumData is null)
         {
-            await NavigateToAsync("/");
+            await NavigateToAsync($"{EmporiumViewModel.NavigationPath}");
             return;
         }
 
@@ -71,7 +76,7 @@ public class CategoryViewModel : ViewModelBase
 
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            FilteredItems = AllItems;            
+            FilteredItems = AllItems;
         }
         else
         {
@@ -83,7 +88,7 @@ public class CategoryViewModel : ViewModelBase
                 .ToArray();
         }
 
-        TotalPages = (int)Math.Ceiling(((double)FilteredItems.Length) / ItemsPerPage);
+        TotalPages = (int)Math.Ceiling((double)FilteredItems.Length / ItemsPerPage);
         SelectedPageIndex = 1;
     }
 
