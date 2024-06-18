@@ -21,6 +21,7 @@ namespace Liquidata.Common.Actions.Shared;
 [JsonDerivedType(typeof(ConditionalAction), nameof(ConditionalAction))]
 [JsonDerivedType(typeof(ExecuteTemplateAction), nameof(ExecuteTemplateAction))]
 [JsonDerivedType(typeof(ForeachAction), nameof(ForeachAction))]
+[JsonDerivedType(typeof(LoopAction), nameof(LoopAction))]
 
 [JsonDerivedType(typeof(ClickAction), nameof(ClickAction))]
 [JsonDerivedType(typeof(ExecuteScriptAction), nameof(ExecuteScriptAction))]
