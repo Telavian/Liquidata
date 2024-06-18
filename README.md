@@ -10,7 +10,7 @@ The actions themselves are added and configured through the use of the <a href="
 
 ### Overview
 - Simple point and click application
-- Data can be extracted with no knowledge of HTML or javascript
+- Data can be extracted with no knowledge of HTML or Javascript
 - Images, text, and links can be extracted into a structured form
 - Automatically can select similar items to simplify structured extraction
 - Extraction can be run locally or in the cloud
