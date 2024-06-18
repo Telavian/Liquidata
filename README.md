@@ -38,8 +38,8 @@ Through the cloud, projects can also be run in parallel and massively scaled to 
 An action is a single building block that performs a specific operation. Multiple actions can be used together to perform complicated tasks or to extract whatever data is needed for specific projects.
 
 ### Selection
-<a href="docs/Actions/Select.md">Select</a>
-<a href="docs/Actions/RelativeSelect.md">Relative Select</a>
+<div><a href="docs/Actions/Select.md">Select</a></div>
+<div><a href="docs/Actions/RelativeSelect.md">Relative Select</a></div>
 
 ### Data
 <a href="docs/Actions/BeginRecord.md">Begin Record</a>
