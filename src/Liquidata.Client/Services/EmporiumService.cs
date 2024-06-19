@@ -135,10 +135,12 @@ public class EmporiumService(ILocalStorageService localStorage) : IEmporiumServi
 
     private EmporiumItem GenerateDataItem(Faker faker, EmporiumCategory category)
     {
+        var productId = Guid.NewGuid();
         var item = new EmporiumItem
         {
+            ProductId = productId,
             Category = category,
-            ImageLink = $"https://picsum.photos/id/{Random.Shared.Next(0, 1084)}/300/300",
+            ImageLink = $"https://picsum.photos/seed/{productId}/300/300",
             Manufacturer = faker.Company.CompanyName(),
             Name = faker.Commerce.ProductName(),
             Price = float.Parse(faker.Commerce.Price()),
