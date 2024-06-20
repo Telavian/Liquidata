@@ -7,56 +7,7 @@
 <MudStack Row="true" style="width: 100%;" Spacing="1"
           onmouseover="@(() => UpdateIsMouseOverAsyncCommand(true))"
           onmouseout="@(() => UpdateIsMouseOverAsyncCommand(false))">
-    <MudTooltip Text="Toggles whether the action is executed" Delay="500" Color="Color.Primary">
-        <MudToggleIconButton Style="@BuildItemVisibility(IsMouseOver, IsDisabled)"
-                             Icon="@Icons.Material.TwoTone.Block" ToggledIcon="@Icons.Material.TwoTone.Block" ToggledColor="Color.Error"
-                             @bind-Toggled="IsDisabled" />
-    </MudTooltip>
-
-    <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
-
-    <div>
-        @if (Action?.ActionType == ActionType.Template) { <TemplateDisplay Action="Action" Parent="Parent" /> }
-
-else if (Action?.ActionType == ActionType.Select) { <SelectDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectDisplay Action="Action" Parent="Parent" /> }
-
-else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Extract) { <ExtractDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Log) { <LogDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Scope) { <ScopeDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Store) { <StoreDisplay Action="Action" Parent="Parent" /> }
-
-else if (Action?.ActionType == ActionType.Conditional) { <ConditionalDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Foreach) { <ForeachDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Loop) { <LoopDisplay Action="Action" Parent="Parent" /> }    
-
-else if (Action?.ActionType == ActionType.Click) { <ClickDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Hover) { <HoverDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Input) { <InputDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Keypress) { <KeypressDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Reload) { <ReloadDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Scroll) { <ScrollDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Stop) { <StopDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.StopIf) { <StopIfDisplay Action="Action" Parent="Parent" /> }
-else if (Action?.ActionType == ActionType.Wait) { <WaitDisplay Action="Action" Parent="Parent" /> }
-else { <ErrorDisplay Action="Action" Parent="Parent" /> }
-    </div>
     
-    <MudIconButton Icon="@Icons.Material.TwoTone.Add" Color="Color.Success"
-                    Style="@BuildItemVisibility(IsMouseOver)"               
-                    Title="Add a new action"
-                    OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />        
-
-    <MudIconButton Icon="@Icons.Material.TwoTone.Clear" Color="Color.Error" 
-                    Style="@BuildItemVisibility(IsMouseOver)"
-                    Title="Remove action and all descendents"
-                    OnClick="@(() => Parent!.RemoveActionAsyncCommand(Action!))" />    
-
     <MudTooltip Delay="500" Color="Color.Primary">
         <TooltipContent>
             @(BuildValidationErrors())
@@ -67,4 +18,54 @@ else { <ErrorDisplay Action="Action" Parent="Parent" /> }
                            Style="@BuildValidationVisibility()" />
         </ChildContent>
     </MudTooltip>
+
+    <MudTooltip Text="Toggles whether the action is executed" Delay="500" Color="Color.Primary">
+        <MudToggleIconButton Style="@BuildVisibilityStatus(IsMouseOver, IsDisabled)"
+                             Icon="@Icons.Material.TwoTone.Block" ToggledIcon="@Icons.Material.TwoTone.Block" ToggledColor="Color.Error"
+                             @bind-Toggled="IsDisabled" />
+    </MudTooltip>
+
+    <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
+
+    <div style="margin-right: -15px;">
+        @if (Action?.ActionType == ActionType.Template) { <TemplateDisplay Action="Action" Parent="Parent" /> }
+
+        else if (Action?.ActionType == ActionType.Select) { <SelectDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.RelativeSelect) { <RelativeSelectDisplay Action="Action" Parent="Parent" /> }
+
+        else if (Action?.ActionType == ActionType.BeginRecord) { <BeginRecordDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Extract) { <ExtractDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Log) { <LogDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Scope) { <ScopeDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ScreenCapture) { <ScreenCaptureDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Store) { <StoreDisplay Action="Action" Parent="Parent" /> }
+
+        else if (Action?.ActionType == ActionType.Conditional) { <ConditionalDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ExecuteTemplate) { <ExecuteTemplateDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Foreach) { <ForeachDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Loop) { <LoopDisplay Action="Action" Parent="Parent" /> }    
+
+        else if (Action?.ActionType == ActionType.Click) { <ClickDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.ExecuteScript) { <ExecuteScriptDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Hover) { <HoverDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Input) { <InputDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Keypress) { <KeypressDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Reload) { <ReloadDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Scroll) { <ScrollDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.SolveCaptcha) { <SolveCaptchaDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Stop) { <StopDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.StopIf) { <StopIfDisplay Action="Action" Parent="Parent" /> }
+        else if (Action?.ActionType == ActionType.Wait) { <WaitDisplay Action="Action" Parent="Parent" /> }
+        else { <ErrorDisplay Action="Action" Parent="Parent" /> }
+    </div>
+    
+    <MudIconButton Icon="@Icons.Material.TwoTone.Add" Color="Color.Success"
+                   Style="@BuildVisibilityStatus(IsMouseOver)"
+                   Title="Add a new action"
+                    OnClick="@(() => Parent!.AddChildActionAsyncCommand(Action!))" />        
+
+    <MudIconButton Icon="@Icons.Material.TwoTone.Clear" Color="Color.Error"
+                   Style="@BuildVisibilityStatus(IsMouseOver)"
+                    Title="Remove action and all descendents"
+                    OnClick="@(() => Parent!.RemoveActionAsyncCommand(Action!))" />    
 </MudStack>

@@ -48,15 +48,22 @@ public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
         _bus.Subscribe<ActionUpdatedMessage>(HandleActionUpdatedMessage);
     }
 
-    protected string BuildItemVisibility(params bool[] states)
+    protected string BuildVisibilityStatus(params bool[] states)
     {
-        var anyTrue = states.Any(x => x);
-
-        var style = @"margin-right: -15px; ";
+        var (anyTrue, style) = DetermineItemVisibility(states);
 
         return anyTrue
             ? $"{style} visibility: visible;"
             : $"{style} visibility: hidden;";
+    }
+
+    protected string BuildDisplayStatus(params bool[] states)
+    {
+        var (anyTrue, style) = DetermineItemVisibility(states);
+
+        return anyTrue
+            ? $"{style} display: block;"
+            : $"{style} display: none;";
     }
 
     protected string BuildActionIcon()
@@ -73,7 +80,7 @@ public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
     {
         var errors = Action!.BuildValidationErrors();
         var isInvalid = !Action.IsDisabled && errors.Length > 0;
-        return BuildItemVisibility(isInvalid);
+        return BuildDisplayStatus(isInvalid);
     }
 
     protected MarkupString BuildValidationErrors()
@@ -96,6 +103,14 @@ public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
         await Task.Yield();
         await _bus.Publish(new ActionUpdatedMessage { ActionId = Action?.ActionId ?? Guid.Empty });
         await RefreshAsync();
+    }
+
+    private (bool isVisible, string style) DetermineItemVisibility(bool[] states)
+    {
+        var anyTrue = states.Any(x => x);
+        var style = @"margin-right: -15px;";
+
+        return (anyTrue, style);
     }
 
     private async Task UpdateIsMouseOverAsync(bool isOver)
