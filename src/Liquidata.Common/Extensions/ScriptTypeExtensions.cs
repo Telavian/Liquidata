@@ -15,7 +15,6 @@ public static class ScriptTypeExtensions
             ScriptType.Link => "return $this.getLink();",
             ScriptType.PageUrl => "return $this.getPageUrl();",
             ScriptType.Source => "return $this.getAttr('src');",
-            ScriptType.StarRating => "return $this.getStarRating('class', 'full', 'half');",
             ScriptType.Text => "return $this.getText();",
             ScriptType.Time => "return $this.getTime();",
             ScriptType.Title => "return $this.getAttr('title');",

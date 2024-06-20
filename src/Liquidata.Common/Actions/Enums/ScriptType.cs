@@ -9,7 +9,6 @@ public enum ScriptType
     Link,
     PageUrl,
     Source,
-    StarRating,
     Text,
     Time,
     Title,

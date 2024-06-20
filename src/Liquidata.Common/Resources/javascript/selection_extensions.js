@@ -96,20 +96,6 @@ Object.defineProperty(String.prototype, "getPageUrl", {
     configurable: true,
 });
 
-Object.defineProperty(String.prototype, "getStarRating", {
-    value: function getStarRating(className, fullName, halfName) {
-        var node = getNode(this);
-
-        if (node == null) {
-            return ``;
-        }
-
-        return "star rating";
-    },
-    writable: true,
-    configurable: true,
-});
-
 Object.defineProperty(String.prototype, "getText", {
     value: function getText() {
         var node = getNode(this);
