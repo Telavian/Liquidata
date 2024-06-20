@@ -96,7 +96,8 @@
                          ReadOnly="false" Hover="true" ExpandOnDoubleClick="true"
                          @bind-SelectedValue="SelectedAction" Items="@TemplateActionItems">
                 <ItemTemplate Context="item">
-                    <MudTreeViewItem Value="@item" Items="@item!.ChildActions" Expanded="true">
+                    <MudTreeViewItem Style="overflow-x: visible; margin-right: 10px;"
+                    Value="@item" Items="@item!.ChildActions" Expanded="true">
                         <BodyContent>
                             <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
                                 <ActivatorContent>

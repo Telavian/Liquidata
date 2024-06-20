@@ -55,8 +55,8 @@ public partial class ActionDisplayViewModel : ViewModelBase, IDisposable
         var style = @"margin-right: -15px; ";
 
         return anyTrue
-            ? $"{style} display: block"
-            : $"{style} display: none";
+            ? $"{style} visibility: visible;"
+            : $"{style} visibility: hidden;";
     }
 
     protected string BuildActionIcon()

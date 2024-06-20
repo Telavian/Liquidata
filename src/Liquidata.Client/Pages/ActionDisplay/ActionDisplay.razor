@@ -47,17 +47,6 @@ else if (Action?.ActionType == ActionType.Wait) { <WaitDisplay Action="Action" P
 else { <ErrorDisplay Action="Action" Parent="Parent" /> }
     </div>
     
-    <MudTooltip Delay="500" Color="Color.Primary">
-        <TooltipContent>
-            @(BuildValidationErrors())
-        </TooltipContent>
-
-        <ChildContent>
-            <MudIconButton Icon="@Icons.Material.TwoTone.Warning" Color="Color.Warning" 
-                           Style="@BuildValidationVisibility()" />
-        </ChildContent>
-    </MudTooltip>
-
     <MudIconButton Icon="@Icons.Material.TwoTone.Add" Color="Color.Success"
                     Style="@BuildItemVisibility(IsMouseOver)"               
                     Title="Add a new action"
@@ -67,4 +56,15 @@ else { <ErrorDisplay Action="Action" Parent="Parent" /> }
                     Style="@BuildItemVisibility(IsMouseOver)"
                     Title="Remove action and all descendents"
                     OnClick="@(() => Parent!.RemoveActionAsyncCommand(Action!))" />    
+
+    <MudTooltip Delay="500" Color="Color.Primary">
+        <TooltipContent>
+            @(BuildValidationErrors())
+        </TooltipContent>
+
+        <ChildContent>
+            <MudIconButton Icon="@Icons.Material.TwoTone.Warning" Color="Color.Warning"
+                           Style="@BuildValidationVisibility()" />
+        </ChildContent>
+    </MudTooltip>
 </MudStack>
