@@ -60,6 +60,8 @@
                                     <MudImage Src="@item.ImageLink" Height="300" Width="300" Elevation="10" ObjectPosition="ObjectPosition.Center" />
                                 </MudLink>
 
+                                <MudText Align="Align.Center">@(item.StarRating) out of 10</MudText>
+
                                 <MudRating Style="margin-left: auto; margin-right: auto;"
                                            MaxValue="10" ReadOnly="true" title="@($"{item.StarRating} rating")"
                                            SelectedValue="@((int)item.StarRating)" />

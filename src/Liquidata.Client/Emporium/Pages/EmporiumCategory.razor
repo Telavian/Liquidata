@@ -61,6 +61,8 @@
                             </MudLink>
 
                             <MudText Align="Align.Left">Manufactured by @item.Manufacturer</MudText>
+
+                            <MudText Align="Align.Left">@(item.StarRating) out of 10</MudText>
                             <MudRating Style="margin-right: auto;"
                                        MaxValue="10" ReadOnly="true" title="@($"{item.StarRating} rating")"
                                        SelectedValue="@((int)item.StarRating)" />

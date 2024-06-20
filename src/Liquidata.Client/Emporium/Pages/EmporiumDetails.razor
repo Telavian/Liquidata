@@ -52,9 +52,12 @@
                         </MudText>
 
                         <MudText Align="Align.Left">Manufactured by @Product?.Manufacturer</MudText>
+                        <MudText Align="Align.Left">@(Product?.StarRating) out of 10</MudText>
+
                         <MudRating Style="margin-right: auto;"
                                    MaxValue="10" ReadOnly="true" title="@($"{Product?.StarRating} rating")"
                                    SelectedValue="@((int)(Product?.StarRating ?? 0))" />
+
                         <MudText Align="Align.Left">$@(Product?.Price)</MudText>
                         <MudText Align="Align.Left">@(Product?.Quantity) available</MudText>
                         <MudText Align="Align.Left">@Product?.Description</MudText>
@@ -102,6 +105,8 @@
                                 <MudIcon Icon="@Icons.Material.TwoTone.Person" />
 
                                 <MudText Align="Align.Left">@review.Reviewer</MudText>
+
+                                <MudText Align="Align.Center">@(review.StarRating) out of 10</MudText>
 
                                 <MudRating MaxValue="10" ReadOnly="true" title="@($"{review.StarRating} rating")"
                                             SelectedValue="@((int)review.StarRating)" />
