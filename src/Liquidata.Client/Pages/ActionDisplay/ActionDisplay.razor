@@ -27,7 +27,7 @@
 
     <MudIcon Class="verticalCenter" Icon="@BuildActionIcon()" Color="@BuildActionColor()" />
 
-    <div style="margin-right: -15px;">
+    <div>
         @if (Action?.ActionType == ActionType.Template) { <TemplateDisplay Action="Action" Parent="Parent" /> }
 
         else if (Action?.ActionType == ActionType.Select) { <SelectDisplay Action="Action" Parent="Parent" /> }

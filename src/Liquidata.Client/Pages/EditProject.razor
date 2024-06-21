@@ -93,11 +93,14 @@
 
             <MudTreeView Style="grid-row: 3; grid-column: 1 / span 3; height: 100%; margin-top: 5px;"
                          SelectionMode="SelectionMode.SingleSelection" Color="Color.Success"
-                         ReadOnly="false" Hover="true" ExpandOnDoubleClick="true"
-                         @bind-SelectedValue="SelectedAction" Items="@TemplateActionItems">
+                         ReadOnly="false" Hover="true"
+                         Items="@TemplateActionItems"
+                         @bind-SelectedValue="SelectedAction">
                 <ItemTemplate Context="item">
-                    <MudTreeViewItem Style="overflow-x: visible; margin-right: 10px;"
-                    Value="@item" Items="@item!.ChildActions" Expanded="true">
+                    <MudTreeViewItem Style="margin-right: 10px; user-select: none;"
+                                     Value="@item" Expanded="true"
+                                     Items="@item!.ChildActions"
+                                     OnDoubleClick="@(() => ShowActionOptionsAsyncCommand(item))">
                         <BodyContent>
                             <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
                                 <ActivatorContent>

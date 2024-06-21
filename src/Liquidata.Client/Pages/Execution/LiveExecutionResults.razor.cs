@@ -10,6 +10,7 @@ using Microsoft.JSInterop;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Liquidata.UI.Common.Pages.Common;
+using Liquidata.Common.Services;
 
 namespace Liquidata.Client.Pages.Execution;
 
@@ -61,13 +62,64 @@ public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
 
     private async Task ExecuteProjectAsync(Project project, bool allowInteractive, IExecutionService executionService)
     {
+        var shouldContinue = await CheckValidExecutionStateAsync(project, allowInteractive);
+
+        if (!shouldContinue) 
+        {
+            return;
+        }
+
+        ExecutionMessage = "";
+        IsResultsLoading = true;
+        await RefreshAsync();
+
+        await PerformProjectExecutionAsync(project, executionService);
+    }
+
+    private async Task PerformProjectExecutionAsync(Project project, IExecutionService executionService)
+    {
+        try
+        {
+            Console.WriteLine($"Executing project '{project.Name}'");
+            await project.ExecuteProjectAsync(executionService);
+
+            await executionService.WaitForExecutionTasksAsync();
+
+            var executionResults = executionService.DataHandler.GetExecutionResults();
+            executionResults.LoggedMessages = executionService.LoggedMessages
+                .ToArray();
+
+            if (executionResults.Records.Length == 0)
+            {
+                ExecutionMessage = "No records extracted";
+            }
+            else
+            {
+                ExecutionResults = executionResults;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExecutionMessage = $"Error while executing project: {ex.Message}";
+        }
+        finally
+        {
+            IsResultsLoading = false;
+            await RefreshAsync();
+
+            await _bus.Publish(new ExecutionResultsUpdatedMessage());
+        }
+    }
+
+    private async Task<bool> CheckValidExecutionStateAsync(Project project, bool allowInteractive)
+    {
         if (project == null)
         {
             ExecutionMessage = "Project is not loaded";
             ExecutionResults = null;
 
             await RefreshAsync();
-            return;
+            return false;
         }
 
         var isInteractive = project.CheckIfInterative();
@@ -78,7 +130,7 @@ public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
             ExecutionResults = null;
 
             await RefreshAsync();
-            return;
+            return false;
         }
 
         var isFullyDefined = project.CheckIfFullyDefined();
@@ -89,35 +141,10 @@ public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
             ExecutionResults = null;
 
             await RefreshAsync();
-            return;
+            return false;
         }
 
-        ExecutionMessage = "";
-        IsResultsLoading = true;
-        await RefreshAsync();
-        
-        try
-        {
-            Console.WriteLine($"Executing project '{project.Name}'");
-            await project.ExecuteProjectAsync(executionService);
-
-            await executionService.WaitForExecutionTasksAsync();
-            
-            var executionResults = executionService.DataHandler.GetExecutionResults();
-            executionResults.LoggedMessages = executionService.LoggedMessages
-                .ToArray();
-
-            ExecutionResults = executionResults;
-        }
-        catch (Exception ex)
-        {
-            ExecutionMessage = $"Error while executing project: {ex.Message}";
-        }
-        finally
-        {
-            IsResultsLoading = false;
-            await RefreshAsync();
-        }
+        return true;
     }
 
     private async Task HandleSaveExecutionResultsAsync()

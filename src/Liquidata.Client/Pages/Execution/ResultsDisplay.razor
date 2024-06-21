@@ -1,6 +1,7 @@
 ﻿@layout MainLayout
 @using Liquidata.Common.Actions
 @using Liquidata.Common.Actions.Enums
+@using Liquidata.Common.Execution
 @using MudBlazor
 @inherits ResultsDisplayViewModel
 
@@ -11,7 +12,11 @@
     <HeaderContent>
         @foreach (var column in ExecutionResults.AllColumns)
         {
-            <MudTh>@column</MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<DataRecord, object>(x => x?.GetRowData(column) ?? string.Empty)">
+                    @column
+                </MudTableSortLabel>
+            </MudTh>
         }
     </HeaderContent>
 

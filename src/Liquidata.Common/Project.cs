@@ -1,5 +1,6 @@
 ﻿using Liquidata.Common.Actions;
 using Liquidata.Common.Services.Interfaces;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace Liquidata.Common;
@@ -67,7 +68,12 @@ public class Project
             throw new Exception("Unable to find main template");
         }
 
+        var timer = Stopwatch.StartNew();
+        Console.WriteLine($"Project '{Name}' execution started");
+
         await mainTemplate.ExecuteActionAsync(executionService);
         await executionService.WaitForExecutionTasksAsync();
+
+        Console.WriteLine($"Project '{Name}' execution complete in {timer.Elapsed}");
     }
 }
