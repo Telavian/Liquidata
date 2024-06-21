@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Liquidata.Client",
   "resources": {
-    "hash": "sha256-37CGVYaPBx4MIqYH7nnIR+Zw50KZX8VUbEP/1lwnKUM=",
+    "hash": "sha256-eeQyom+RYmd3n/Aq443VnaFoV71ozvlbaey/9Fiix2g=",
     "jsModuleNative": {
       "dotnet.native.8.0.6.suuomc2hr0.js": "sha256-YU6M9+jtDVnB8/wtrgIndOstzNh778Ls8g9XnbjorSk="
     },
@@ -23,9 +23,9 @@
       "Bogus.wasm": "sha256-ov5CGNe59JEwqbFGEdaI5KxUHDvwH/66QzFIoRDYgVw=",
       "CurrieTechnologies.Razor.Clipboard.wasm": "sha256-vBJMgYbeYk769TDOiieLojmO+DfePc7AbWS4YH+WzUU=",
       "DebounceThrottle.wasm": "sha256-gK37sFiPFI+w526x8/E3eArktDOfTG41cbZ1QE2RoAk=",
-      "Liquidata.Client.wasm": "sha256-zjV8bF8slbH38lDDbP6VZB7NQw4beDPdMrHtqw4w478=",
-      "Liquidata.Common.wasm": "sha256-7m6jpDPasEHsnNcomMI+XxAI0gpwXGzb30MaDcK7wEU=",
-      "Liquidata.UI.Common.wasm": "sha256-gpGAelsKNnly5SHR1LbGtlL0IpMUejsKJNP3VBfZr/s=",
+      "Liquidata.Client.wasm": "sha256-/rs148+vJvqtu+aSbbK5bi00vPOynD8b5Nkg33y4NLI=",
+      "Liquidata.Common.wasm": "sha256-LhCfvAfWo62zZyBKBzGpoduMk8rgRYZ6hvOixKXldt0=",
+      "Liquidata.UI.Common.wasm": "sha256-APCGMXboFWYUBwc3cx8oIpTg1BRKxXmwu/J7H+gu2QY=",
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-jQpSuhmgCRZZ4gcusOC0Sk6smWqva6ww9yQar31DmhY=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-H57GfPLqfhzZ9G7X67SAnIMU72morkNcrQ8PqTkE/dM=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-ystxj5ABzhAkNJtrMvQO/G5tk4ISb+AfWK5c3n1oOqw=",
