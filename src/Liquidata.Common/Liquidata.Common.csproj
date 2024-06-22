@@ -14,11 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\javascript\selection.js" />
     <None Remove="Resources\javascript\selection_extensions.js" />
+    <None Remove="Resources\javascript\xpath.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\javascript\selection.js" />
     <EmbeddedResource Include="Resources\javascript\selection_extensions.js" />
+    <EmbeddedResource Include="Resources\javascript\xpath.js" />
   </ItemGroup>
 
 </Project>

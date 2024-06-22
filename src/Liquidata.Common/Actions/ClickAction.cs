@@ -49,7 +49,7 @@ public class ClickAction : ActionBase
         if (IsNewPage)
         {
             // New pages must execute in new template
-            var newTemplate = executionService.CurrentProject.AllTemplates
+            var newTemplate = executionService.Project.AllTemplates
                 .FirstOrDefault(x => x.ActionId == ExecutionTemplateId) 
                 ?? throw new ExecutionException("Unable to find template for click action");
 
@@ -79,7 +79,7 @@ public class ClickAction : ActionBase
 
         if (ClickType == ClickType.ExecuteTemplate)
         {
-            var newTemplate = executionService.CurrentProject.AllTemplates
+            var newTemplate = executionService.Project.AllTemplates
                 .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
                 ?? throw new ExecutionException("Unable to find template for click action");
 

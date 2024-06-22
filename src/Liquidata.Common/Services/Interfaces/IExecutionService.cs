@@ -8,7 +8,7 @@
 
         public int Concurrency { get; }
         public string CurrentSelection { get; set; }
-        public Project CurrentProject { get; }
+        public Project Project { get; }
         IList<string> LoggedErrors { get; }
         IList<string> LoggedMessages { get; }
         IList<IBrowserService> AllBrowsers { get; }

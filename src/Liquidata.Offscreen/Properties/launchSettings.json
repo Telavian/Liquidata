@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Liquidata.Offscreen": {
+      "commandName": "Project",
+      "commandLineArgs": "--project C:\\Users\\Patrick\\Desktop\\Emporium.json --browser Edge --concurrency 3"
+    }
+  }
+}

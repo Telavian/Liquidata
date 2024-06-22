@@ -89,10 +89,19 @@ public partial class RunProjectViewModel : ViewModelBase
 
         var dataHandler = new DataHandlerService();
         var xPathProcessorService = new XPathProcessorService(_browserService);
-        var browserRegistration = () => RefreshAsync();
 
         _browserService.RootPage = project.Url;
-        ExecutionService = new ExecutionService(CurrentProject!, CurrentProject!.Concurrency, _browserService, dataHandler, xPathProcessorService, browserRegistration);            
+        ExecutionService = new ExecutionService
+        {
+            Project = CurrentProject!,
+            Concurrency = CurrentProject!.Concurrency,
+            Browser = _browserService,
+            DataHandler = dataHandler,
+            XPathProcessor = xPathProcessorService,
+            BrowserPageAddedAction = b => RefreshAsync(),
+            BrowserPageRemovedAction = b => RefreshAsync(),
+        }; 
+        
         await ExecutionService.RegisterBrowserAsync(_browserService);
         SelectedBrowser = _browserService;
         await RefreshAsync();

@@ -111,7 +111,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
     public static async Task ProcessSelectedItemAsync(string xpathSelection)
     {
         await Task.Yield();
-        var selection = JsonSerializer.Deserialize<XPathSelection>(xpathSelection)!;
+        var selection = xpathSelection.FromJson<XPathSelection>()!;
 
         await _processSelectedItemAction(selection);
     }
@@ -518,10 +518,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             return;
         }
 
-        var options = new JsonSerializerOptions();
-        options.Converters.Add(new JsonStringEnumConverter());
-
-        var json = JsonSerializer.Serialize(CurrentProject, options);
+        var json = CurrentProject.ToJson();
         await _blazorFileSaver.SaveAs($"{CurrentProject.Name}.json", json, "application/json");
     }
 
@@ -578,10 +575,17 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
     {
         await Task.Yield();
 
-        var dataHandler = new DataHandlerService();
-        var browserRegistration = () => Task.CompletedTask;
+        var dataHandler = new DataHandlerService();        
 
-        var executionService = new ExecutionService(CurrentProject!, 1, _browserService, dataHandler, _xPathProcessorService, browserRegistration);
+        var executionService = new ExecutionService
+        {
+            Project = CurrentProject!,
+            Concurrency = 1,
+            Browser = _browserService,
+            DataHandler = dataHandler,
+            XPathProcessor = _xPathProcessorService,
+        };
+                
         await executionService.RegisterBrowserAsync(_browserService);
 
         await _bus.Publish(new ExecuteProjectMessage { Project = project, AllowInteractive = false, ExecutionService = executionService });

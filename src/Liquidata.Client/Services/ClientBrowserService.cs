@@ -3,18 +3,17 @@ using Liquidata.Common;
 using Liquidata.Common.Actions.Enums;
 using Liquidata.Common.Actions.Shared;
 using Liquidata.Common.Exceptions;
+using Liquidata.Common.Extensions;
 using Liquidata.Common.Models;
 using Liquidata.Common.Services.Interfaces;
 using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.Json;
 
 namespace Liquidata.Client.Services;
 
 public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 {
-    private bool _initialized;
     private static int _totalBrowserCount;
 
     private const string LD_Document = "LD_Document";
@@ -28,6 +27,12 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
     public string RootPage { get; set; } = "";
     public string BrowserId { get; set; } = GlobalConstants.LDBrowser_Name;
     public bool IsBrowserInitialized { get; set; }
+
+    public ValueTask DisposeAsync()
+    {
+        // No explicit disposale needed
+        return ValueTask.CompletedTask;
+    }
 
     public async Task UpdateBrowserSelectionModeAsync(ActionBase? action, BrowserMode browserMode)
     {
@@ -49,14 +54,25 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         await ExecuteJavascriptAsync($"globalThis.liquidata_selection_mode = `{selectionMode}`;");
     }
 
+    public Task StartBrowserAsync()
+    {
+        // No explicit start is needed
+        return Task.CompletedTask;
+    }
+
     public async Task InitializeBrowserAsync()
     {
+        if (IsBrowserInitialized)
+        {
+            return;
+        }
+
         Console.WriteLine($"Initializing browser: {BrowserId}");
         await AddSelectionCssAsync();
         await AddXPathJsAsync();
         await AddSelectionJsAsync();
         await AddSelectionExtensionsJsAsync();
-        _initialized = true;
+        IsBrowserInitialized = true;
     }
 
     public async Task<bool> CheckForDocumentAccessAsync()
@@ -101,7 +117,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
         while (true)
         {            
-            if (_initialized)
+            if (IsBrowserInitialized)
             {
                 return true;
             }
@@ -169,7 +185,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
             throw new Exception("Unable to determine selection information");
         }
 
-        var info = JsonSerializer.Deserialize<SelectionInfo>(result.result)!;
+        var info = result.result.FromJson<SelectionInfo>();
         info.Attributes = info.Attributes
             .Select(x => x
                 .Replace(SelectedCSSClass, "")
@@ -194,7 +210,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
                 throw new Exception("Unable to determine xpath matches");
             }
 
-            var matches = JsonSerializer.Deserialize<string[]>(result.result)!;
+            var matches = result.result.FromJson<string[]>();
 
             if (matches is not null && matches.Length > 0)
             {
@@ -302,6 +318,9 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
             BrowserId = $"{GlobalConstants.LDBrowser_Name}{browserCount}"
         };
 
+        await browser.StartBrowserAsync();
+        await browser.InitializeBrowserAsync();
+
         return browser;
     }
 
@@ -352,8 +371,6 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task<string> GetVariableAsync(string name)
     {
-        await Task.Yield();
-
         var script = $"globalThis.${name} ?? ``;";
         var (isSuccess, result) = await ExecuteJavascriptAsync<string>(script);
 
@@ -412,6 +429,9 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         {
             throw new ExecutionException("Unable to reload page");
         }
+
+        IsBrowserInitialized = false;
+        await InitializeBrowserAsync();
     }
 
     public async Task<byte[]> GetScreenshotAsync()
@@ -499,12 +519,12 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     private Task<string> LoadSelectionJsAsync()
     {        
-        return LoadResourceAsync(Assembly.GetExecutingAssembly(), "Liquidata.Client.Resources.javascript.selection.js");        
+        return LoadResourceAsync(typeof(Project).Assembly, "Liquidata.Common.Resources.javascript.selection.js");        
     }
 
     private Task<string> LoadXPathJsAsync()
     {
-        return LoadResourceAsync(Assembly.GetExecutingAssembly(), "Liquidata.Client.Resources.javascript.xpath.js");
+        return LoadResourceAsync(typeof(Project).Assembly, "Liquidata.Common.Resources.javascript.xpath.js");
     }
 
     private Task<string> LoadSelectionExtensionsJsAsync()
@@ -514,18 +534,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     private async Task<string> LoadResourceAsync(Assembly assembly, string name)
     {
-        using var stream = assembly
-            .GetManifestResourceStream(name);
-
-        if (stream is null)
-        {
-            throw new Exception($"Resource '{name}' not found");
-        }
-
-        using var reader = new StreamReader(stream);
-        var result = await reader.ReadToEndAsync();
-
-        return result
+        return (await assembly.LoadResourceAsync(name))
             .Replace(LD_Document, IFrameContentDocument);
     }
 

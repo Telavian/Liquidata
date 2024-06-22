@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Liquidata.UI.Common.Pages.Common;
 using Liquidata.Common.Services;
+using Liquidata.Common.Extensions;
 
 namespace Liquidata.Client.Pages.Execution;
 
@@ -154,10 +155,7 @@ public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
             return;
         }
 
-        var options = new JsonSerializerOptions();
-        options.Converters.Add(new JsonStringEnumConverter());
-
-        var json = JsonSerializer.Serialize(ExecutionResults, options);
+        var json = ExecutionResults.ToJson();
         await _blazorFileSaver.SaveAs($"extraction_results.json", json, "application/json");
     }
 }

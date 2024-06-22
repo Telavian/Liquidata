@@ -1,4 +1,5 @@
 ﻿using Liquidata.Common.Actions;
+using Liquidata.Common.Extensions;
 using Liquidata.Common.Services.Interfaces;
 using System.Diagnostics;
 using System.Text.Json;
@@ -46,8 +47,8 @@ public class Project
 
     public Project FullClone()
     {
-        var json = JsonSerializer.Serialize(this);
-        return JsonSerializer.Deserialize<Project>(json)!;
+        var json = this.ToJson(); JsonSerializer.Serialize(this);
+        return json.FromJson<Project>()!;
     }
 
     public void RestoreParentReferences()

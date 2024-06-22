@@ -3,12 +3,13 @@ using Liquidata.Common.Models;
 
 namespace Liquidata.Common.Services.Interfaces;
 
-public interface IBrowserService
+public interface IBrowserService : IAsyncDisposable
 {        
     string RootPage { get; set; }
     string BrowserId { get; set; }
     bool IsBrowserInitialized { get; set; }
 
+    Task StartBrowserAsync();
     Task InitializeBrowserAsync();
     Task<bool> CheckForDocumentAccessAsync();
     Task<bool> WaitForBrowserReadyAsync(TimeSpan waitTime);

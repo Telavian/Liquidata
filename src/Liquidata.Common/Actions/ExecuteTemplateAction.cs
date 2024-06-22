@@ -31,7 +31,7 @@ public class ExecuteTemplateAction : ActionBase
             return ExecutionReturnType.Continue;
         }
 
-        var newTemplate = executionService.CurrentProject.AllTemplates
+        var newTemplate = executionService.Project.AllTemplates
             .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
             ?? throw new ExecutionException("Unable to find template for click action");
 
