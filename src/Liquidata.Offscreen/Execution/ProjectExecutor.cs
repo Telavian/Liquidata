@@ -1,12 +1,8 @@
 ﻿using Liquidata.Client.Services;
 using Liquidata.Common.Extensions;
 using Liquidata.Common.Services;
-using Liquidata.Common.Services.Interfaces;
-using Liquidata.Offscreen.Enums;
 using Liquidata.Offscreen.Execution.Models;
 using Liquidata.Offscreen.Services;
-using System.Text.Json;
-using System.Xml;
 
 namespace Liquidata.Offscreen.Execution
 {
@@ -21,11 +17,21 @@ namespace Liquidata.Offscreen.Execution
                 concurrency = 1;
             }
 
+            if (string.IsNullOrWhiteSpace(settings.Project.Url))
+            {
+                throw new Exception("Project url is not defined");
+            }
+
             await using var browser = new PlaywrightBrowserService(settings);
+            browser.RootPage = settings.Project.Url;
+
             var dataHandler = new DataHandlerService();
             var xPathProcessor = new XPathProcessorService(browser);
 
+            Console.WriteLine("Starting browser");
             await browser.StartBrowserAsync();
+
+            Console.WriteLine("Initializing browser");
             await browser.InitializeBrowserAsync();
 
             var executionService = new ExecutionService

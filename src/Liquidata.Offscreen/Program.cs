@@ -14,7 +14,6 @@ internal class Program
         var rootCommand = new RootCommand("Liquidata.Offscreen command line data extractor");
 
         var projectOption = new Option<FileInfo>("--project", "Path to the JSON project file")
-            .LegalFileNamesOnly()
             .LegalFilePathsOnly();
         projectOption.AddAlias("-p");
         projectOption.IsRequired = true;
@@ -27,7 +26,6 @@ internal class Program
         rootCommand.AddOption(browserOption);
 
         var browserPathOption = new Option<FileInfo>("--browser-path", "Path to the browser executable")
-            .LegalFileNamesOnly()
             .LegalFilePathsOnly();
         browserPathOption.AddAlias("-bp");
         browserPathOption.IsRequired = false;
@@ -46,7 +44,6 @@ internal class Program
         rootCommand.AddOption(concurrencyOption);
 
         var outputOption = new Option<FileInfo>("--output", "Path to save the JSON execution results")
-            .LegalFileNamesOnly()
             .LegalFilePathsOnly();
         outputOption.AddAlias("-o");
         outputOption.IsRequired = false;

@@ -2,7 +2,7 @@
   "profiles": {
     "Liquidata.Offscreen": {
       "commandName": "Project",
-      "commandLineArgs": "--project C:\\Users\\Patrick\\Desktop\\Emporium.json --browser Edge --concurrency 3"
+      "commandLineArgs": "--project C:\\Users\\Patrick\\Desktop\\Emporium.json --print-output --browser-path \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --headless"
     }
   }
 }
