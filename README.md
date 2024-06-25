@@ -6,7 +6,7 @@ Liquiddata is a free and open source web based data extraction system that can t
 ## Capabilities
 Liquidata allows for a data to be extracted through a sequence of actions. Each action represents a specific operation to perform during the execution of the project. At the end of execution then the extracted data can be visualized or exported in a json form which can be used elsewhere for specific purposes.
 
-The actions themselves are added and configured through the use of the <a href="https://telavian.github.io/Liquidata">Liquidata Client</a> application. The actions are grouped together in a reusable form in a project that represents the overall data extraction tasks to perform.
+The actions themselves are added and configured through the use of the <a href="https://telavian.github.io/Liquidata">Liquidata Client</a> application. The actions are grouped together using a reusable form in a project that represents the overall data extraction tasks to perform.
 
 ### Overview
 - Simple point and click application
@@ -18,20 +18,20 @@ The actions themselves are added and configured through the use of the <a href="
 # <a href="/docs/Tutorial/00-Introduction.md;">Get Started</a>
 
 ## Client
-<a href="https://telavian.github.io/Liquidata">Liquidata Client</a> is the heart of the system. This is the application that is used to build the projects for each data extraction need. Each extractor consists of a single project, which in turn consists of one or more templates. The <strong>main</strong> template is automatically the entrypoint for the extractor and acts as the starting point for everything.
+<a href="docs/Client.md">Liquidata Client</a> is the heart of the system. This is the application that is used to build the projects for each data extraction need. Each extractor consists of a single project, which in turn consists of one or more templates. The <strong>main</strong> template is automatically the entrypoint for the extractor and acts as the starting point for everything.
 
 Each template consists of a series of actions that define the options to perform and the data to be extracted. In most cases the <strong>main</strong> template is sufficent. However in advanced cases complicated sites may need multiple templates, where each one has a specific purpose. Each action can then be configured and customized for the project's specific needs.
 
 ### Emporium
-<a href="https://telavian.github.io/Liquidata/Emporium">Liquidata Emporium</a> is a simple fake ecommerce website that can be used to test the many capabilities of Liquidata. All the information is randomly generated the first time the site is loaded and then reused. This means the Emporium can be used as many times as needed to perfect data extraction without fear of being blocked, or getting the dreaded CAPTCHAs.
+<a href="docs/Emporium.md">Liquidata Emporium</a> is a simple fake ecommerce website that can be used to test the many capabilities of Liquidata. All the information is randomly generated the first time the site is loaded and then reused. This means the Emporium can be used as many times as needed to perfect data extraction without fear of being blocked, or getting the dreaded CAPTCHAs.
 
 ### Offscreen
-<a href="">Liquidata Offscreen</a> is a way to run the Liquidata projects in the background so that projects can be repeatedly run without user interaction or on a schedule. This greatly simplifies the case where data is needed more than a single time or where complicated projects take some time to run.
+<a href="docs/Offscreen.md">Liquidata Offscreen</a> is a way to run the Liquidata projects in the background so that projects can be repeatedly run without user interaction or on a schedule. This greatly simplifies the case where data is needed more than a single time or where complicated projects take some time to run.
 
 Liquidata Offscreen uses a <a href="https://en.wikipedia.org/wiki/Headless_browser">headless browser</a> to execute the project exactly as a user would in a normal web browser. This avoids the web security limitions that Liquidata Client has, due to how the Client visualizes other websites for extraction. 
 
 ### Cloud
-<a href="">Liquidata Cloud</a> is similar to Liquidata Offscreen, however projects can be run and scheduled in the cloud which means local resource limitations are not a concern anymore. The cloud offers the simpliest way to execute projects without a need for worrying about things directly.
+<a href="docs/Cloud.md">Liquidata Cloud</a> is similar to Liquidata Offscreen, however projects can be run and scheduled in the cloud which means local resource limitations are not a concern anymore. The cloud offers the simpliest way to execute projects without a need for worrying about things directly.
 
 Through the cloud, projects can also be run in parallel and massively scaled to ensure that complicated projects can be executed quickly and efficently. All extracted data can then be downloaded locally or visualized directly in the cloud.
 
