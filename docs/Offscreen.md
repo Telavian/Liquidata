@@ -6,7 +6,7 @@ Once collection is complete, then the collected data can be saved to a file and 
 
 ### Command Line
 | Argument            | Required | Description |
-| ------              |      | ----------- |
+| ------              |  ---     | ----------- |
 | --project, -p       |  Yes | The path on disk to the saved project file. |
 | --browser, -b       |  No  | The type of browser to use. Can be `Chromium`, `Firefox`, or `WebKit`. Defaults to `Chromium`. |
 | --browser-path, -bp |  No  | The path to the browser executable to use. |
