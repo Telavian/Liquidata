@@ -44,7 +44,8 @@ namespace Liquidata.Offscreen.Services
             var launchOptions = new BrowserTypeLaunchOptions
             {
                 Headless = settings.IsHeadless,
-                ExecutablePath = settings.BrowserPath?.FullName ?? ""
+                ExecutablePath = settings.BrowserPath?.FullName ?? "",
+                Proxy = CreateBrowserProxy()
             };
 
             _playwright = await Playwright.CreateAsync();
@@ -65,6 +66,8 @@ namespace Liquidata.Offscreen.Services
             }
 
             _page = await _browser!.NewPageAsync();
+            await ProcessExecutionSettingsAsync(_page);
+
             await _page.GotoAsync(RootPage);
             await _page.WaitForLoadStateAsync(LoadState.Load);
         }
@@ -108,6 +111,7 @@ namespace Liquidata.Offscreen.Services
             }
 
             var page = await _browser!.NewPageAsync();
+            await ProcessExecutionSettingsAsync(_page);
 
             var browser = new PlaywrightBrowserService(settings)
             {
@@ -503,6 +507,34 @@ namespace Liquidata.Offscreen.Services
             }
 
             throw new ExecutionException("Unable to build selection link");
+        }
+
+        private Proxy? CreateBrowserProxy()
+        {
+            if (settings.ProxyServer is null)
+            {
+                return null;
+            }
+
+            return new Proxy
+            {
+                Server = settings.ProxyServer.ToString(),
+                Username = settings.ProxyUser,
+                Password = settings.ProxyPassword,
+            };
+        }
+
+        private async Task ProcessExecutionSettingsAsync(IPage? page)
+        {
+            if (page is null)
+            {
+                return;
+            }
+
+            if (settings.DisableImages)
+            {
+                await page.RouteAsync("**/*.{png,jpg,jpeg,gif,svg,webp}", async r => await r.AbortAsync());
+            }
         }
     }
 }

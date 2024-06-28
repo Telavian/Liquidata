@@ -31,6 +31,26 @@ internal class Program
         browserPathOption.IsRequired = false;
         rootCommand.AddOption(browserPathOption);
 
+        var disableImagesOption = new Option<bool>("--disable-images", "Disables the loading of images");            
+        disableImagesOption.AddAlias("-di");
+        disableImagesOption.IsRequired = false;
+        rootCommand.AddOption(disableImagesOption);
+
+        var proxyServerOption = new Option<Uri>("--proxy-server", "Address of proxy to use in project execution. Example: https://domain.com:1234/");
+        proxyServerOption.AddAlias("-ps");
+        proxyServerOption.IsRequired = false;        
+        rootCommand.AddOption(proxyServerOption);
+
+        var proxyUserOption = new Option<string>("--proxy-user", "Username to use for the browser proxy");
+        proxyUserOption.AddAlias("-pu");
+        proxyUserOption.IsRequired = false;
+        rootCommand.AddOption(proxyUserOption);
+
+        var proxyPasswordOption = new Option<string>("--proxy-password", "Password to use for the browser proxy");
+        proxyPasswordOption.AddAlias("-pp");
+        proxyPasswordOption.IsRequired = false;
+        rootCommand.AddOption(proxyPasswordOption);
+
         var concurrencyOption = new Option<int?>("--concurrency", "Concurrency of the extraction operation. Defaults to value in project file");
         concurrencyOption.AddAlias("-c");
         concurrencyOption.AddValidator(result =>
@@ -106,6 +126,10 @@ internal class Program
                 OutputLocation = c.ParseResult.GetValueForOption(outputOption),
                 PrintOutput = c.ParseResult.GetValueForOption(printOutputOption),
                 IsHeadless = c.ParseResult.GetValueForOption(headlessOption),
+                DisableImages = c.ParseResult.GetValueForOption(disableImagesOption),
+                ProxyServer = c.ParseResult.GetValueForOption(proxyServerOption),
+                ProxyUser = c.ParseResult.GetValueForOption(proxyUserOption),
+                ProxyPassword = c.ParseResult.GetValueForOption(proxyPasswordOption),
             };
         }
     }

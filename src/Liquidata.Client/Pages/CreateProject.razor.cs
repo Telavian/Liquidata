@@ -14,8 +14,6 @@ public partial class CreateProjectViewModel : ViewModelBase
 
     public string? Name { get; set; }
     public string? Url { get; set; }
-    public bool LoadImages { get; set; } = true;
-    public bool RotateIpAddresses { get; set; } = false;
     public int Concurrency { get; set; } = 3;
 
     private Func<Task>? _createProjectAsyncCommand;

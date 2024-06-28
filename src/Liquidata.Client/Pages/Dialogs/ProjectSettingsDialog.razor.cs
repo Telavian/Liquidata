@@ -11,8 +11,6 @@ public class ProjectSettingsDialogViewModel : DialogViewModelBase
 
     public string Name { get; set; } = "";
     public string Url { get; set; } = "";
-    public bool LoadImages { get; set; }
-    public bool RotateIpAddresses { get; set; }
     public int Concurrency { get; set; }
 
     private Func<Task>? _saveSettingsAsyncCommand;
@@ -24,8 +22,6 @@ public class ProjectSettingsDialogViewModel : DialogViewModelBase
 
         Name = CurrentProject?.Name ?? "";
         Url = CurrentProject?.Url ?? "";
-        LoadImages = CurrentProject?.LoadImages ?? false;
-        RotateIpAddresses = CurrentProject?.RotateIpAddresses ?? false;
         Concurrency = CurrentProject?.Concurrency ?? 0;
     }
 
@@ -47,8 +43,6 @@ public class ProjectSettingsDialogViewModel : DialogViewModelBase
 
         CurrentProject.Name = Name;
         CurrentProject.Url = Url;
-        CurrentProject.LoadImages = LoadImages;
-        CurrentProject.RotateIpAddresses = RotateIpAddresses;
         CurrentProject.Concurrency = Concurrency;
 
         Dialog?.Close();

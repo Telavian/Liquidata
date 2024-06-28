@@ -15,12 +15,6 @@
                 <MudTextField Style="word-break: break-all;" Label="Starting Url" Clearable="true" InputType="InputType.Url"
                               @bind-Value="@Url" Variant="@Variant.Text" />
 
-                <MudCheckBox Label="Load Images" LabelPosition="LabelPosition.Start" Color="Color.Secondary"
-                             @bind-Value="@LoadImages" />
-
-                <MudCheckBox Label="Rotate IP Addresses" LabelPosition="LabelPosition.Start" Color="Color.Secondary"
-                             @bind-Value="@RotateIpAddresses" />
-
                 <MudNumericField Label="Concurrency" Clearable="true"
                               @bind-Value="@Concurrency" Variant="@Variant.Text" />
             </MudStack>
