@@ -7,13 +7,11 @@ using Liquidata.Common.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using System.Text.Json;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Models;
 using Liquidata.Client.Services.Interfaces;
 using BlazorComponentBus;
 using Liquidata.Client.Messages;
-using System.Text.Json.Serialization;
 using BlazorFileSaver;
 using Liquidata.Common.Services;
 using Liquidata.UI.Common.Pages.Common;
@@ -22,7 +20,6 @@ namespace Liquidata.Client.Pages;
 
 public partial class EditProjectViewModel : ViewModelBase, IDisposable
 {
-    private bool _isBrowserInitialized;
     private static Func<XPathSelection, Task> _processSelectedItemAction = async selection => await Task.Yield();
     
     [Inject] private ComponentBus _bus { get; set; } = null!;
@@ -203,7 +200,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             await RemoveActionAsync(action);
         }
 
-        await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });        
     }
 
     private async Task HandleToggleBrowserModeAsync()
@@ -243,6 +240,8 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
                 .Any();
 
         action.Parent!.RemoveChild(action);
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = action.Parent?.ActionId ?? Guid.Empty });
+        await ExecuteProjectAsync(CurrentProject!);
 
         if (isSelected)
         {
@@ -272,12 +271,10 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
         if (!hasAccess)
         {
-            _isBrowserInitialized = true;
             await ShowAlertAsync(Constants.WebSecurityErrorMessage, true);
             return;
         }
 
-        _isBrowserInitialized = true;
         Console.WriteLine("Executing browser initialization");        
         await _browserService.InitializeBrowserAsync();
         await _browserService.WaitForBrowserReadyAsync(TimeSpan.FromSeconds(10));
@@ -313,8 +310,10 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             await MergeSelectedItemAsync(selectionAction, selection.XPath);
         }        
 
-        await HighlightSelectionsAsync();
-        await RefreshAsync();
+        await HighlightSelectionsAsync();        
+        await RefreshAsync();        
+        await ExecuteProjectAsync(CurrentProject!);
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = currentAction?.ActionId ?? Guid.Empty });
     }
 
     private async Task<bool> ProcessRelativeSelectedItemAsync(XPathSelection selection)
@@ -428,6 +427,7 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         selectionAction.XPath = "";
 
         await HighlightSelectionsAsync();
+        await _bus.Publish(new ActionUpdatedMessage { ActionId = action?.ActionId ?? Guid.Empty });
     }
 
     private async Task HandleNewTemplateSelectedAsync(Template template)
@@ -567,14 +567,12 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
             return;
         }
 
-        var project = CurrentProject.FullClone();
-        _ = ExecuteProjectAsync(project);
+        _ = ExecuteProjectAsync(CurrentProject);
     }
 
     private async Task ExecuteProjectAsync(Project project)
     {
-        await Task.Yield();
-
+        project = project.FullClone();
         var dataHandler = new DataHandlerService();        
 
         var executionService = new ExecutionService
@@ -619,6 +617,8 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
 
         // Add these for convenience
         action.AddChildAction(CurrentProject!, ActionType.BeginRecord);
-        action.AddChildAction(CurrentProject!, ActionType.Extract);
+        var extractAction = action.AddChildAction(CurrentProject!, ActionType.Extract) as ExtractAction;
+        extractAction!.FieldType = Common.Actions.Enums.FieldType.Text;
+        extractAction.Script = ScriptType.Text.BuildScript();
     }
 }

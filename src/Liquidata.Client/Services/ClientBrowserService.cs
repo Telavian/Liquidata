@@ -62,11 +62,6 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
 
     public async Task InitializeBrowserAsync()
     {
-        if (IsBrowserInitialized)
-        {
-            return;
-        }
-
         Console.WriteLine($"Initializing browser: {BrowserId}");
         await AddSelectionCssAsync();
         await AddXPathJsAsync();
@@ -186,7 +181,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         }
 
         var info = result.result.FromJson<SelectionInfo>();
-        info.Attributes = info.Attributes
+        info!.Attributes = info.Attributes
             .Select(x => x
                 .Replace(SelectedCSSClass, "")
                 .Replace(RelativeSelectedCSSClass, "")

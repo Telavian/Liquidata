@@ -43,7 +43,7 @@ public class ProjectService(ILocalStorageService localStorage) : IProjectService
         var key = BuildProjectKey(projectId);
         var project = await localStorage.GetItemAsync<Project>(key);
 
-        project!.RestoreParentReferences();
+        project?.RestoreParentReferences();
         return project;
     }
 
