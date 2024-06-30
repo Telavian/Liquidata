@@ -4,7 +4,7 @@ const liquidataRelativeSelectionMode = "relativeSelection";
 globalThis.liquidata_selection_mode = liquidataBrowseMode;
 
 function highlightElement(element, name) {
-    if (element === null) {
+    if (element === null || element.classList === null) {
         return;
     }
 
@@ -17,7 +17,7 @@ function highlightElement(element, name) {
 }
 
 function removeHighlighting(element, name) {
-    if (element === null) {
+    if (element === null || element.classList === null) {
         return;
     }
 
