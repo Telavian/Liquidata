@@ -25,6 +25,4 @@ Windows: `TBD`
 Linux: `TBD`
 
 ### Extensions
-CSP Unblock
-Cors Unblock
-
+X-Frame-Options
