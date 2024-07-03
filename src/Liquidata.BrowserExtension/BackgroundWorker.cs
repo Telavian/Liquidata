@@ -1,5 +1,6 @@
 ﻿using Blazor.BrowserExtension;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
 using WebExtensions.Net.DeclarativeNetRequest;
 
@@ -42,6 +43,7 @@ public partial class BackgroundWorker : BackgroundWorkerBase
 
         var options = new UpdateSessionRulesOptions()
         {
+            RemoveRuleIds = [1, 2],
             AddRules = 
             [
                 new Rule
@@ -74,7 +76,7 @@ public partial class BackgroundWorker : BackgroundWorkerBase
                 }
             ]
         };
-
+                
         await WebExtensions.DeclarativeNetRequest.UpdateSessionRules(options);
     }
 }
