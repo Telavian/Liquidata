@@ -1,91 +1,80 @@
 ﻿using Blazor.BrowserExtension;
-using System;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using WebExtensions.Net.WebRequest;
+using WebExtensions.Net.DeclarativeNetRequest;
 
 namespace Liquidata.BrowserExtension;
 
 public partial class BackgroundWorker : BackgroundWorkerBase
 {
-    private readonly string[] _domains = ["telavian.github.io", "localhost"];
-    private readonly string[] _headers = ["Frame-Options"];
+    private static readonly string[] _domains = ["telavian.github.io", "localhost"];
 
     [BackgroundWorkerMain]
     public override void Main()
     {
-        WebExtensions.Runtime.OnInstalled.AddListener(OnInstalled);
-        WebExtensions.Runtime.OnStartup.AddListener(OnStartup);
-    }
+        //Logger.LogInformation("Initializing extension");
+        _ = WebExtensions.Runtime.OnInstalled.AddListener(OnInstalled);
+        _ = WebExtensions.Runtime.OnStartup.AddListener(OnStartup);
+    }    
 
-    async Task OnInstalled()
+    private async Task OnInstalled()
     {
+        Logger.LogInformation("Extension installed");
         var indexPageUrl = await WebExtensions.Runtime.GetURL("index.html");
         await WebExtensions.Tabs.Create(new()
         {
             Url = indexPageUrl
         });
-    }    
 
-    async Task OnStartup()
+        await SubscribeAsync();
+    }
+
+    private async Task OnStartup()
     {
-        await WebExtensions.WebRequest.OnBeforeSendHeaders.AddListener(HandleOnBeforeSendHeaders);
-        await WebExtensions.WebRequest.OnHeadersReceived.AddListener(HandleOnHeadersReceived);
-    }    
+        await Task.Yield();
+        Logger.LogInformation("Extension starting");
+        await SubscribeAsync();
+    }
 
-    private BlockingResponse HandleOnBeforeSendHeaders(OnBeforeSendHeadersEventCallbackDetails details)
+    private async Task SubscribeAsync()
     {
-        if (!IsUrlMatch(details.Url) && !IsUrlMatch(details.DocumentUrl) && !IsUrlMatch(details.OriginUrl))
-        {
-            return new();
-        }
+        Logger.LogInformation("Subscribing events");
 
-        return new BlockingResponse
+        var options = new UpdateSessionRulesOptions()
         {
-            RequestHeaders = FilterHeaders(details.RequestHeaders),
+            AddRules = 
+            [
+                new Rule
+                {
+                    Id = 1,
+                    Condition = new Condition
+                    {
+                        UrlFilter = "*",
+                        InitiatorDomains = _domains
+                    },
+                    Action = new Action
+                    {
+                        Type = "modifyHeaders",
+                        ResponseHeaders = [new ResponseHeader { Operation = "remove", Header = "X-Frame-Options" }]
+                    }
+                },
+                new Rule
+                {
+                    Id = 2,
+                    Condition = new Condition
+                    {
+                        UrlFilter = "*",
+                        InitiatorDomains = _domains
+                    },
+                    Action = new Action
+                    {
+                        Type = "modifyHeaders",
+                        ResponseHeaders = [new ResponseHeader { Operation = "remove", Header = "Frame-Options" }]
+                    }
+                }
+            ]
         };
-    }
 
-    private BlockingResponse HandleOnHeadersReceived(OnHeadersReceivedEventCallbackDetails details)
-    {
-        if (!IsUrlMatch(details.Url) && !IsUrlMatch(details.DocumentUrl) && !IsUrlMatch(details.OriginUrl))
-        {
-            return new();
-        }
-
-        return new BlockingResponse
-        {
-            ResponseHeaders = FilterHeaders(details.ResponseHeaders),
-        };
-    }
-
-    private bool IsUrlMatch(string url)
-    {
-        var uri = new Uri(url, UriKind.RelativeOrAbsolute);
-        if (!uri.IsAbsoluteUri)
-        {
-            return false;
-        }
-
-        var host = uri.Host;
-        
-        foreach (var domain in _domains)
-        {
-            if (host.EndsWith(domain, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private HttpHeaders FilterHeaders(HttpHeaders headers)
-    {
-        foreach (var header in _headers)
-        {
-            headers.RemoveAll(x => x.Name.Contains(header, StringComparison.OrdinalIgnoreCase));
-        }
-        
-        return headers;
+        await WebExtensions.DeclarativeNetRequest.UpdateSessionRules(options);
     }
 }
