@@ -29,7 +29,7 @@ namespace Liquidata.Common.Tests.Actions
         }
 
         [Fact]
-        public async Task GivenCall_WhenExecuted_ThenRecordAdded()
+        public async Task GivenCall_WhenExecuted_ThenReloaded()
         {
             var browser = new Mock<IBrowserService>();
             var executionService = new Mock<IExecutionService>();            
