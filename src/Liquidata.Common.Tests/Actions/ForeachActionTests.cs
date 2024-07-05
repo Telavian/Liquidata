@@ -85,7 +85,7 @@ namespace Liquidata.Common.Tests.Actions
         }
 
         [Fact]
-        public async Task GivenCall_WhenExecuted_ThenExtracted()
+        public async Task GivenCall_WhenExecuted_ThenInterated()
         {
             var dataResult = new string[0];
 
