@@ -15,7 +15,7 @@ The actions themselves are added and configured through the use of the <a href="
 - Automatically can select similar items to simplify structured extraction
 - Extraction can be run locally or in the cloud
 
-# <a href="/docs/Tutorial/00-Introduction.md;">Get Started</a>
+# <a href="/docs/Tutorial/00-Introduction.md">Get Started</a>
 
 ## Client
 <a href="docs/Client.md">Liquidata Client</a> is the heart of the system. This is the application that is used to build the projects for each data extraction need. Each extractor consists of a single project, which in turn consists of one or more templates. The <strong>main</strong> template is automatically the entrypoint for the extractor and acts as the starting point for everything.

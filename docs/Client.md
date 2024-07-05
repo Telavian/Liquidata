@@ -2,7 +2,7 @@
 
 The Client is an application that can be used to create and test data extraction projects. An unlimited amount of projects can be created and used. However, it should be noted that unless a project is exported, to disk or the cloud, then it exists entirely within the local storage of the browser and can be accidently cleared if the user is not careful. 
 
-### <a href="https://telavian.github.io/Liquidata">Emporium</a>
+### <a href="https://telavian.github.io/Liquidata">Liquidata</a>
 
 ### Project
 A project acts as a collection of templates, collection settings, and a starting web site location. It conveniently defines the entire collection operation and is used to extract a specific set of data. A project can include any number of templates, however it must contain at least one template named `main` which acts as the entry point for the collection operation.
