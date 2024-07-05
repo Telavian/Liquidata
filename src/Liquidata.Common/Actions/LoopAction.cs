@@ -12,7 +12,7 @@ public class LoopAction : ActionBase
     [JsonIgnore] public override bool IsInteractive => false;
     [JsonIgnore] public override bool IsNameRequired => false;
 
-    public int MaxTimesCount { get; set; }
+    public int MaxTimesCount { get; set; } = 10;
     public int WaitMilliseconds { get; set; }
 
     public override string[] BuildValidationErrors()
@@ -27,20 +27,13 @@ public class LoopAction : ActionBase
             return ExecutionReturnType.Continue;
         }
 
-        var count = 0;
-
         var maxCount = MaxTimesCount <= 0
-            ? int.MaxValue
+            ? 10
             : MaxTimesCount;
 
-        foreach (var child in ChildActions)
+        for (var count = 0; count < maxCount; count++)
         {
-            if (count >= maxCount)
-            {
-                return ExecutionReturnType.Continue;
-            }
-
-            var returnType = await child.ExecuteActionAsync(executionService);
+            var returnType = await ExecuteChildrenAsync(executionService);
 
             if (returnType == ExecutionReturnType.StopLoop)
             {
@@ -51,10 +44,9 @@ public class LoopAction : ActionBase
                 return returnType;
             }
 
-            count++;
             await WaitForDelayAsync(WaitMilliseconds);
         }
 
-        return ExecutionReturnType.Continue;
+        return ExecutionReturnType.Continue;        
     }
 }
