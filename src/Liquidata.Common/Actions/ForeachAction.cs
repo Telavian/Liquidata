@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Exceptions;
 using System.Text.RegularExpressions;
+using Liquidata.Common.Services;
 
 namespace Liquidata.Common.Actions;
 
@@ -61,38 +62,45 @@ public class ForeachAction : ActionBase
 
         foreach (var item in result) 
         {
-            var previousThisValue = "";
-            var previousSelection = "";
+            await ExecuteItemAsync(executionService, item);
+        }
 
-            try
+        return ExecutionReturnType.Continue;
+    }
+
+    private async Task<ExecutionReturnType> ExecuteItemAsync(IExecutionService executionService, string item)
+    {
+        var previousThisValue = "";
+        var previousSelection = "";
+
+        try
+        {
+            await executionService.Browser.SetVariableAsync(Name, item);
+
+            previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
+            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, item);
+
+            previousSelection = executionService.CurrentSelection;
+            executionService.CurrentSelection = item;
+
+            var returnType = await ExecuteChildrenAsync(executionService);
+
+            if (returnType == ExecutionReturnType.StopLoop)
             {
-                await executionService.Browser.SetVariableAsync(Name, item);
-                
-                previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
-                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, item);
-                
-                previousSelection = executionService.CurrentSelection;
-                executionService.CurrentSelection = item;
-
-                var returnType = await ExecuteChildrenAsync(executionService);
-
-                if (returnType == ExecutionReturnType.StopLoop)
-                {
-                    return ExecutionReturnType.Continue;
-                }
-                else if (returnType != ExecutionReturnType.Continue)
-                {
-                    return returnType;
-                }
-
-                await WaitForDelayAsync(WaitMilliseconds);
+                return ExecutionReturnType.Continue;
             }
-            finally
+            else if (returnType != ExecutionReturnType.Continue)
             {
-                await executionService.Browser.RemoveVariableAsync(Name);
-                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
-                executionService.CurrentSelection = previousSelection;
+                return returnType;
             }
+
+            await WaitForDelayAsync(WaitMilliseconds);
+        }
+        finally
+        {
+            await executionService.Browser.RemoveVariableAsync(Name);
+            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
+            executionService.CurrentSelection = previousSelection;
         }
 
         return ExecutionReturnType.Continue;
