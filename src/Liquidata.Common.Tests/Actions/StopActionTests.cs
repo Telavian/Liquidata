@@ -5,13 +5,13 @@ using Moq;
 
 namespace Liquidata.Common.Tests.Actions
 {
-    public class SolveCaptchaActionTests
+    public class StopActionTests
     {
         [Fact]
         public async Task GivenCall_WhenValidation_ThenNoErrors()
         {
             await Task.Yield();
-            var action = new SolveCaptchaAction();
+            var action = new StopAction();
             var errors = action.BuildValidationErrors();
 
             Assert.Empty(errors);
@@ -22,25 +22,24 @@ namespace Liquidata.Common.Tests.Actions
         {
             var executionService = new Mock<IExecutionService>();
 
-            var action = new SolveCaptchaAction { IsDisabled = true };
+            var action = new StopAction { IsDisabled = true };
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
         }
 
-        [Fact]
-        public async Task GivenCall_WhenExecuted_ThenHovered()
+        [Theory]
+        [InlineData(StopType.Loop, ExecutionReturnType.StopLoop)]
+        [InlineData(StopType.Template, ExecutionReturnType.StopTemplate)]
+        [InlineData(StopType.Project, ExecutionReturnType.StopProject)]
+        public async Task GivenCall_WhenExecuted_ThenCorrectTypeReturned(StopType stopType, ExecutionReturnType returnType)
         {
-            var browser = new Mock<IBrowserService>();
-            
             var executionService = new Mock<IExecutionService>();            
-            executionService.Setup(x => x.Browser).Returns(browser.Object);
 
-            var action = new SolveCaptchaAction();
-            var returnType = await action.ExecuteActionAsync(executionService.Object);
+            var action = new StopAction { StopType = stopType };
+            var actualReturnType = await action.ExecuteActionAsync(executionService.Object);
 
-            Assert.Equal(ExecutionReturnType.Continue, returnType);
-            browser.Verify(x => x.SolveCaptchaAsync(), Times.Once());
+            Assert.Equal(returnType, actualReturnType);            
         }
     }
 }
