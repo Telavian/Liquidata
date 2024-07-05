@@ -18,6 +18,17 @@ namespace Liquidata.Common.Tests.Actions
         }
 
         [Fact]
+        public async Task GivenCall_WhenDisabled_ThenNoAction()
+        {
+            var executionService = new Mock<IExecutionService>();
+
+            var action = new BeginRecordAction { IsDisabled = true };
+            var returnType = await action.ExecuteActionAsync(executionService.Object);
+
+            Assert.Equal(ExecutionReturnType.Continue, returnType);
+        }
+
+        [Fact]
         public async Task GivenCall_WhenExecuted_ThenRecordAdded()
         {
             var dataHandler = new Mock<IDataHandlerService>();

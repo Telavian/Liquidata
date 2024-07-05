@@ -41,7 +41,7 @@ public class ClickAction : ActionBase
         var isSelectionDisabled = await executionService.Browser
             .CheckSelectionDisabledAsync(executionService.CurrentSelection);
 
-        if (IsDisabled)
+        if (IsDisabled || isSelectionDisabled)
         {
             return ExecutionReturnType.Continue;
         }
