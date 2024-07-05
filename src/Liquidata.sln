@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.UI.Common", "Liqu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.Offscreen", "Liquidata.Offscreen\Liquidata.Offscreen.csproj", "{E2515E51-0B49-4E84-8B75-EB490EA3DD07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquidata.BrowserExtension", "Liquidata.BrowserExtension\Liquidata.BrowserExtension.csproj", "{C0E3EED6-2E3A-4C2C-A6A8-885595694057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquidata.BrowserExtension", "Liquidata.BrowserExtension\Liquidata.BrowserExtension.csproj", "{C0E3EED6-2E3A-4C2C-A6A8-885595694057}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A0E6A610-EC12-4F51-BA56-C1253603135F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquidata.Common.Tests", "Liquidata.Common.Tests\Liquidata.Common.Tests.csproj", "{ABE5046C-C8F0-43BC-A45E-3F875A17E260}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +43,16 @@ Global
 		{C0E3EED6-2E3A-4C2C-A6A8-885595694057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0E3EED6-2E3A-4C2C-A6A8-885595694057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0E3EED6-2E3A-4C2C-A6A8-885595694057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABE5046C-C8F0-43BC-A45E-3F875A17E260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE5046C-C8F0-43BC-A45E-3F875A17E260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE5046C-C8F0-43BC-A45E-3F875A17E260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE5046C-C8F0-43BC-A45E-3F875A17E260}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ABE5046C-C8F0-43BC-A45E-3F875A17E260} = {A0E6A610-EC12-4F51-BA56-C1253603135F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F08E446-0B19-4A7A-9A0F-C0CA53F92A67}
