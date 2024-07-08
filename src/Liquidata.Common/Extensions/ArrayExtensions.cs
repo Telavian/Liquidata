@@ -4,7 +4,7 @@ public static class ArrayExtensions
 {
     public static T[] TakeRandom<T>(this T[] items, int count)
     {
-        if (items is null || items.Length == 0)
+        if (items is null || items.Length == 0 || count <= 0)
         {
             return [];
         }
