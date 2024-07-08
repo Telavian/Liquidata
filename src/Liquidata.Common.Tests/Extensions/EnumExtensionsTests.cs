@@ -2,7 +2,7 @@
 
 namespace Liquidata.Common.Tests.Extensions;
 
-public class EnumTests
+public class EnumExtensionsTests
 {
     [Fact]
     public void GiveEnum_WhenLowercase_ThenTextLower()
