@@ -33,7 +33,7 @@ public class ExecuteTemplateAction : ActionBase
 
         var newTemplate = executionService.Project.AllTemplates
             .FirstOrDefault(x => x.ActionId == ExecutionTemplateId)
-            ?? throw new ExecutionException("Unable to find template for click action");
+            ?? throw new ExecutionException("Unable to find template to execute");
 
         var returnType = await newTemplate.ExecuteActionAsync(executionService);
         await WaitForDelayAsync(WaitMilliseconds);
