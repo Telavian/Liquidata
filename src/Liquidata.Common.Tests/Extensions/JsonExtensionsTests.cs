@@ -2,7 +2,7 @@
 
 namespace Liquidata.Common.Tests.Extensions;
 
-public class JsonExtensionTests
+public class JsonExtensionsTests
 {
     [Fact]
     public void GivenClass_WhenToJson_ThenJsonCreated()
