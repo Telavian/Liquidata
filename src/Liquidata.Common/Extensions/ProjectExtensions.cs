@@ -1,8 +1,4 @@
-﻿
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace Liquidata.Common.Extensions;
+﻿namespace Liquidata.Common.Extensions;
 
 public static class ProjectExtensions
 {
