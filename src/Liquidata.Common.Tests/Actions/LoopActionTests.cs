@@ -32,12 +32,18 @@ namespace Liquidata.Common.Tests.Actions
         [Fact]
         public async Task GivenCall_WhenExecuted_ThenLooped()
         {
+            var logMessage = Guid.NewGuid().ToString();
+            var project = new Project();
             var executionService = new Mock<IExecutionService>();
 
-            var action = new LoopAction();
+            var action = new LoopAction { MaxTimesCount = 5 };
+            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+            logAction.Script = logMessage;
+            logAction.ExpressionType = ExpressionType.Text;
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
+            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Exactly(action.MaxTimesCount));
         }
     }
 }

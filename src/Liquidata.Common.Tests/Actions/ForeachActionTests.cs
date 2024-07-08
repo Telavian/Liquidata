@@ -87,7 +87,9 @@ namespace Liquidata.Common.Tests.Actions
         [Fact]
         public async Task GivenCall_WhenExecuted_ThenInterated()
         {
-            var dataResult = new string[0];
+            var dataResult = new string[] { "1" };
+            var logMessage = Guid.NewGuid().ToString();
+            var project = new Project();
 
             var browser = new Mock<IBrowserService>();
             browser.Setup(x => x.ExecuteJavascriptAsync<string[]>(It.IsAny<string>()))
@@ -97,9 +99,13 @@ namespace Liquidata.Common.Tests.Actions
             executionService.Setup(x => x.Browser).Returns(browser.Object);
 
             var action = new ForeachAction { Name = "name", Script = "script" };
+            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+            logAction.Script = logMessage;
+            logAction.ExpressionType = ExpressionType.Text;
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
+            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Once());
         }
     }
 }

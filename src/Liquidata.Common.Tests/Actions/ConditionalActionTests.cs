@@ -44,6 +44,9 @@ namespace Liquidata.Common.Tests.Actions
         [Fact]
         public async Task GivenCall_WhenScript_ThenExecuted()
         {
+            var logMessage = Guid.NewGuid().ToString();
+            var project = new Project();
+
             var browser = new Mock<IBrowserService>();
             browser.Setup(x => x.ExecuteJavascriptAsync<bool>(It.IsAny<string>()))
                 .ReturnsAsync((true, true));
@@ -52,10 +55,15 @@ namespace Liquidata.Common.Tests.Actions
             executionService.Setup(x => x.Browser).Returns(browser.Object);
 
             var action = new ConditionalAction { Script = "xyz" };
+            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+            logAction.Script = logMessage;
+            logAction.ExpressionType = ExpressionType.Text;
+
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
             browser.Verify(x => x.ExecuteJavascriptAsync<bool>(action.Script), Times.Once());
+            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Once());
         }
     }
 }

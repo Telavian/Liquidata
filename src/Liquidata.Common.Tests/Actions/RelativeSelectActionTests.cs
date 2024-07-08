@@ -68,22 +68,31 @@ namespace Liquidata.Common.Tests.Actions
         [Fact]
         public async Task GivenCall_WhenMatches_ThenExecuted()
         {
+            var logMessage = Guid.NewGuid().ToString();
+            var project = new Project();
+            var xpathMatches = new string[] { "1", "2", "3" };
+
             var xpathProcessor = new Mock<IXPathProcessorService>();
             xpathProcessor.Setup(x => x.MakeRelativeXPathQuery(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns("xyz");
 
             var browser = new Mock<IBrowserService>();
             browser.Setup(x => x.GetAllMatchesAsync(It.IsAny<string>(), It.IsAny<int>()))
-                .ReturnsAsync(new string[] { "1", "2", "3" });
+                .ReturnsAsync(xpathMatches);
 
             var executionService = new Mock<IExecutionService>();
             executionService.Setup(x => x.XPathProcessor).Returns(xpathProcessor.Object);
             executionService.Setup(x => x.Browser).Returns(browser.Object);
 
             var action = new RelativeSelectAction();
+            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+            logAction.Script = logMessage;
+            logAction.ExpressionType = ExpressionType.Text;
+
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
+            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Exactly(xpathMatches.Length));
         }
     }
 }

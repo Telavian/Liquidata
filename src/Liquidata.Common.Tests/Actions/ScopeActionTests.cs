@@ -41,16 +41,23 @@ namespace Liquidata.Common.Tests.Actions
         [Fact]
         public async Task GivenCall_WhenExecuted_ThenScopeUpdated()
         {
+            var logMessage = Guid.NewGuid().ToString();
+            var project = new Project();
             var dataHandler = new Mock<IDataHandlerService>();
 
             var executionService = new Mock<IExecutionService>();
             executionService.Setup(x => x.DataHandler).Returns(dataHandler.Object);
 
             var action = new ScopeAction();
+            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+            logAction.Script = logMessage;
+            logAction.ExpressionType = ExpressionType.Text;
+
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
             dataHandler.VerifySet(x => x.DataScope = It.IsAny<string>(), Times.Exactly(2));
+            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Once());
         }
     }
 }
