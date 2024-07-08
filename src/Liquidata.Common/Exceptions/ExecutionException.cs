@@ -1,10 +1,9 @@
-﻿namespace Liquidata.Common.Exceptions
+﻿namespace Liquidata.Common.Exceptions;
+
+public class ExecutionException : Exception
 {
-    public class ExecutionException : Exception
+    public ExecutionException(string message) : base(message)
     {
-        public ExecutionException(string message) : base(message)
-        {
-            // Nothing
-        }
+        // Nothing
     }
 }

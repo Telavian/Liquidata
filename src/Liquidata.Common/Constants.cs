@@ -1,7 +1,6 @@
-﻿namespace Liquidata.Common
+﻿namespace Liquidata.Common;
+
+public static class Constants
 {
-    public static class Constants
-    {
-        public const string ThisSelectionName = "this";
-    }
+    public const string ThisSelectionName = "this";
 }

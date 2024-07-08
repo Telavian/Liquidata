@@ -1,23 +1,22 @@
-﻿namespace Liquidata.Common.Extensions
+﻿namespace Liquidata.Common.Extensions;
+
+public static class MaxTimesExtensions
 {
-    public static class MaxTimesExtensions
+    public static string BuildMaxTimesText(this int maxTimes, string prefix = "")
     {
-        public static string BuildMaxTimesText(this int maxTimes, string prefix = "")
+        if (maxTimes <= 0)
         {
-            if (maxTimes <= 0)
-            {
-                return $"{prefix} unlimited times"
-                    .Trim();
-            }
-
-            if (maxTimes == 1)
-            {
-                return $"{prefix} 1 time"
-                    .Trim();
-            }
-
-            return $"{prefix} {maxTimes} times"
+            return $"{prefix} unlimited times"
                 .Trim();
         }
+
+        if (maxTimes == 1)
+        {
+            return $"{prefix} 1 time"
+                .Trim();
+        }
+
+        return $"{prefix} {maxTimes} times"
+            .Trim();
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace Liquidata.Common.Execution
+﻿namespace Liquidata.Common.Execution;
+
+public class Screenshot
 {
-    public class Screenshot
-    {
-        public string Name { get; set; } = "";
-        public byte[] Data { get; set; } = [];
-    }
+    public string Name { get; set; } = "";
+    public byte[] Data { get; set; } = [];
 }

@@ -1,10 +1,9 @@
-﻿namespace Liquidata.Common.Actions.Enums
+﻿namespace Liquidata.Common.Actions.Enums;
+
+public enum ExecutionReturnType
 {
-    public enum ExecutionReturnType
-    {
-        Continue,
-        StopLoop,
-        StopTemplate,
-        StopProject
-    }
+    Continue,
+    StopLoop,
+    StopTemplate,
+    StopProject
 }
