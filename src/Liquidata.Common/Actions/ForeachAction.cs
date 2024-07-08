@@ -70,39 +70,23 @@ public class ForeachAction : ActionBase
 
     private async Task<ExecutionReturnType> ExecuteItemAsync(IExecutionService executionService, string item)
     {
-        var previousThisValue = "";
-        var previousSelection = "";
-
-        try
-        {
-            await executionService.Browser.SetVariableAsync(Name, item);
-
-            previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
-            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, item);
-
-            previousSelection = executionService.CurrentSelection;
-            executionService.CurrentSelection = item;
-
-            var returnType = await ExecuteChildrenAsync(executionService);
-
-            if (returnType == ExecutionReturnType.StopLoop)
+        await Task.Yield();
+        return await ExecuteSelectionActionAsync(executionService, item,
+            async () =>
             {
+                var returnType = await ExecuteChildrenAsync(executionService);
+
+                if (returnType == ExecutionReturnType.StopLoop)
+                {
+                    return ExecutionReturnType.Continue;
+                }
+                else if (returnType != ExecutionReturnType.Continue)
+                {
+                    return returnType;
+                }
+
+                await WaitForDelayAsync(WaitMilliseconds);
                 return ExecutionReturnType.Continue;
-            }
-            else if (returnType != ExecutionReturnType.Continue)
-            {
-                return returnType;
-            }
-
-            await WaitForDelayAsync(WaitMilliseconds);
-        }
-        finally
-        {
-            await executionService.Browser.RemoveVariableAsync(Name);
-            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
-            executionService.CurrentSelection = previousSelection;
-        }
-
-        return ExecutionReturnType.Continue;
+            });
     }
 }

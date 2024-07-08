@@ -208,6 +208,31 @@ public abstract class ActionBase
         return value;
     }
 
+    protected async Task<ExecutionReturnType> ExecuteSelectionActionAsync(IExecutionService executionService, string selection, Func<Task<ExecutionReturnType>> action)
+    {
+        var previousThisValue = "";
+        var previousSelection = "";
+
+        try
+        {
+            await executionService.Browser.SetVariableAsync(Name, selection);
+
+            previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
+            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, selection);
+
+            previousSelection = executionService.CurrentSelection;
+            executionService.CurrentSelection = selection;
+
+            return await action();
+        }
+        finally
+        {
+            await executionService.Browser.RemoveVariableAsync(Name);
+            await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
+            executionService.CurrentSelection = previousSelection;
+        }
+    }
+
     private ICollection<ActionBase> FindActions(Func<ActionBase, bool> filter, List<ActionBase>? results = null)
     {
         results ??= new List<ActionBase>();

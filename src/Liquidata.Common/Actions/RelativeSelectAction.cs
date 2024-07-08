@@ -30,37 +30,28 @@ public class RelativeSelectAction : SelectionActionBase
 
         foreach (var match in matches)
         {
-            var previousThisValue = "";
-            var previousSelection = "";
-
-            try
-            {
-                await executionService.Browser.SetVariableAsync(Name, match);
-                
-                previousThisValue = await executionService.Browser.GetVariableAsync(Constants.ThisSelectionName);
-                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, match);
-                
-                previousSelection = executionService.CurrentSelection;
-                executionService.CurrentSelection = match;
-
-                var returnType = await ExecuteChildrenAsync(executionService);
-
-                if (returnType == ExecutionReturnType.StopLoop)
+            var returnType = await ExecuteSelectionActionAsync(executionService, match,
+                async () =>
                 {
+                    var returnType = await ExecuteChildrenAsync(executionService);
+
+                    if (returnType == ExecutionReturnType.StopLoop)
+                    {
+                        return ExecutionReturnType.Continue;
+                    }
+                    else if (returnType != ExecutionReturnType.Continue)
+                    {
+                        return returnType;
+                    }
+
+                    await WaitForDelayAsync(ItemWaitMilliseconds);
                     return ExecutionReturnType.Continue;
-                }
-                else if (returnType != ExecutionReturnType.Continue)
-                {
-                    return returnType;
-                }
+                });
 
-                await WaitForDelayAsync(ItemWaitMilliseconds);
-            }
-            finally
+
+            if (returnType != ExecutionReturnType.Continue)
             {
-                await executionService.Browser.RemoveVariableAsync(Name);
-                await executionService.Browser.SetVariableAsync(Constants.ThisSelectionName, previousThisValue);
-                executionService.CurrentSelection = previousSelection;
+                return returnType;
             }
         }
 
