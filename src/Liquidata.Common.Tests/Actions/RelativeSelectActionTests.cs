@@ -4,95 +4,94 @@ using Liquidata.Common.Exceptions;
 using Liquidata.Common.Services.Interfaces;
 using Moq;
 
-namespace Liquidata.Common.Tests.Actions
+namespace Liquidata.Common.Tests.Actions;
+
+public class RelativeSelectActionTests
 {
-    public class RelativeSelectActionTests
+    [Fact]
+    public async Task GivenCall_WhenValidation_ThenNoErrors()
     {
-        [Fact]
-        public async Task GivenCall_WhenValidation_ThenNoErrors()
-        {
-            await Task.Yield();
-            var action = new RelativeSelectAction { Name = "xyz", XPath = "xyz" };
-            var errors = action.BuildValidationErrors();
+        await Task.Yield();
+        var action = new RelativeSelectAction { Name = "xyz", XPath = "xyz" };
+        var errors = action.BuildValidationErrors();
 
-            Assert.Empty(errors);
-        }
+        Assert.Empty(errors);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenNameInvalid_ThenErrors()
-        {
-            await Task.Yield();
-            var action = new RelativeSelectAction { Name = "", XPath = "xyz" };
-            var errors = action.BuildValidationErrors();
+    [Fact]
+    public async Task GivenCall_WhenNameInvalid_ThenErrors()
+    {
+        await Task.Yield();
+        var action = new RelativeSelectAction { Name = "", XPath = "xyz" };
+        var errors = action.BuildValidationErrors();
 
-            Assert.NotEmpty(errors);
-        }
+        Assert.NotEmpty(errors);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenXPathInvalid_ThenErrors()
-        {
-            await Task.Yield();
-            var action = new RelativeSelectAction { Name = "xyz", XPath = "" };
-            var errors = action.BuildValidationErrors();
+    [Fact]
+    public async Task GivenCall_WhenXPathInvalid_ThenErrors()
+    {
+        await Task.Yield();
+        var action = new RelativeSelectAction { Name = "xyz", XPath = "" };
+        var errors = action.BuildValidationErrors();
 
-            Assert.NotEmpty(errors);
-        }
+        Assert.NotEmpty(errors);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenDisabled_ThenNoAction()
-        {
-            var executionService = new Mock<IExecutionService>();
+    [Fact]
+    public async Task GivenCall_WhenDisabled_ThenNoAction()
+    {
+        var executionService = new Mock<IExecutionService>();
 
-            var action = new RelativeSelectAction { IsDisabled = true };
-            var returnType = await action.ExecuteActionAsync(executionService.Object);
+        var action = new RelativeSelectAction { IsDisabled = true };
+        var returnType = await action.ExecuteActionAsync(executionService.Object);
 
-            Assert.Equal(ExecutionReturnType.Continue, returnType);
-        }
+        Assert.Equal(ExecutionReturnType.Continue, returnType);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenNoSelection_ThenException()
-        {
-            var xpathProcessor = new Mock<IXPathProcessorService>();
-            xpathProcessor.Setup(x => x.MakeRelativeXPathQuery(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns("");
+    [Fact]
+    public async Task GivenCall_WhenNoSelection_ThenException()
+    {
+        var xpathProcessor = new Mock<IXPathProcessorService>();
+        xpathProcessor.Setup(x => x.MakeRelativeXPathQuery(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns("");
 
-            var executionService = new Mock<IExecutionService>();
-            executionService.Setup(x => x.XPathProcessor).Returns(xpathProcessor.Object);
+        var executionService = new Mock<IExecutionService>();
+        executionService.Setup(x => x.XPathProcessor).Returns(xpathProcessor.Object);
 
-            var action = new RelativeSelectAction();
-            var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
+        var action = new RelativeSelectAction();
+        var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
 
-            Assert.Contains("not defined", error.Message);
-        }
+        Assert.Contains("not defined", error.Message);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenMatches_ThenExecuted()
-        {
-            var logMessage = Guid.NewGuid().ToString();
-            var project = new Project();
-            var xpathMatches = new string[] { "1", "2", "3" };
+    [Fact]
+    public async Task GivenCall_WhenMatches_ThenExecuted()
+    {
+        var logMessage = Guid.NewGuid().ToString();
+        var project = new Project();
+        var xpathMatches = new string[] { "1", "2", "3" };
 
-            var xpathProcessor = new Mock<IXPathProcessorService>();
-            xpathProcessor.Setup(x => x.MakeRelativeXPathQuery(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns("xyz");
+        var xpathProcessor = new Mock<IXPathProcessorService>();
+        xpathProcessor.Setup(x => x.MakeRelativeXPathQuery(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns("xyz");
 
-            var browser = new Mock<IBrowserService>();
-            browser.Setup(x => x.GetAllMatchesAsync(It.IsAny<string>(), It.IsAny<int>()))
-                .ReturnsAsync(xpathMatches);
+        var browser = new Mock<IBrowserService>();
+        browser.Setup(x => x.GetAllMatchesAsync(It.IsAny<string>(), It.IsAny<int>()))
+            .ReturnsAsync(xpathMatches);
 
-            var executionService = new Mock<IExecutionService>();
-            executionService.Setup(x => x.XPathProcessor).Returns(xpathProcessor.Object);
-            executionService.Setup(x => x.Browser).Returns(browser.Object);
+        var executionService = new Mock<IExecutionService>();
+        executionService.Setup(x => x.XPathProcessor).Returns(xpathProcessor.Object);
+        executionService.Setup(x => x.Browser).Returns(browser.Object);
 
-            var action = new RelativeSelectAction();
-            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
-            logAction.Script = logMessage;
-            logAction.ExpressionType = ExpressionType.Text;
+        var action = new RelativeSelectAction();
+        var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+        logAction.Script = logMessage;
+        logAction.ExpressionType = ExpressionType.Text;
 
-            var returnType = await action.ExecuteActionAsync(executionService.Object);
+        var returnType = await action.ExecuteActionAsync(executionService.Object);
 
-            Assert.Equal(ExecutionReturnType.Continue, returnType);
-            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Exactly(xpathMatches.Length));
-        }
+        Assert.Equal(ExecutionReturnType.Continue, returnType);
+        executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Exactly(xpathMatches.Length));
     }
 }

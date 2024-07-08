@@ -4,108 +4,107 @@ using Liquidata.Common.Exceptions;
 using Liquidata.Common.Services.Interfaces;
 using Moq;
 
-namespace Liquidata.Common.Tests.Actions
+namespace Liquidata.Common.Tests.Actions;
+
+public class ForeachActionTests
 {
-    public class ForeachActionTests
+    [Fact]
+    public async Task GivenCall_WhenValid_ThenNoErrors()
     {
-        [Fact]
-        public async Task GivenCall_WhenValid_ThenNoErrors()
-        {
-            await Task.Yield();
-            var action = new ForeachAction();
-            action.Name = "xyz";
-            action.Script = "abc";
-            var errors = action.BuildValidationErrors();
+        await Task.Yield();
+        var action = new ForeachAction();
+        action.Name = "xyz";
+        action.Script = "abc";
+        var errors = action.BuildValidationErrors();
 
-            Assert.Empty(errors);
-        }
+        Assert.Empty(errors);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenInvalid_ThenErrors()
-        {
-            await Task.Yield();
-            var action = new ForeachAction();            
-            var errors = action.BuildValidationErrors();
+    [Fact]
+    public async Task GivenCall_WhenInvalid_ThenErrors()
+    {
+        await Task.Yield();
+        var action = new ForeachAction();            
+        var errors = action.BuildValidationErrors();
 
-            Assert.NotEmpty(errors);
-        }
+        Assert.NotEmpty(errors);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenDisabled_ThenNoAction()
-        {
-            var executionService = new Mock<IExecutionService>();
+    [Fact]
+    public async Task GivenCall_WhenDisabled_ThenNoAction()
+    {
+        var executionService = new Mock<IExecutionService>();
 
-            var action = new ForeachAction { IsDisabled = true };
-            var returnType = await action.ExecuteActionAsync(executionService.Object);
+        var action = new ForeachAction { IsDisabled = true };
+        var returnType = await action.ExecuteActionAsync(executionService.Object);
 
-            Assert.Equal(ExecutionReturnType.Continue, returnType);
-        }
+        Assert.Equal(ExecutionReturnType.Continue, returnType);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenNoScript_ThenException()
-        {
-            var executionService = new Mock<IExecutionService>();
+    [Fact]
+    public async Task GivenCall_WhenNoScript_ThenException()
+    {
+        var executionService = new Mock<IExecutionService>();
 
-            var action = new ForeachAction { Name = "xyz", Script = null };
+        var action = new ForeachAction { Name = "xyz", Script = null };
 
-            var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
-            Assert.Contains("not defined", error.Message);
-        }
+        var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
+        Assert.Contains("not defined", error.Message);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenNoName_ThenException()
-        {
-            var executionService = new Mock<IExecutionService>();
+    [Fact]
+    public async Task GivenCall_WhenNoName_ThenException()
+    {
+        var executionService = new Mock<IExecutionService>();
 
-            var action = new ForeachAction { Script = "xyz", Name = null! };
+        var action = new ForeachAction { Script = "xyz", Name = null! };
 
-            var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
-            Assert.Contains("not defined", error.Message);
-        }
+        var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
+        Assert.Contains("not defined", error.Message);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenExecutionError_ThenException()
-        {
-            var dataResult = "data";
+    [Fact]
+    public async Task GivenCall_WhenExecutionError_ThenException()
+    {
+        var dataResult = "data";
 
-            var browser = new Mock<IBrowserService>();
-            browser.Setup(x => x.ExecuteJavascriptAsync<string>(It.IsAny<string>()))
-                .ReturnsAsync((false, dataResult));
+        var browser = new Mock<IBrowserService>();
+        browser.Setup(x => x.ExecuteJavascriptAsync<string>(It.IsAny<string>()))
+            .ReturnsAsync((false, dataResult));
 
-            var dataHandler = new Mock<IDataHandlerService>();
+        var dataHandler = new Mock<IDataHandlerService>();
 
-            var executionService = new Mock<IExecutionService>();
-            executionService.Setup(x => x.Browser).Returns(browser.Object);
-            executionService.Setup(x => x.DataHandler).Returns(dataHandler.Object);
+        var executionService = new Mock<IExecutionService>();
+        executionService.Setup(x => x.Browser).Returns(browser.Object);
+        executionService.Setup(x => x.DataHandler).Returns(dataHandler.Object);
 
-            var action = new ForeachAction { Name = "name", Script = "script" };
-            var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
+        var action = new ForeachAction { Name = "name", Script = "script" };
+        var error = await Assert.ThrowsAsync<ExecutionException>(async () => await action.ExecuteActionAsync(executionService.Object));
 
-            Assert.Contains("not executed", error.Message);
-        }
+        Assert.Contains("not executed", error.Message);
+    }
 
-        [Fact]
-        public async Task GivenCall_WhenExecuted_ThenInterated()
-        {
-            var dataResult = new string[] { "1" };
-            var logMessage = Guid.NewGuid().ToString();
-            var project = new Project();
+    [Fact]
+    public async Task GivenCall_WhenExecuted_ThenInterated()
+    {
+        var dataResult = new string[] { "1" };
+        var logMessage = Guid.NewGuid().ToString();
+        var project = new Project();
 
-            var browser = new Mock<IBrowserService>();
-            browser.Setup(x => x.ExecuteJavascriptAsync<string[]>(It.IsAny<string>()))
-                .ReturnsAsync((true, dataResult));
+        var browser = new Mock<IBrowserService>();
+        browser.Setup(x => x.ExecuteJavascriptAsync<string[]>(It.IsAny<string>()))
+            .ReturnsAsync((true, dataResult));
 
-            var executionService = new Mock<IExecutionService>();
-            executionService.Setup(x => x.Browser).Returns(browser.Object);
+        var executionService = new Mock<IExecutionService>();
+        executionService.Setup(x => x.Browser).Returns(browser.Object);
 
-            var action = new ForeachAction { Name = "name", Script = "script" };
-            var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
-            logAction.Script = logMessage;
-            logAction.ExpressionType = ExpressionType.Text;
-            var returnType = await action.ExecuteActionAsync(executionService.Object);
+        var action = new ForeachAction { Name = "name", Script = "script" };
+        var logAction = (LogAction)action.AddChildAction(project, ActionType.Log);
+        logAction.Script = logMessage;
+        logAction.ExpressionType = ExpressionType.Text;
+        var returnType = await action.ExecuteActionAsync(executionService.Object);
 
-            Assert.Equal(ExecutionReturnType.Continue, returnType);
-            executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Once());
-        }
+        Assert.Equal(ExecutionReturnType.Continue, returnType);
+        executionService.Verify(x => x.LogMessageAsync(logMessage), Times.Once());
     }
 }

@@ -1,44 +1,43 @@
 ﻿
 using Liquidata.Common.Extensions;
 
-namespace Liquidata.Common.Tests.Extensions
+namespace Liquidata.Common.Tests.Extensions;
+
+public class ArrayExtensionsTests
 {
-    public class ArrayExtensionsTests
+    private readonly int[] _testList = [1, 2, 3, 4];
+
+    [Fact]
+    public void GivenCall_WhenCountNegative_ThenEmptyList()
     {
-        private readonly int[] _testList = [1, 2, 3, 4];
+        var result = _testList.TakeRandom(-1);
+        Assert.Empty(result);
+    }
 
-        [Fact]
-        public void GivenCall_WhenCountNegative_ThenEmptyList()
+    [Fact]
+    public void GivenCall_WhenCountZero_ThenEmptyList()
+    {
+        var result = _testList.TakeRandom(0);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void GivenCall_WhenListSmallerThanCount_ThenList()
+    {
+        var result = _testList.TakeRandom(_testList.Length + 1);
+        Assert.Equal(_testList, result);
+    }
+
+    [Fact]
+    public void GivenCall_WhenCount_ThenRandomItems()
+    {
+        var result = _testList.TakeRandom(_testList.Length - 1);
+        
+        foreach (var item in result)
         {
-            var result = _testList.TakeRandom(-1);
-            Assert.Empty(result);
+            Assert.Contains(item, _testList);
         }
 
-        [Fact]
-        public void GivenCall_WhenCountZero_ThenEmptyList()
-        {
-            var result = _testList.TakeRandom(0);
-            Assert.Empty(result);
-        }
-
-        [Fact]
-        public void GivenCall_WhenListSmallerThanCount_ThenList()
-        {
-            var result = _testList.TakeRandom(_testList.Length + 1);
-            Assert.Equal(_testList, result);
-        }
-
-        [Fact]
-        public void GivenCall_WhenCount_ThenRandomItems()
-        {
-            var result = _testList.TakeRandom(_testList.Length - 1);
-            
-            foreach (var item in result)
-            {
-                Assert.Contains(item, _testList);
-            }
-
-            Assert.Distinct(result);
-        }
+        Assert.Distinct(result);
     }
 }
