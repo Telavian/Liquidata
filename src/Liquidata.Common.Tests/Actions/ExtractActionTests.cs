@@ -105,7 +105,7 @@ namespace Liquidata.Common.Tests.Actions
             var returnType = await action.ExecuteActionAsync(executionService.Object);
 
             Assert.Equal(ExecutionReturnType.Continue, returnType);
-            executionService.Verify(x => x.DataHandler.AddData(action.Name, dataResult), Times.Once());
+            executionService.Verify(x => x.DataHandler.AddDataAsync(action.Name, dataResult), Times.Once());
         }
     }
 }

@@ -59,7 +59,7 @@ public class ExtractAction : ActionBase
         }
 
         result = await executionService.DataHandler.CleanDataAsync(result, FieldType);
-        executionService.DataHandler.AddData(Name, result);
+        await executionService.DataHandler.AddDataAsync(Name, result);
         return ExecutionReturnType.Continue;
     }
 }

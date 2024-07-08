@@ -30,7 +30,7 @@ namespace Liquidata.Common.Services
             _isRunning = true;
         }
 
-        public IExecutionService Clone(string? selection = null, IBrowserService? browser = null)
+        public IExecutionService Clone(string? selection = null, IBrowserService? browser = null, IDataHandlerService? dataHandler = null)
         {
             return new ExecutionService
             {
@@ -39,7 +39,7 @@ namespace Liquidata.Common.Services
 
                 Project = Project,
                 Browser = browser ?? Browser,
-                DataHandler = DataHandler,
+                DataHandler = dataHandler ?? DataHandler,
                 XPathProcessor = XPathProcessor,
                 BrowserPageAddedAction = BrowserPageAddedAction,
                 BrowserPageRemovedAction = BrowserPageRemovedAction,

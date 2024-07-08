@@ -6,12 +6,13 @@ using Microsoft.Recognizers.Text.Choice;
 using Microsoft.Recognizers.Text.DateTime;
 using Microsoft.Recognizers.Text.Number;
 using Microsoft.Recognizers.Text.Sequence;
-using System.Xml.Schema;
 
 namespace Liquidata.Common.Services
 {
     public class DataHandlerService : IDataHandlerService
     {
+        private SemaphoreSlim _lockItem = new SemaphoreSlim(1);
+
         private DataRecord? _currentRecord = null;
         private List<DataRecord> _allRecords = [];
 
@@ -19,11 +20,36 @@ namespace Liquidata.Common.Services
 
         public string DataScope { get; set; } = "";
 
-        public void AddData(string name, string value)
+        public IDataHandlerService Clone()
+        {
+            return new DataHandlerService
+            {
+                _currentRecord = _currentRecord,
+                DataScope = DataScope,
+            };
+        }
+
+        public async Task MergeDataAsync(IDataHandlerService dataHandler)
+        {
+            await Task.Yield();
+            var results = dataHandler.GetExecutionResults();
+
+            await ExecuteInLockAsync(() =>
+            {
+                _allRecords.AddRange(results.Records);
+
+                foreach (var screenshot in results.Screenshots)
+                {
+                    _screenshots.Add(screenshot.Name, screenshot.Data);
+                }
+            });      
+        }
+
+        public async Task AddDataAsync(string name, string value)
         {
             if (_currentRecord == null)
             {
-                AddRecord();
+                await AddRecordAsync();
             }
 
             if (!string.IsNullOrWhiteSpace(DataScope))
@@ -31,18 +57,25 @@ namespace Liquidata.Common.Services
                 name = $"{DataScope}.{name}";
             }
 
-            _currentRecord!.AddData(name, value);
+            await ExecuteInLockAsync(() =>
+            {
+                _currentRecord!.AddData(name, value);
+            });
         }
 
-        public void AddRecord()
+        public async Task AddRecordAsync()
         {
-            if (_currentRecord != null && !_currentRecord.HasData())
+            await Task.Yield();
+            await ExecuteInLockAsync(() =>
             {
-                return;
-            }
+                if (_currentRecord != null && !_currentRecord.HasData())
+                {
+                    return;
+                }
 
-            _currentRecord = new DataRecord();
-            _allRecords.Add(_currentRecord);
+                _currentRecord = new DataRecord();
+                _allRecords.Add(_currentRecord);
+            });
         }
 
         public async Task AddScreenshotAsync(string name, byte[] screenshot)
@@ -63,13 +96,16 @@ namespace Liquidata.Common.Services
             var columns = _allRecords
                 .SelectMany(x => x.AllColumns)
                 .Distinct()
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .OrderBy(x => x)
                 .ToArray();
 
             return new ExecutionResults
             {
                 AllColumns = columns,
-                Records = _allRecords.ToArray(),
+                Records = _allRecords
+                    .Where(x => x.HasData())
+                    .ToArray(),
                 Screenshots = _screenshots
                     .Select(x => new Screenshot { Name = x.Key, Data = x.Value })
                     .ToArray()
@@ -182,6 +218,32 @@ namespace Liquidata.Common.Services
             }
 
             return "";
+        }
+
+        private async Task ExecuteInLockAsync(Func<Task> action)
+        {
+            try
+            {
+                await _lockItem.WaitAsync();
+                await action();
+            }
+            finally
+            {
+                _lockItem.Release();
+            }
+        }
+
+        private async Task ExecuteInLockAsync(Action action)
+        {
+            try
+            {
+                await _lockItem.WaitAsync();
+                action();
+            }
+            finally
+            {
+                _lockItem.Release();
+            }
         }
     }
 }

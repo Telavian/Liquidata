@@ -7,8 +7,11 @@ namespace Liquidata.Common.Services.Interfaces
     {
         public string DataScope { get; set; }
 
-        public void AddRecord();
-        public void AddData(string name, string value);
+        public IDataHandlerService Clone();
+        public Task MergeDataAsync(IDataHandlerService dataHandler);
+
+        public Task AddRecordAsync();
+        public Task AddDataAsync(string name, string value);
         
         Task AddScreenshotAsync(string name, byte[] screenshot);
         ExecutionResults GetExecutionResults();

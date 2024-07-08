@@ -19,6 +19,6 @@
         public Task WaitForExecutionTasksAsync();
         public Task LogErrorAsync(string message);
         public Task LogMessageAsync(string message);
-        public IExecutionService Clone(string? selection = null, IBrowserService? browser = null);
+        public IExecutionService Clone(string? selection = null, IBrowserService? browser = null, IDataHandlerService? dataHandler = null);
     }
 }

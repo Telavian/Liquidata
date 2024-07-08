@@ -25,8 +25,8 @@ public class BeginRecordAction : ActionBase
             return ExecutionReturnType.Continue;
         }
 
-        executionService.DataHandler
-            .AddRecord();
+        await executionService.DataHandler
+            .AddRecordAsync();
 
         return ExecutionReturnType.Continue;
     }

@@ -4,6 +4,7 @@ using Liquidata.Common.Extensions;
 using System.Text.Json.Serialization;
 using Liquidata.Common.Services.Interfaces;
 using Liquidata.Common.Exceptions;
+using Liquidata.Common.Services;
 
 namespace Liquidata.Common.Actions;
 
@@ -56,18 +57,21 @@ public class ClickAction : ActionBase
             var selection = executionService.CurrentSelection;
             await executionService.CreateExecutionTaskAsync(async () =>
             {
+                var childDataHandler = executionService.DataHandler.Clone();                
+
                 var browser = await executionService.Browser.ClickOpenInNewPageAsync(selection, ClickButton, IsDoubleClick);
-                executionService = executionService.Clone(selection:"", browser:browser);
-                await executionService.RegisterBrowserAsync(browser);
+                var childExecutionService = executionService.Clone(selection:"", browser:browser, dataHandler:childDataHandler);
+                await childExecutionService.RegisterBrowserAsync(browser);
 
                 try
                 {
                     await WaitForDelayAsync(WaitMilliseconds);
-                    await newTemplate.ExecuteActionAsync(executionService);
+                    await newTemplate.ExecuteActionAsync(childExecutionService);
                 }                
                 finally
                 {
-                    await executionService.UnregisterBrowserAsync(browser);
+                    await childExecutionService.UnregisterBrowserAsync(browser);
+                    await executionService.DataHandler.MergeDataAsync(childDataHandler);
                 }
             });
 
