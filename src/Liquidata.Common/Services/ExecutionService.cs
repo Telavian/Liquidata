@@ -26,8 +26,8 @@ public class ExecutionService : IExecutionService
 
     public void Initialize()
     {
-        _taskExecutors ??= BuildTaskExecutors(Concurrency);
         _isRunning = true;
+        _taskExecutors ??= BuildTaskExecutors(Concurrency);        
     }
 
     public IExecutionService Clone(string? selection = null, IBrowserService? browser = null, IDataHandlerService? dataHandler = null)
@@ -62,13 +62,19 @@ public class ExecutionService : IExecutionService
     {
         while (true)
         {
-            await Task.Delay(100);
-            
+            // Signal finished
             if (_executionTasks.IsEmpty)
             {
-                _isRunning = false;
+                _isRunning = false;                
+            }
+
+            // Check if actually finished
+            if (_taskExecutors.All(x => x.IsCompleted))
+            {
                 return;
             }
+
+            await Task.Delay(100);           
         }
     }
 

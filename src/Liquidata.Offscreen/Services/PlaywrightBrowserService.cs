@@ -7,7 +7,6 @@ using Liquidata.Common.Services.Interfaces;
 using Liquidata.Offscreen.Execution.Models;
 using Microsoft.Playwright;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 
 namespace Liquidata.Offscreen.Services
@@ -20,7 +19,7 @@ namespace Liquidata.Offscreen.Services
         private IBrowser? _browser;
         private IPage? _page;
         
-        private bool _ownsInstance;
+        private bool _ownsInstance = true;
 
         public string RootPage { get; set; } = "";
         public string BrowserId { get; set; } = Guid.NewGuid().ToString();
@@ -118,6 +117,7 @@ namespace Liquidata.Offscreen.Services
                 _playwright = _playwright,
                 _browser = _browser,
                 _page = page,
+                _ownsInstance = false,
                 RootPage = link,
             };
 
