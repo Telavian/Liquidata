@@ -123,7 +123,7 @@ public class LiveExecutionResultsViewModel : ViewModelBase, IDisposable
             return false;
         }
 
-        var isInteractive = project.CheckIfInterative();
+        var isInteractive = project.CheckIfInteractive();
 
         if (!allowInteractive && isInteractive)
         {

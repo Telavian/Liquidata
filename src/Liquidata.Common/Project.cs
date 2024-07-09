@@ -26,7 +26,7 @@ public class Project
         };
     }
 
-    public bool CheckIfInterative()
+    public bool CheckIfInteractive()
     {
         return AllTemplates
             .SelectMany(x => x.TraverseTree())
@@ -43,8 +43,11 @@ public class Project
 
     public Project FullClone()
     {
-        var json = this.ToJson(); JsonSerializer.Serialize(this);
-        return json.FromJson<Project>()!;
+        var json = this.ToJson(); JsonSerializer.Serialize(this);        
+        var result = json.FromJson<Project>()!;
+
+        result.RestoreParentReferences();
+        return result;
     }
 
     public void RestoreParentReferences()
