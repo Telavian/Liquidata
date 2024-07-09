@@ -11,10 +11,10 @@ namespace Liquidata.Common.Services;
 
 public class DataHandlerService : IDataHandlerService
 {
-    private SemaphoreSlim _lockItem = new SemaphoreSlim(1);
+    private readonly SemaphoreSlim _lockItem = new SemaphoreSlim(1);
 
     private DataRecord? _currentRecord = null;
-    private List<DataRecord> _allRecords = [];
+    private readonly List<DataRecord> _allRecords = [];
 
     private readonly Dictionary<string, byte[]> _screenshots = new Dictionary<string, byte[]>();
 
@@ -87,7 +87,7 @@ public class DataHandlerService : IDataHandlerService
             return;
         }
 
-        name = $"name_{DateTime.Now.ToString("s")}";
+        name = $"{name}_{DateTime.Now.ToString("s")}";
         _screenshots.Add(name, screenshot);
     }
 
