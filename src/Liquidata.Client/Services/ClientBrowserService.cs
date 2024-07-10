@@ -25,8 +25,9 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
     private const string SelectorHighlightCSSClass = "liquidata_selector_highlight";
 
     public string RootPage { get; set; } = "";
-    public string BrowserId { get; set; } = GlobalConstants.LDBrowser_Name;
+    public string BrowserId { get; set; } = LDBrowser_Name;
     public bool IsBrowserInitialized { get; set; }
+    public const string LDBrowser_Name = "liquidata_browser";
 
     public ValueTask DisposeAsync()
     {
@@ -310,7 +311,7 @@ public class ClientBrowserService(IJSRuntime jsRuntime) : IClientBrowserService
         var browser = new ClientBrowserService(jsRuntime)
         {
             RootPage = link,
-            BrowserId = $"{GlobalConstants.LDBrowser_Name}{browserCount}"
+            BrowserId = $"{LDBrowser_Name}{browserCount}"
         };
 
         await browser.StartBrowserAsync();

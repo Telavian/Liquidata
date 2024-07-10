@@ -2,6 +2,7 @@
 @layout MainLayout
 @using Liquidata.Client.Extensions
 @using Liquidata.Client.Pages.Execution
+@using Liquidata.Client.Services
 @using Liquidata.Common.Actions
 @using Liquidata.Common.Actions.Enums
 @using MudBlazor
@@ -126,7 +127,7 @@
 
     <!-- Browser -->
     <div style="grid-row: 1; grid-column: 3;">
-        <iframe id="@(GlobalConstants.LDBrowser_Name)" src="@ActiveUrl"
+        <iframe id="@(ClientBrowserService.LDBrowser_Name)" src="@ActiveUrl"
                 onload="@(() => BrowserLoadedAsyncCommand())" />
     </div>
 
