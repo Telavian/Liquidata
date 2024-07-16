@@ -8,7 +8,7 @@ public class ExecutionService : IExecutionService
     private bool _isRunning;
 
     private ConcurrentQueue<Func<Task>> _executionTasks = new ConcurrentQueue<Func<Task>>();
-    private Task[] _taskExecutors = null!;            
+    private Task[] _taskExecutors = [];            
 
     public required IDataHandlerService DataHandler { get; init; }
     public required IXPathProcessorService XPathProcessor { get; init; }
@@ -65,11 +65,11 @@ public class ExecutionService : IExecutionService
             // Signal finished
             if (_executionTasks.IsEmpty)
             {
-                _isRunning = false;                
+                _isRunning = false;
             }
 
             // Check if actually finished
-            if (_taskExecutors.All(x => x.IsCompleted))
+            if (_taskExecutors.Length == 0 || _taskExecutors.All(x => x.IsCompleted))
             {
                 return;
             }
