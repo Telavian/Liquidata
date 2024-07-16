@@ -158,6 +158,25 @@ public partial class EditProjectViewModel : ViewModelBase, IDisposable
         throw new Exception($"Unknown browser mode: '{BrowserMode}'");
     }
 
+    protected TreeItemData<ActionBase> ConvertToFullTreeItem(ActionBase action)
+    {
+        return new TreeItemData<ActionBase>
+        {
+            Value = action,
+            Children = action.ChildActions
+                .Select(x => ConvertToFullTreeItem(x))
+                .ToList()
+        };
+    }
+
+    protected TreeItemData<ActionBase> ConvertToTreeItem(ActionBase action)
+    {
+        return new TreeItemData<ActionBase>
+        {
+            Value = action,
+        };
+    }
+
     private async Task HandleAddTemplateAsync()
     {
         var (success, templateResult) = await ShowDialogAsync<AddTemplateDialog, Template>("Add Template");

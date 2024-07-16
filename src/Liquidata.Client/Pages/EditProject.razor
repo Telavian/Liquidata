@@ -92,24 +92,32 @@
                 </MudTooltip>
             </div>
 
+            @{
+                var treeItems = TemplateActionItems.Select(x => ConvertToFullTreeItem(x)).ToList();
+            }
+
             <MudTreeView Style="grid-row: 3; grid-column: 1 / span 3; height: 100%; margin-top: 5px;"
                          SelectionMode="SelectionMode.SingleSelection" Color="Color.Success"
                          ReadOnly="false" Hover="true"
-                         Items="@TemplateActionItems"
+                         Items="@treeItems"
                          @bind-SelectedValue="SelectedAction">
                 <ItemTemplate Context="item">
+                    @{
+                        var localItems = item.Value.ChildActions.Select(x => ConvertToTreeItem(x)).ToList();
+                    }
+
                     <MudTreeViewItem Style="margin-right: 10px; user-select: none;"
-                                     Value="@item" Expanded="true"
-                                     Items="@item!.ChildActions"
-                                     OnDoubleClick="@(() => ShowActionOptionsAsyncCommand(item))">
+                                     Value="@item.Value" Expanded="true"
+                                     Items="@localItems"
+                                     OnDoubleClick="@(() => ShowActionOptionsAsyncCommand(item.Value))">
                         <BodyContent>
                             <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
                                 <ActivatorContent>
-                                    <ActionDisplay Action="@item" Parent="@this" />
+                                    <ActionDisplay Action="@item.Value" Parent="@this" />
                                 </ActivatorContent>
 
                                 <ChildContent>
-                                    <MudMenuItem  OnClick="@(() => ShowActionOptionsAsyncCommand(item))">
+                                    <MudMenuItem OnClick="@(() => ShowActionOptionsAsyncCommand(item.Value))">
                                         Show options
                                     </MudMenuItem>
                                 </ChildContent>
